@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = hblprefs;
+	cell = PSLinkCell;
+	detail = hblprefsListController;
+	icon = hblprefs.png;
+	isController = 1;
+	label = HomeButtonLock;
+    };
+}

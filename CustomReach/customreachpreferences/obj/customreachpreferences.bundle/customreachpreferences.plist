@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>items</key>
+    <array>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>icon</key>
+			<string>/Library/PreferenceBundles/customreachpreferences.bundle/CR.png</string>
+			<key>height</key>
+			<integer>133</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Respring After Making Changes!</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+		</dict>
+        <dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Time Before Reachability Auto-Closes</string>
+		</dict>
+        <dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>ReachintActiveEnabled</string>
+            <key>label</key>            <string>Reachability Interacive Timer</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>             <string>PSEditTextCell</string>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>ReachintActive</string>
+            <key>label</key>            <string>Time:</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+    
+	
+		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Time Before Reachability Closes</string>
+		</dict>
+        <dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>ReachTimerEnabled</string>
+            <key>label</key>            <string>Enable</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>             <string>PSEditTextCell</string>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>ReachTimer</string>
+            <key>label</key>            <string>Time:</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+	
+	
+	
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Taps To Activate Reachability</string>
+		</dict>
+        <dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>TapforTriggerEnabled</string>
+            <key>label</key>            <string>Enable</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>             <string>PSEditTextCell</string>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>NumberofTaps</string>
+            <key>label</key>            <string>Number:</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+	
+	
+	
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Reachability Y-Offset</string>
+		</dict>
+        <dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>YOffsetEnabled</string>
+            <key>label</key>            <string>Enable</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>             <string>PSEditTextCell</string>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>YOffset</string>
+            <key>label</key>            <string>Y-Offset:</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+
+	
+	
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Reachability Animation Speed</string>
+		</dict>
+        <dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>StiffEnabled</string>
+            <key>label</key>            <string>Enable</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>             <string>PSEditTextCell</string>
+            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>key</key>              <string>StiffNumber</string>
+            <key>label</key>            <string>Stiffness:</string>
+            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+        </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>Contact Me!</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by Lacertosus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>My Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+    <key>title</key>
+    <string>CustomReach</string>
+</dict>
+</plist>

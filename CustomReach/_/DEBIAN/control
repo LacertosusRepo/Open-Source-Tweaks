@@ -1,0 +1,10 @@
+Package: com.lacertosus.customreach
+Name: CustomReach
+Depends: mobilesubstrate
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Lacertosus
+Author: Lacertosus
+Section: Tweaks
+Version: 0.0.1-1
+Installed-Size: 318

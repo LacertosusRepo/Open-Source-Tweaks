@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>icon</key>
+			<string>/Library/PreferenceBundles/hblprefs.bundle/HBLock.png</string>
+			<key>height</key>
+			<integer>133</integer>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Choose Action:</string>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Activation Methods</string>
+			<key>isController</key>
+			<true/>
+			<key>bundle</key>
+			<string>LibActivator</string>
+			<key>activatorListener</key>
+			<string>com.lacertosusrepo.homebuttonlock</string>
+		</dict>
+	
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Choose whats disabled when activated:</string>
+		</dict>
+	
+		<dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosusrepo.homebuttonlock</string>
+            <key>key</key>              <string>ccDisabled</string>
+            <key>label</key>            <string>Disable Control Center</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.homebuttonlock/preferences.changed</string>
+        </dict>
+		
+		<dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosusrepo.homebuttonlock</string>
+            <key>key</key>              <string>ncDisabled</string>
+            <key>label</key>            <string>Disable Notification Center</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.homebuttonlock/preferences.changed</string>
+        </dict>
+		<dict>
+			<key>label</key>
+			<string>Contact Me:</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>My Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>HomeButtonLock</string>
+</dict>
+</plist>

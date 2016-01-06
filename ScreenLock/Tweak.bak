@@ -1,0 +1,101 @@
+#import <libactivator/libactivator.h>
+
+//Variables
+static BOOL canInteract = YES;			//Master Lock
+static BOOL screenDisabled = NO;		//Locks Screen
+static BOOL volDisabled = NO;			//Locks Up & Down Volume
+//static BOOL homeDisabled = NO;			//Locks Home Button
+
+
+
+
+//Tweak Code
+//Disables Screen Interaction
+%hook UIView
+-(BOOL)isUserInteractionEnabled {
+	if(canInteract == NO && screenDisabled == YES) {
+		return NO;
+	} else {
+		screenDisabled = NO;
+		%orig;
+		}
+	return %orig;
+}
+
+-(void)setUserInteractionEnabled:(BOOL)arg1 {
+		if(canInteract == NO && screenDisabled == YES) {
+		arg1 = NO;
+	} else {
+		screenDisabled = NO;
+		%orig;
+	}
+}
+%end
+
+
+//Disables Volume Control
+%hook VolumeControl
+-(void)_changeVolumeBy:(float)arg1 {
+	if(canInteract == NO && volDisabled == YES) {
+		arg1 = nil;
+	} else {
+		volDisabled = NO;
+		%orig;
+	}
+}
+%end
+
+
+//Disables Home Button
+(Coming Soon)
+
+//Activator Stuff
+@interface ScreenLock : NSObject <LAListener>
+@end
+ 
+@implementation ScreenLock
+ 
+- (void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event {
+	if(canInteract == NO) {	//Checks if its already activated
+		canInteract = YES;
+		screenDisabled = NO;
+		volDisabled = NO;
+		return;
+		}
+		
+	//Disables Interaction
+		canInteract = NO;
+		screenDisabled = YES;
+		volDisabled = YES;
+		 
+	[event setHandled:YES]; // To prevent the default OS implementation
+}
+ 
+- (void)activator:(LAActivator *)activator abortEvent:(LAEvent *)event {
+
+	// Enables Interaction
+		canInteract = YES;
+		screenDisabled = NO;
+		volDisabled = NO;
+}
+
+//Makes Tweak Show Up in Activator
+- (NSString *)activator:(LAActivator *)activator requiresLocalizedTitleForListenerName:(NSString *)listenerName {
+	return @"ScreenLock";
+		//Name in Activator Selection
+}
+- (NSString *)activator:(LAActivator *)activator requiresLocalizedDescriptionForListenerName:(NSString *)listenerName {
+	return @"Disable screen interaction";
+		//Decription of Activator Action
+}
+- (NSArray *)activator:(LAActivator *)activator requiresCompatibleEventModesForListenerWithName:(NSString *)listenerName {
+	return [NSArray arrayWithObjects:@"springboard", @"lockscreen", @"application", nil];
+		//Where Action can be Activated
+}
+ 
++ (void)load {
+	if ([LASharedActivator isRunningInsideSpringBoard]) {
+		[LASharedActivator registerListener:[self new] forName:@"com.lacertosus.screenlock"];
+	}
+}
+@end

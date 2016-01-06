@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = customreachpreferences;
+	cell = PSLinkCell;
+	detail = customreachpreferencesListController;
+	icon = Icon.png;
+	isController = 1;
+	label = CustomReach;
+    };
+}
