@@ -25,12 +25,4 @@
 {
 	 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.me/Lacertosus"]];
 }
-
--(void)respring
-{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    system("killall -9 SpringBoard");
-#pragma clang diagnostic pop
-}
 @end

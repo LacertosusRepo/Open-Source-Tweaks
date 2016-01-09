@@ -1,16 +1,26 @@
+#include <CoreFoundation/CFNotificationCenter.h>
+#import <Foundation/NSUserDefaults.h>
+
+@interface NSUserDefaults (UFS_Category)
+- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
+- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
+@end
+
+static NSString *domainString = @"com.lacertosusrepo.customreach";
+static NSString *notificationString = @"com.lacertosusrepo.customreach/preferences.changed";
+
 static BOOL ReachEnabled = YES; 
 static BOOL ReachintActiveEnabled = YES;
 static BOOL ReachTimerEnabled = YES;
 static BOOL TapforTriggerEnabled = YES;
 static BOOL YOffsetEnabled = YES;
 static BOOL StiffEnabled = YES;
+
 static int ReachintActive = 10;
-static int ReachTimer = 15;
+static int ReachTimer = 10;
 static int NumberofTaps = 2;
-static int YOffset = 50;
-static int StiffNumber = 100;
-
-
+static int YOffset = 20;
+static int StiffNumber = 1;
 
 %hook SBReachabilitySettings
 
@@ -22,7 +32,7 @@ static int StiffNumber = 100;
 	if(ReachintActiveEnabled) {
 		return ReachintActive;
 	} else {
-	return %orig;
+		return %orig;
 	}
 }
 
@@ -39,7 +49,7 @@ static int StiffNumber = 100;
 		return NumberofTaps;
 	} else {
 		return 2;
-		}
+	}
 }
 
 -(double)yOffsetFactor {
@@ -47,7 +57,7 @@ static int StiffNumber = 100;
 		return YOffset;
 	} else {
 		return %orig;
-		}
+	}
 }
 	
 -(double)stiffness {
@@ -55,37 +65,45 @@ static int StiffNumber = 100;
 		return StiffNumber;
 	} else {
 		return %orig;
-		}
+	}
 }
 
 %end
 
 //PREFERENCES
-static void loadPrefs()
-{
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.lacertosus.customreach.plist"];
-    if(prefs)
-    {
-        ReachEnabled = ( [prefs objectForKey:@"ReachEnabled"] ? [[prefs objectForKey:@"ReachEnabled"] boolValue] : ReachEnabled );
-		ReachintActiveEnabled = ( [prefs objectForKey:@"ReachintActiveEnabled"] ? [[prefs objectForKey:@"ReachintActiveEnabled"] boolValue] : ReachintActiveEnabled );
-		ReachTimerEnabled = ( [prefs objectForKey:@"ReachTimerEnabled"] ? [[prefs objectForKey:@" ReachTimerEnabled"] boolValue] : ReachTimer/ReachTimerEnabled );
-		TapforTriggerEnabled = ( [prefs objectForKey:@"TapforTriggerEnabled"] ? [[prefs objectForKey:@"TapforTriggerEnabled"] boolValue] : TapforTriggerEnabled );
-		YOffsetEnabled = ( [prefs objectForKey:@"YOffsetEnabled"] ? [[prefs objectForKey:@"YOffsetEnabled"] boolValue] : YOffsetEnabled );
-		StiffEnabled = ( [prefs objectForKey:@"StiffEnabled"] ? [[prefs objectForKey:@"StiffEnabled"] boolValue] : StiffEnabled );
-		
-		ReachintActive = [prefs objectForKey:@"ReachintActive"] ? [[prefs objectForKey:@"ReachintActive"] intValue] : ReachintActive;
-		ReachTimer = [prefs objectForKey:@"ReachTimer"] ? [[prefs objectForKey:@"ReachTimer"] intValue] : ReachTimer;
-		NumberofTaps = [prefs objectForKey:@"NumberofTaps"] ? [[prefs objectForKey:@"NumberofTaps"] intValue] : NumberofTaps;
-		YOffset = [prefs objectForKey:@"YOffset"] ? [[prefs objectForKey:@"YOffset"] intValue] : YOffset;
-        StiffNumber = [prefs objectForKey:@"StiffNumber"] ? [[prefs objectForKey:@"StiffNumber"] intValue]: StiffNumber; 
-    
-		
-	}
-    [prefs release];
+static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"ReachEnabled" inDomain:domainString];
+	ReachEnabled = (a)? [a boolValue]:YES;
+	NSNumber *b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"ReachintActiveEnabled" inDomain:domainString];
+	ReachintActiveEnabled = (b)? [b boolValue]:YES;
+	NSNumber *c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"ReachTimerEnabled" inDomain:domainString];
+	ReachTimerEnabled = (c)? [c boolValue]:YES;
+	NSNumber *d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"TapforTriggerEnabled" inDomain:domainString];
+	TapforTriggerEnabled = (d)? [d boolValue]:YES;
+	NSNumber *e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"YOffsetEnabled" inDomain:domainString];
+	YOffsetEnabled = (e)? [e boolValue]:YES;
+	NSNumber *f = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"StiffEnabled" inDomain:domainString];
+	StiffEnabled = (f)? [f boolValue]:YES;
+	
+	NSNumber *g = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"ReachintActive" inDomain:domainString];
+	ReachintActive = (g)? [g intValue]:nil;
+	NSNumber *h = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"ReachTimer" inDomain:domainString];
+	ReachTimer = (h)? [h intValue]:nil;
+	NSNumber *i = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"NumberofTaps" inDomain:domainString];
+	NumberofTaps = (i)? [i intValue]:nil;
+	NSNumber *j = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"YOffset" inDomain:domainString];
+	YOffset = (j)? [j intValue]:nil;
+	NSNumber *k = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"StiffNumber" inDomain:domainString];
+	StiffNumber = (k)? [k intValue]:nil;
+	NSLog(@"Preferences LAAA");
 }
+	
+%ctor {
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
+	//set initial `enable' variable
+	notificationCallback(NULL, NULL, NULL, NULL, NULL);
 
-%ctor 
-{
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.jontelang.sliderchangerprefs/settingschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
-    loadPrefs();
+	//register for notifications
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+	[pool release];
 }

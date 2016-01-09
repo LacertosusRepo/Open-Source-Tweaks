@@ -4,13 +4,11 @@ SDK = iPhoneOS8.1
 
 include theos/makefiles/common.mk
 
-TWEAK_NAME = CustomReach
-CustomReach_FILES = Tweak.xm
-CustomReach_FRAMEWORKS = UIKit
-SUBPROJECTS += customreachpreferences
+TWEAK_NAME = SoundSpring
+SoundSpring_FILES = Tweak.xm
+SoundSpring_FRAMEWORKS = UIKit AudioToolbox AVFoundation
 
 include $(THEOS_MAKE_PATH)/tweak.mk
-include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-install::
 	install.exec "killall -9 SpringBoard"

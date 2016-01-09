@@ -3,7 +3,7 @@
 	bundle = customreachpreferences;
 	cell = PSLinkCell;
 	detail = customreachpreferencesListController;
-	icon = Icon.png;
+	icon = CRIcon.png;
 	isController = 1;
 	label = CustomReach;
     };

@@ -1,5 +1,5 @@
-Package: com.lacertosusrepo.customreach
-Name: CustomReach
+Package: com.lacertosusrepo.soundspring
+Name: SoundSpring
 Depends: mobilesubstrate
 Version: 0.0.1
 Architecture: iphoneos-arm

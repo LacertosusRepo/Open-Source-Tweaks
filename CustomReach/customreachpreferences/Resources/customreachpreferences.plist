@@ -12,20 +12,6 @@
 			<key>height</key>
 			<integer>133</integer>
 		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Respring After Making Changes!</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>respring</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>label</key>
-			<string>Respring</string>
-		</dict>
         <dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
@@ -35,18 +21,18 @@
         <dict>
             <key>cell</key>             <string>PSSwitchCell</string>
             <key>default</key>          <false/>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>ReachintActiveEnabled</string>
             <key>label</key>            <string>Reachability Interacive Timer</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 
         <dict>
             <key>cell</key>             <string>PSEditTextCell</string>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>ReachintActive</string>
             <key>label</key>            <string>Time:</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
     
 	
@@ -60,18 +46,18 @@
         <dict>
             <key>cell</key>             <string>PSSwitchCell</string>
             <key>default</key>          <false/>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>ReachTimerEnabled</string>
             <key>label</key>            <string>Enable</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 
         <dict>
             <key>cell</key>             <string>PSEditTextCell</string>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>ReachTimer</string>
             <key>label</key>            <string>Time:</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 	
 	
@@ -85,18 +71,18 @@
         <dict>
             <key>cell</key>             <string>PSSwitchCell</string>
             <key>default</key>          <false/>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>TapforTriggerEnabled</string>
             <key>label</key>            <string>Enable</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 
         <dict>
             <key>cell</key>             <string>PSEditTextCell</string>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>NumberofTaps</string>
             <key>label</key>            <string>Number:</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 	
 	
@@ -110,18 +96,18 @@
         <dict>
             <key>cell</key>             <string>PSSwitchCell</string>
             <key>default</key>          <false/>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>YOffsetEnabled</string>
             <key>label</key>            <string>Enable</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 
         <dict>
             <key>cell</key>             <string>PSEditTextCell</string>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>YOffset</string>
             <key>label</key>            <string>Y-Offset:</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 
 	
@@ -135,18 +121,18 @@
         <dict>
             <key>cell</key>             <string>PSSwitchCell</string>
             <key>default</key>          <false/>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>StiffEnabled</string>
             <key>label</key>            <string>Enable</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 
         <dict>
             <key>cell</key>             <string>PSEditTextCell</string>
-            <key>defaults</key>         <string>com.lacertosus.customreach</string>
+            <key>defaults</key>         <string>com.lacertosusrepo.customreach</string>
             <key>key</key>              <string>StiffNumber</string>
             <key>label</key>            <string>Stiffness:</string>
-            <key>PostNotification</key> <string>com.lacertosus.customreach/settingschanged</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.customreach/preferences.changed</string>
         </dict>
 		<dict>
 			<key>cell</key>
@@ -158,7 +144,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Created by Lacertosus</string>
+			<string>Created by LacertosusDeus</string>
 		</dict>
 		<dict>
 			<key>action</key>
