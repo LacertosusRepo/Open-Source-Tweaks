@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>label</key>
+			<string>Sound Options</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>					<string>PSLinkListCell</string>
+			<key>detail</key>				<string>PSListItemsController</string>
+			<key>default</key>				<string>1</string>
+			<key>defaults</key>				<string>com.lacertosusrepo.soundspring</string>
+			<key>key</key>					<string>soundOption</string>
+			<key>PostNotification</key>		<string>com.lacertosusrepo.soundspring/preferences.changed</string>
+			<key>label</key>				<string>Choose Sound</string>
+			<key>validValues</key>			
+				<array>
+					<string>0</string>
+					<string>1</string>
+					<string>2</string>
+				</array>
+			<key>validTitles</key>
+				<array>
+					<string>What In The Fuck</string>
+					<string>Adele</string>
+					<string>Kobe</string>
+				</array>
+		</dict>
+		
+		<dict>
+			<key>label</key>
+			<string>Contact Me</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>My Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>SoundSpring</string>
+</dict>
+</plist>

@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = soundprefs;
+	cell = PSLinkCell;
+	detail = soundprefsListController;
+	icon = soundprefs.png;
+	isController = 1;
+	label = SoundSpring;
+    };
+}
