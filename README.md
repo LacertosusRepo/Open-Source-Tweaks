@@ -18,5 +18,8 @@
 ## ScreenLock
 *- Disables screen interaction via Activator Action*
 
+## SoundSpring
+*- Play sound on unlock after respring/reboot*
+
 ## VolumeLock
 *- Disable the ability to increase/decrease volume via Activator Action, while still allowing Activator actions using the volume buttons.*
