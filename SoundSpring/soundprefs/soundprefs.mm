@@ -25,4 +25,9 @@
 {
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.me/Lacertosus"]];
 }
+
+-(void)playSound
+{
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.soundspring-playcurrentsound"), nil, nil, true);
+}
 @end

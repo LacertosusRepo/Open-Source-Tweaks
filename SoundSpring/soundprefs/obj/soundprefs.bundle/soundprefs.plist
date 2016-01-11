@@ -5,10 +5,26 @@
 	<key>items</key>
 	<array>
 		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>icon</key>
+			<string>/Library/PreferenceBundles/soundprefs.bundle/soundheader.png</string>
+			<key>height</key>
+			<integer>133</integer>
+		</dict>
+		<dict>
 			<key>label</key>
 			<string>Sound Options</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Play Current Sound</string>
+			<key>action</key>
+			<string>playSound</string>
 		</dict>
 		<dict>
 			<key>cell</key>					<string>PSLinkListCell</string>
@@ -23,14 +39,37 @@
 					<string>0</string>
 					<string>1</string>
 					<string>2</string>
+					<string>3</string>
+					<string>4</string>
+					<string>5</string>
+					<string>6</string>
 				</array>
 			<key>validTitles</key>
 				<array>
-					<string>What In The Fuck</string>
 					<string>Adele</string>
 					<string>Kobe</string>
+					<string>Peter Magic</string>
+					<string>Thats Nasty</string>
+					<string>Suprise</string>
+					<string>Aint Nobody Got Time</string>
+					<string>What in the Fuck</string>
 				</array>
 		</dict>
+		<dict>
+			<key>label</key>
+			<string>Note: if you are in silent mode or have no volume enabled, the sound will not play</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+            <key>cell</key>             <string>PSSwitchCell</string>
+            <key>default</key>          <false/>
+            <key>defaults</key>         <string>com.lacertosusrepo.soundspring</string>
+            <key>key</key>              <string>everyUnlock</string>
+            <key>label</key>            <string>Play Sound After Every Unlock</string>
+            <key>PostNotification</key> <string>com.lacertosusrepo.soundspring/preferences.changed</string>
+        </dict>
+		
 		
 		<dict>
 			<key>label</key>
@@ -38,7 +77,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Created by LacertosusDeus</string>
+			<string>Created by LacertosusDeus.  Thank you to Uroboro, Thomas Finch, and rdrnt for all the help.</string>
 		</dict>
 		<dict>
 			<key>action</key>
