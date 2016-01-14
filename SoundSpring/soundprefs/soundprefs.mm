@@ -30,4 +30,9 @@
 {
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.soundspring-playcurrentsound"), nil, nil, true);
 }
+
+-(void)stopSound
+{
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.soundspring-stopcurrentsound"), nil, nil, true);
+}
 @end

@@ -11,27 +11,39 @@
 //Audio Variables
 	AVAudioPlayer *audioPlayer;
 	NSURL *adeleURL;
+	NSURL *bassURL;
+	NSURL *cenaURL;
 	NSURL *kobeURL;
 	NSURL *magicURL;
+	NSURL *milkURL;
 	NSURL *nastyURL;
 	NSURL *supriseURL;
 	NSURL *timeURL;
+	NSURL *weedURL;
 	NSURL *witfURL;
 
 
 //Sounds
 	//Adele
 	NSString *adelePath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"ADELE" ofType:@"mp3"];
+	//Bass Drop
+	NSString *bassPath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"BASS" ofType:@"wav"];
+	//Cena
+	NSString *cenaPath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"CENA" ofType:@"mp3"];
 	//Kobe
 	NSString *kobePath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"KOBE" ofType:@"mp3"];
 	//Peter Magic
 	NSString *magicPath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"MAGIC" ofType:@"wav"];
+	//Milk
+	NSString *milkPath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"MILK" ofType:@"mp3"];
 	//Thats Nasty
 	NSString *nastyPath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"NASTY" ofType:@"mp3"];
 	//Suprise
 	NSString *suprisePath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"SUPRISE" ofType:@"wav"];
 	//Aint Nobody Got Time
 	NSString *timePath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"TIME" ofType:@"wav"];
+	//Weed
+	NSString *weedPath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"WEED" ofType:@"mp3"];
 	//What In The Fuck
 	NSString *witfPath = [[NSBundle bundleWithPath:@"/Library/Application Support/SoundSpring"] pathForResource:@"WITF" ofType:@"mp3"];
 	
@@ -71,6 +83,26 @@ static NSString *notificationString = @"com.lacertosusrepo.soundspring/preferenc
 			
 		} if(resetRespring == YES && soundOption == 1) {
 			
+			bassURL = [[NSURL alloc] initFileURLWithPath:bassPath];
+			
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:bassURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+			
+			[audioPlayer play];
+			
+		} if(resetRespring == YES && soundOption == 2) {
+			
+			cenaURL = [[NSURL alloc] initFileURLWithPath:cenaPath];
+			
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:cenaURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+			
+			[audioPlayer play];
+			
+		} if(resetRespring == YES && soundOption == 3) {
+			
 			kobeURL = [[NSURL alloc] initFileURLWithPath:kobePath];
 			
 			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:kobeURL error:nil];
@@ -78,8 +110,8 @@ static NSString *notificationString = @"com.lacertosusrepo.soundspring/preferenc
 			audioPlayer.volume = 1;
 			
 			[audioPlayer play];
-			
-		} if(resetRespring == YES && soundOption == 2) {
+		
+		} if(resetRespring == YES && soundOption == 4) {
 			
 			magicURL = [[NSURL alloc] initFileURLWithPath:magicPath];
 			
@@ -89,7 +121,17 @@ static NSString *notificationString = @"com.lacertosusrepo.soundspring/preferenc
 			
 			[audioPlayer play];
 		
-		} if(resetRespring == YES && soundOption == 3) {
+		} if(resetRespring == YES && soundOption == 5) {
+			
+			milkURL = [[NSURL alloc] initFileURLWithPath:milkPath];
+
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:milkURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+
+			[audioPlayer play];
+		
+		} if(resetRespring == YES && soundOption == 6) {
 			
 			nastyURL = [[NSURL alloc] initFileURLWithPath:nastyPath];
 			
@@ -98,8 +140,8 @@ static NSString *notificationString = @"com.lacertosusrepo.soundspring/preferenc
 			audioPlayer.volume = 1;
 			
 			[audioPlayer play];
-		
-		} if(resetRespring == YES && soundOption == 4) {
+			
+		} if(resetRespring == YES && soundOption == 7) {
 			
 			supriseURL = [[NSURL alloc] initFileURLWithPath:suprisePath];
 
@@ -108,8 +150,8 @@ static NSString *notificationString = @"com.lacertosusrepo.soundspring/preferenc
 			audioPlayer.volume = 1;
 
 			[audioPlayer play];
-		
-		} if(resetRespring == YES && soundOption == 5) {
+			
+		} if(resetRespring == YES && soundOption == 8) {
 			
 			timeURL = [[NSURL alloc] initFileURLWithPath:timePath];
 
@@ -119,7 +161,17 @@ static NSString *notificationString = @"com.lacertosusrepo.soundspring/preferenc
 
 			[audioPlayer play];
 			
-		} if(resetRespring == YES && soundOption == 6) {
+		} if(resetRespring == YES && soundOption == 9) {
+			
+			weedURL = [[NSURL alloc] initFileURLWithPath:weedPath];
+		
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:weedURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+
+			[audioPlayer play];
+			
+		} if(resetRespring == YES && soundOption == 10) {
 			
 			witfURL = [[NSURL alloc] initFileURLWithPath:witfPath];
 		
@@ -152,6 +204,26 @@ void playCurrentSound() {
 			
 		} if(soundOption == 1) {
 			
+			bassURL = [[NSURL alloc] initFileURLWithPath:bassPath];
+			
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:bassURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+			
+			[audioPlayer play];
+			
+		}if(soundOption == 2) {
+			
+			cenaURL = [[NSURL alloc] initFileURLWithPath:cenaPath];
+			
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:cenaURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+			
+			[audioPlayer play];
+			
+		} if(soundOption == 3) {
+			
 			kobeURL = [[NSURL alloc] initFileURLWithPath:kobePath];
 			
 			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:kobeURL error:nil];
@@ -159,8 +231,8 @@ void playCurrentSound() {
 			audioPlayer.volume = 1;
 			
 			[audioPlayer play];
-			
-		} if(soundOption == 2) {
+		
+		} if(soundOption == 4) {
 			
 			magicURL = [[NSURL alloc] initFileURLWithPath:magicPath];
 			
@@ -170,7 +242,17 @@ void playCurrentSound() {
 			
 			[audioPlayer play];
 		
-		} if(soundOption == 3) {
+		} if(soundOption == 5) {
+			
+			milkURL = [[NSURL alloc] initFileURLWithPath:milkPath];
+
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:milkURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+
+			[audioPlayer play];
+		
+		} if(soundOption == 6) {
 			
 			nastyURL = [[NSURL alloc] initFileURLWithPath:nastyPath];
 			
@@ -179,8 +261,8 @@ void playCurrentSound() {
 			audioPlayer.volume = 1;
 			
 			[audioPlayer play];
-		
-		} if(soundOption == 4) {
+			
+		} if(soundOption == 7) {
 			
 			supriseURL = [[NSURL alloc] initFileURLWithPath:suprisePath];
 
@@ -189,8 +271,8 @@ void playCurrentSound() {
 			audioPlayer.volume = 1;
 
 			[audioPlayer play];
-		
-		} if(soundOption == 5) {
+			
+		} if(soundOption == 8) {
 			
 			timeURL = [[NSURL alloc] initFileURLWithPath:timePath];
 
@@ -200,7 +282,17 @@ void playCurrentSound() {
 
 			[audioPlayer play];
 			
-		} if(soundOption == 6) {
+		} if(soundOption == 9) {
+			
+			weedURL = [[NSURL alloc] initFileURLWithPath:weedPath];
+		
+			audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:weedURL error:nil];
+			audioPlayer.numberOfLoops = 0;
+			audioPlayer.volume = 1;
+
+			[audioPlayer play];
+			
+		} if(soundOption == 10) {
 			
 			witfURL = [[NSURL alloc] initFileURLWithPath:witfPath];
 		
@@ -209,11 +301,14 @@ void playCurrentSound() {
 			audioPlayer.volume = 1;
 
 			[audioPlayer play];
-		
+			
 		}
 	[NSURL release];
 }
 
+void stopCurrentSound() {
+	[audioPlayer release];
+}
 
 //Preferences
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -227,6 +322,8 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 %ctor {
 
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)playCurrentSound, CFSTR("com.lacertosusrepo.soundspring-playcurrentsound"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)stopCurrentSound, CFSTR("com.lacertosusrepo.soundspring-stopcurrentsound"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 
 
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
