@@ -9,6 +9,9 @@
 *- Home Button stuck or broken? Causing accidental app closing, activating Siri, or the app switcher? Assign an action to HomeButtonLock to disable the home button actions (additional options in preferences).*
 
 
+## PopUpOnStart <img src="https://raw.githubusercontent.com/LacertosusRepo/Open-Source-Tweaks/master/PopUpOnStart/popprefs/Resources/popprefs%402x.png" alt="PopupOnStart">
+
+
 ## Netflix'n'Chill
 *- Theme that rethemes Netflix app with "Netflix and Chill" meme*
 
