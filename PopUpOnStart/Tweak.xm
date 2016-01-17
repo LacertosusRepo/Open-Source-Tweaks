@@ -37,8 +37,6 @@ static NSString *cancelText = @"Confirm";
 	}
 %end
 
-//Message me with any questions!
-
 //Preferences
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
 	
@@ -52,6 +50,7 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	cancelText = (d)? (d):cancelText;
 }
 
+//Receiver for preferences 
 %ctor {
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	//set initial `enable' variable
