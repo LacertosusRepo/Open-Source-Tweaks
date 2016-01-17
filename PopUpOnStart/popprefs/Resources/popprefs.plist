@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>icon</key>
+			<string>/Library/PreferenceBundles/popprefs.bundle/popheader.png</string>
+			<key>height</key>
+			<integer>133</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.popuponstart</string>
+			<key>label</key>
+			<string>Enable Alert</string>
+			<key>key</key>
+			<string>enableAlert</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.popuponstart/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>label</key>
+			<string>Alert Settings</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>Respring Successful</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.popuponstart</string>
+			<key>placeholder</key>
+			<string>Alert Title</string>
+			<key>key</key>
+			<string>titleText</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.popuponstart/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>Device Ready To Use</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.popuponstart</string>
+			<key>placeholder</key>
+			<string>Alert Message</string>
+			<key>key</key>
+			<string>messageText</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.popuponstart/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>Confirm</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.popuponstart</string>
+			<key>placeholder</key>
+			<string>Cancel Button</string>
+			<key>key</key>
+			<string>cancelText</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.popuponstart/preferences.changed</string>
+		</dict>
+		
+		
+		<dict>
+			<key>label</key>
+			<string>Contact Me</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>My Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>PopUpOnStart</string>
+</dict>
+</plist>

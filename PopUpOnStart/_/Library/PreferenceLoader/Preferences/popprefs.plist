@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = popprefs;
+	cell = PSLinkCell;
+	detail = popprefsListController;
+	icon = popprefs.png;
+	isController = 1;
+	label = PopUpOnStart;
+    };
+}

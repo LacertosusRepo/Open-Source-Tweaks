@@ -62,6 +62,7 @@ static NSString *notificationString = @"com.lacertosusrepo.soundspring/preferenc
 	-(void)applicationDidFinishLaunching:(id)application {
 		%orig;
 		resetRespring = YES;	
+		 [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
 	}
 %end
 

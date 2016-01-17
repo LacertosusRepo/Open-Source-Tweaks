@@ -1,5 +1,6 @@
 THEOS_DEVICE_IP = 10.0.0.180
 ARCHS = armv7 arm64
+THEOS_BUILD_DIR = DEBS
 SDK = iPhoneOS8.1
 
 include theos/makefiles/common.mk
