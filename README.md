@@ -9,11 +9,11 @@
 *- Home Button stuck or broken? Causing accidental app closing, activating Siri, or the app switcher? Assign an action to HomeButtonLock to disable the home button actions (additional options in preferences).*
 
 
-## Netflix'n'Chill <img src="url" alt="Netflix & Chill">
+## Netflix'n'Chill
 *- Theme that rethemes Netflix app with "Netflix and Chill" meme*
 
 
-## NeverSummerLogo <img src="url" alt="NeverSummer">
+## NeverSummerLogo
 *- Respring logo (image by Never Summer Snowboarding company)*
 
 
