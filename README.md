@@ -1,4 +1,4 @@
-# Tweak Descriptions
+# Tweak/Theme Descriptions
 
 
 ## CustomReach <img src="https://raw.githubusercontent.com/LacertosusRepo/Open-Source-Tweaks/master/CustomReach/customreachpreferences/Resources/CRIcon%402x.png" alt="Custom Reach">
