@@ -10,6 +10,7 @@
 
 
 ## PopUpOnStart <img src="https://raw.githubusercontent.com/LacertosusRepo/Open-Source-Tweaks/master/PopUpOnStart/popprefs/Resources/popprefs%402x.png" alt="PopupOnStart">
+*- Alert is displayed after respring/reboot, customize message in preferences*
 
 
 ## Netflix'n'Chill
