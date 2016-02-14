@@ -1,6 +1,5 @@
 THEOS_DEVICE_IP = 192.168.1.3
 export ARCHS = armv7 arm64
-export TARGET = iphone:clang:8.1
 THEOS_BUILD_DIR = DEBS
 SDK = iPhoneOS8.1
 
