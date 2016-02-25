@@ -1,7 +1,7 @@
 # Tweak/Theme Descriptions
 
 
-## CustomReach <img class="icon" src="https://raw.githubusercontent.com/LacertosusRepo/Open-Source-Tweaks/master/CustomReach/customreachpreferences/Resources/CRIcon%402x.png" alt="Custom Reach">
+## CustomReach <img class="icon" src="https://raw.githubusercontent.com/LacertosusRepo/Open-Source-Tweaks/master/CustomReach/customreachpreferences/Resources/CRIcon%402x.png" alt="Custom Reach" height="50" width="50">
 *- Tweak that allows you to customize Reachability however you want!*
 
 
