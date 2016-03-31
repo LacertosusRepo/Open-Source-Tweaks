@@ -213,7 +213,7 @@ void playCurrentSound() {
 			
 			[audioPlayer play];
 			
-		}if(soundOption == 2) {
+		} if(soundOption == 2) {
 			
 			cenaURL = [[NSURL alloc] initFileURLWithPath:cenaPath];
 			
