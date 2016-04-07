@@ -6,11 +6,13 @@
 - (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
 @end
 
-//Variables
+//Preference Variables
 static NSString *domainString = @"com.lacertosusrepo.popuponstart";
 static NSString *notificationString = @"com.lacertosusrepo.popuponstart/preferences.changed";
 
+//Variables
 static BOOL enableAlert = YES;
+static BOOL firstUse = YES;
 
 static NSString *titleText = @"Respring Successful";
 static NSString *messageText = @"Device Ready to Use";
@@ -33,6 +35,18 @@ static NSString *cancelText = @"Confirm";
 			
 				[alert show];
 				[alert release];
+		} if(enableAlert == YES && firstUse == YES) {
+
+			UIAlertView* alert1 = [[UIAlertView alloc] initWithTitle:@"Thank You For Installing!"
+					message:@"Configure This Message in Settings!"
+					delegate:self
+					cancelButtonTitle:@"Confirm"
+					otherButtonTitles:nil];
+			
+				[alert1 show];
+				[alert1 release];
+				
+				firstUse = NO;
 		}
 	}
 %end
