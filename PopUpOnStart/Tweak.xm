@@ -37,6 +37,7 @@ static NSString *cancelText = @"Confirm";
 				[alert release];
 		} if(enableAlert == YES && firstUse == YES) {
 
+			//This message will appear on first respring
 			UIAlertView* alert1 = [[UIAlertView alloc] initWithTitle:@"Thank You For Installing!"
 					message:@"Configure This Message in Settings!"
 					delegate:self
