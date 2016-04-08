@@ -71,7 +71,7 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	//set initial `enable' variable
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
 
-	//register for notifications
+	//Register for notifications
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
 	[pool release];
 }
