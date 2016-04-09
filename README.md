@@ -18,7 +18,7 @@
 
 
 ## NeverSummerLogo
-*- Respring logo (image by Never Summer Snowboarding company)*
+*- Respring logo (company icon by <a href="http://www.neversummer.com/">Never Summer Industries</a>)*
 
 
 ## No SB Rotate
