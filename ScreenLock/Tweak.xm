@@ -87,7 +87,7 @@ static BOOL canInteract = YES;			//Master Lock
 
 
 //Disables Home Button
-// NOTE: Makes events using home button useless
+// NOTE: Makes events using home button useless, also is broken currently
 //%hook SpringBoard
 //-(void)_setMenuButtonTimer:(id)arg1 {
 //	if(canInteract == NO) {
