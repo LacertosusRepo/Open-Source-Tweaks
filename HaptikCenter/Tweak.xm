@@ -1,12 +1,12 @@
 /*
 ////================================////
-				Oh Hello!
+	     Oh Hello!
   This is my tweak HaptikCenter, Enjoy
 			 
-			 ~LacertosusDeus
+  	  ~LacertosusDeus
 				
-		    If you use anything, 
-		 please credit the author.
+	If you use anything, 
+      please credit the author.
 ////================================////
 */
 
