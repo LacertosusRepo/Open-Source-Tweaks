@@ -6,7 +6,7 @@
 	   self = [super initWithFrame:CGRectZero];
 	   
        if (self) {
- 
+	
             self.headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
             [self.headerLabel setNumberOfLines:1];
             [self.headerLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:36]];
@@ -49,8 +49,8 @@
 }
 
 -(NSArray *)randomTexts {
-    return @[@"Thank You For Installing!",@"Report Any Bugs!",@"Thank You CPDigitalDarkroom!",@"Contact Me With Any Suggetions!",
-            @"by LacertosusDeus",@"We Have So Much Room For Activities!",@"*Deleted Emails Here*",@"Wocka Flocka Approves!",@"Objective-C is Hard."];
+    return @[@"Thank You For Installing",@"Report Any Bugs",@"Open Source On Github",@"Contact Me With Any Suggetions",
+            @"by LacertosusDeus",@"We Have So Much Room For Activities"];
 }
 
 @end

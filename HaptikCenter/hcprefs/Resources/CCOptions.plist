@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>CCOptionsCustomHeaderCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>haptikButtons</string>
+			<key>label</key>
+			<string>Vibrate Buttons</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+	
+		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>This option changes when your volume/brightness slider vibrates.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>haptikSliders</string>
+			<key>label</key>
+			<string>Vibrate Sliders</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>sliderVibrateOptions</string>
+			<key>label</key>
+			<string>SLider Vibration Mode</string>
+			<key>default</key>
+			<string>2</string>
+			<key>validTitles</key>
+			<array>
+				<string>Vibrate on Touch</string>
+				<string>Vibrate on Release</string>
+				<string>Both</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>id</key>
+			<string>SLIDERS VIBRATION</string>
+			<key>Label</key>
+			<string>Volume/Brightness Sliders</string>
+			<key>footerText</key>
+			<string>This option changes when your device vibrates when the control center is induced.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>haptikInduce</string>
+			<key>label</key>
+			<string>Vibrate Present/Dismiss</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>inducedVibrateOptions</string>
+			<key>label</key>
+			<string>Induced CC Vibration Mode</string>
+			<key>default</key>
+			<string>2</string>
+			<key>validTitles</key>
+			<array>
+				<string>Vibrate on Present</string>
+				<string>Vibrate on Dismiss</string>
+				<string>Both</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+		
+	</array>
+	<key>title</key>
+	<string>CC Options</string>
+</dict>
+</plist>

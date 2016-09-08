@@ -15,83 +15,39 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Options</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.hcprefs</string>
-			<key>key</key>
-			<string>haptikButtons</string>
-			<key>label</key>
-			<string>Vibrate Buttons</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.hcprefs</string>
-			<key>key</key>
-			<string>haptikSliders</string>
-			<key>label</key>
-			<string>Vibrate Sliders</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+			<string>Center Options</string>
 		</dict>
 		
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>CCOptionsListController</string>
+			<key>isController</key>
+			<true/>
+			<key>label</key>
+			<string>Control Center</string>
+			<key>icon</key>
+			<string>CCPrefs.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>NCOptionsListController</string>
+			<key>isController</key>
+			<true/>
+			<key>label</key>
+			<string>Notification Center</string>
+			<key>icon</key>
+			<string>NCPrefs.png</string>
+		</dict>
 		
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Slider Options</string>
-			<key>footerText</key>
-			<string>This option changes when your volume/brightness slider vibrates.</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSegmentCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.hcprefs</string>
-			<key>key</key>
-			<string>sliderVibrateOptions</string>
-			<key>label</key>
-			<string>SLider Vibration Mode</string>
-			<key>default</key>
-			<string>2</string>
-			<key>validTitles</key>
-			<array>
-				<string>Vibrate On Touch</string>
-				<string>Vibrate On Release</string>
-				<string>Both</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<string>1</string>
-				<string>2</string>
-				<string>3</string>
-			</array>
-			<key>id</key>
-			<string>ModeCell</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
-		</dict>
-		
-		
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Vibration Duration (s)</string>
-			<key>footerText</key>
-			<string>Default is 0.05.</string>
+			<string>Vibration Length (ms)</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -114,14 +70,40 @@
 			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
 		</dict>
 		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Vibration Intensity</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.75</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>vibeIntensity</string>
+			<key>label</key>
+			<string>Enable</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
 		
 		<dict>
 			<key>label</key>
-			<string>Contact Me</string>
+			<string>Points of Contact</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Created by LacertosusDeus.</string>
+			<string>Leave Debug off when sending crash reports to other developers.</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -152,6 +134,27 @@
 			<string>paypal.png</string>
 			<key>label</key>
 			<string>Donate</string>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus ©2014.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>logSwitch</string>
+			<key>label</key>
+			<string>Debug</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
 		</dict>
 	</array>
 	<key>title</key>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>NCOptionsCustomHeaderCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>haptikClear</string>
+			<key>label</key>
+			<string>Vibrate Notification Clear</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>NC Options</string>
+</dict>
+</plist>

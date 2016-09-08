@@ -1,6 +1,21 @@
 #import <Preferences/PSListController.h>
-@interface hpkRootListController : PSListController
 
+@interface hpkRootListController : PSListController
+{
+	UIStatusBarStyle prevStatusStyle;
+}
+@end
+
+@interface CCOptionsListController : PSListController
+{
+	UIStatusBarStyle prevStatusStyle;
+}
+@end
+
+@interface NCOptionsListController : PSListController
+{
+	UIStatusBarStyle prevStatusStyle;
+}
 @end
 
 @interface HaptikCenterCustomHeaderCell : UIView
@@ -8,4 +23,14 @@
 @property (nonatomic,assign) UILabel *subHeaderLabel;
 @property (nonatomic,assign) UILabel *randomLabel;
 @property (nonatomic,readonly) NSArray *randomTexts;
+@end
+
+@interface CCOptionsCustomHeaderCell : UIView
+@property (nonatomic,assign) UILabel *ccHeaderLabel;
+@property (nonatomic,assign) UILabel *ccSubHeaderLabel;
+@end
+
+@interface NCOptionsCustomHeaderCell : UIView
+@property (nonatomic,assign) UILabel *ncHeaderLabel;
+@property (nonatomic,assign) UILabel *ncSubHeaderLabel;
 @end
