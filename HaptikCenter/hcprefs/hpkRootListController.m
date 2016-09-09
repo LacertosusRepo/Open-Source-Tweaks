@@ -104,20 +104,6 @@
     return _specifiers;
 }
 
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return (UIView *)[[CCOptionsCustomHeaderCell alloc] init];
-    }
-    return nil;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return 140.f;
-    }
-    return (CGFloat)-1;
-}
-
 -(void)viewDidLoad {
     UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/hcprefs.bundle/CCNavBar.png"];
     icon = [icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -166,20 +152,6 @@
 	}
     return _specifiers;
 
-}
-
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return (UIView *)[[NCOptionsCustomHeaderCell alloc] init];
-    }
-    return nil;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return 140.f;
-    }
-    return (CGFloat)-1;
 }
 
 -(void)viewDidLoad {

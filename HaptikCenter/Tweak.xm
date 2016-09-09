@@ -3,7 +3,6 @@
 #import <AudioToolbox/AudioServices.h>
 #include <CoreFoundation/CFNotificationCenter.h>
 #import <Foundation/NSUserDefaults.h>
-#import "BBHeaders.h"
 
 //Defines
 #define RESET_BANNER_T @"HaptikCenter"
