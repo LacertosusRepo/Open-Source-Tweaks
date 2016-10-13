@@ -1,10 +1,11 @@
 export ARCHS = armv7 arm64
+THEOS_DEVICE_IP = 192.168.1.7
 
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = HaptikCenter
 HaptikCenter_FILES = Tweak.xm
-HaptikCenter_FRAMEWORKS = CoreTelephony AudioToolbox
+HaptikCenter_FRAMEWORKS = CoreTelephony AudioToolbox UIKit
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

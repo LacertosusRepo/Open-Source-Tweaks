@@ -14,7 +14,7 @@
 			<key>key</key>
 			<string>haptikButtons</string>
 			<key>label</key>
-			<string>Vibrate Buttons</string>
+			<string>Vibrate Toggles</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
 		</dict>

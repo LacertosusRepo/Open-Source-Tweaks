@@ -29,7 +29,16 @@
 }
 
 -(void)viewDidLoad {
-    UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/hcprefs.bundle/navbarlogo.png"];
+	UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/hcprefs.bundle/navgithub.png"];
+    UIBarButtonItem *gitButton = [[UIBarButtonItem alloc] 
+                               initWithImage:iconBar                                            
+                               style:UIBarButtonItemStyleBordered 
+                               target:self 
+                               action:@selector(gitButtonAction)];
+	self.navigationItem.rightBarButtonItem = gitButton;
+	[gitButton release];
+	
+	UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/hcprefs.bundle/navbarlogo.png"];
     UIImageView *iconView = [[UIImageView alloc] initWithImage:icon];
     self.navigationItem.titleView = iconView;
     self.navigationItem.titleView.alpha = 0;
@@ -48,6 +57,12 @@
                      animations:^{
 			self.navigationItem.titleView.alpha = 1;
                 }completion:nil];
+}
+
+-(IBAction)gitButtonAction {
+	
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"]];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -91,7 +106,13 @@
 {
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"]];
 }
+
+-(void)sendTestVibration 
+{	
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.haptikcenter-testvibration"), nil, nil, true);
+}
 @end
+
 
 //CC Prefs
 @implementation CCOptionsListController

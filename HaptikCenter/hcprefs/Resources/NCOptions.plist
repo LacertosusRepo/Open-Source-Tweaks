@@ -18,6 +18,68 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>haptikAction</string>
+			<key>label</key>
+			<string>Vibrate on Tapping Notificiation</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>This option changes when your device vibrates during activation/deactivation of Reachability in the notification center.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>haptikReach</string>
+			<key>label</key>
+			<string>Vibrate Reachability In NC</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.hcprefs</string>
+			<key>key</key>
+			<string>reachVibrateOptions</string>
+			<key>label</key>
+			<string>Reachability NC Vibration Mode</string>
+			<key>default</key>
+			<string>3</string>
+			<key>validTitles</key>
+			<array>
+				<string>Vibrate on Activation</string>
+				<string>Vibrate on Deactivation</string>
+				<string>Both</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.hcprefs/preferences.changed</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string>NC Options</string>

@@ -1,5 +1,5 @@
 @implementation HaptikCenterCustomHeaderCell
-@synthesize headerLabel,subHeaderLabel,randomLabel;
+@synthesize headerLabel,subHeaderLabel,subHeaderLabel2,randomLabel;
 
 - (id)init {
 
@@ -22,7 +22,7 @@
             self.subHeaderLabel = [[UILabel alloc] initWithFrame:CGRectZero];
             [self.subHeaderLabel setNumberOfLines:1];
             [self.subHeaderLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
-            [self.subHeaderLabel setText:@"Haptic Feedback For Your Control Center"];
+            [self.subHeaderLabel setText:@"Haptic Feedback For Your"];
             [self.subHeaderLabel setBackgroundColor:[UIColor clearColor]];
             [self.subHeaderLabel setTextColor:[UIColor colorWithRed:0.17 green:0.24 blue:0.31 alpha:0.7]];
             [self.subHeaderLabel setTextAlignment:NSTextAlignmentCenter];
@@ -30,6 +30,18 @@
             [self.subHeaderLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.subHeaderLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.headerLabel attribute:NSLayoutAttributeBottom multiplier:1 constant:5]];
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.subHeaderLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+
+            self.subHeaderLabel2 = [[UILabel alloc] initWithFrame:CGRectZero];
+            [self.subHeaderLabel2 setNumberOfLines:1];
+            [self.subHeaderLabel2 setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:17]];
+            [self.subHeaderLabel2 setText:@"Control Center & Notification Center"];
+            [self.subHeaderLabel2 setBackgroundColor:[UIColor clearColor]];
+            [self.subHeaderLabel2 setTextColor:[UIColor colorWithRed:0.17 green:0.24 blue:0.31 alpha:0.7]];
+            [self.subHeaderLabel2 setTextAlignment:NSTextAlignmentCenter];
+            [self addSubview:self.subHeaderLabel2];
+            [self.subHeaderLabel2 setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [self addConstraint:[NSLayoutConstraint constraintWithItem:self.subHeaderLabel2 attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.subHeaderLabel attribute:NSLayoutAttributeBottom multiplier:1 constant:5]];
+            [self addConstraint:[NSLayoutConstraint constraintWithItem:self.subHeaderLabel2 attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
             self.randomLabel = [[UILabel alloc] initWithFrame:CGRectZero];
             [self.randomLabel setNumberOfLines:1];
@@ -40,7 +52,7 @@
             [self.randomLabel setTextAlignment:NSTextAlignmentCenter];
             [self addSubview:self.randomLabel];
             [self.randomLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [self addConstraint:[NSLayoutConstraint constraintWithItem:self.randomLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.subHeaderLabel attribute:NSLayoutAttributeBottom multiplier:1 constant:5]];
+            [self addConstraint:[NSLayoutConstraint constraintWithItem:self.randomLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.subHeaderLabel2 attribute:NSLayoutAttributeBottom multiplier:1 constant:5]];
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.randomLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
     }

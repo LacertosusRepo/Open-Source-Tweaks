@@ -3,11 +3,10 @@
 #import <AudioToolbox/AudioServices.h>
 #include <CoreFoundation/CFNotificationCenter.h>
 #import <Foundation/NSUserDefaults.h>
-
-//Defines
-#define RESET_BANNER_T @"HaptikCenter"
-#define RESET_BANNER_M @"Succesfully Reset Settings."
-#define RESET_BANNER_M_FAIL @"Failed to Reset Settings."
+#import "BBHeaders.h"
+#import <UIKit/_UITapticEngine.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 //Preference Setup
 @interface NSUserDefaults (UFS_Category)
@@ -15,37 +14,53 @@
 - (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
 @end
 
-//Preference Variabled
+//Preference Variables
 static NSString *domainString = @"com.lacertosusrepo.hcprefs";
 static NSString *notificationString = @"com.lacertosusrepo.hcprefs/preferences.changed";
 
 //Vibration Declaration
 FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, objc_object*, NSDictionary*);
+static int const UITapticEngineFeedbackPop = 1002;
+_UITapticEngine *tapticEngine;
 
-//Variables
-//////////
-//Vibration:
-static float timeLength = 0.05;
-static float vibeIntensity = 0.75;
+		/////////////////////////
+		////////Variables////////
+		/////////////////////////
+	
+	//Vibration:
+	static float timeLength = 0.05;
+	static float vibeIntensity = 0.75;
 
-//CC:
-static BOOL haptikButtons = YES;
-static BOOL haptikSliders = YES;
-static BOOL haptikInduce = YES;
+	//CC:
+	static BOOL haptikButtons = YES;
+	static BOOL haptikSliders = YES;
+	static BOOL haptikInduce = YES;
 
-static int sliderVibrateOptions = 2;
-static int inducedVibrateOptions = 3;
+	static int sliderVibrateOptions = 2;
+	static int inducedVibrateOptions = 3;
 
-//NC:
-static BOOL haptikClear = YES;
+	//NC:
+	static BOOL haptikClear = YES;
+	static BOOL haptikReach = YES;
+	static BOOL haptikAction = YES;
 
-//Other:
-static BOOL logSwitch = YES;
+	static int reachVibrateOptions = 3;
+
+	//Other:
+	static BOOL logSwitch = YES;
+	static BOOL useTapticEngine = NO;
+	static BOOL tapticSupported;
 
 //Vibration Method Implementation
 @interface FeedbackCall : NSObject
 + (void)vibrateDevice;
 + (void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity;
+
++ (void)tapticDevice;
+
+- (NSString *)platform;
+- (BOOL)tapticSupported;
++ (void)actuateVibration;
 @end
 
 @implementation FeedbackCall
@@ -70,18 +85,72 @@ static BOOL logSwitch = YES;
 	AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dict);
 
 }
+
+- (NSString *)platform {
+	
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = (char *) malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *platform = [NSString stringWithUTF8String:machine];
+    free(machine);
+
+    return platform;
+	
+}	
+
+- (BOOL)tapticSupported {
+	
+	//iPhone 6s
+	if([[[self platform] substringToIndex: 8] isEqualToString:@"iPhone8,1"]) {
+		
+		return YES;
+	
+	//iPhone 6s+
+	} if([[[self platform] substringToIndex: 8] isEqualToString:@"iPhone8,2"]) {
+		
+		return YES;
+		
+	} else {
+		
+		return NO;	
+	
+	}
+}
+
++ (void)tapticDevice {
+	
+	[tapticEngine actuateFeedback:UITapticEngineFeedbackPop];
+	
+}
+
++ (void)actuateVibration {
+	
+	if(tapticSupported && useTapticEngine == YES) {
+		
+		[self tapticDevice];
+		
+	} else {
+		
+		[self vibrateDevice];
+	
+	}
+}
 @end
 
-//Code Control Center:
-/////////////////////
+	
+	////////////////////////
+	//Code Control Center://
+	////////////////////////
+
 //CC Toggles
 %hook SBUIControlCenterButton
 
 	-(void)_pressAction {
 		
-		if(haptikButtons == YES) {
+		if(haptikButtons == YES && useTapticEngine == NO) {
  
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 		
 		} if(logSwitch) {
 		
@@ -100,11 +169,11 @@ static BOOL logSwitch = YES;
 		
 		if(haptikSliders == YES && sliderVibrateOptions == 1) {
 		
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 			
 		} if(haptikSliders == YES && sliderVibrateOptions == 3) {
 		
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 			
 		} if(logSwitch) {
 		
@@ -118,11 +187,11 @@ static BOOL logSwitch = YES;
 		
 		if(haptikSliders == YES && sliderVibrateOptions == 2) {
 		
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 			
 		} if(haptikSliders == YES && sliderVibrateOptions == 3) {
 		
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 			
 		} if(logSwitch) {
 		
@@ -142,11 +211,11 @@ static BOOL logSwitch = YES;
 		
 		if(haptikSliders == YES && sliderVibrateOptions == 1) {
 			
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 			
 		} if(haptikSliders == YES && sliderVibrateOptions == 3) {
 		
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 			
 		} if(logSwitch) {
 		
@@ -160,11 +229,11 @@ static BOOL logSwitch = YES;
 		
 		if(haptikSliders == YES && sliderVibrateOptions == 2) {
 		
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 		
 		} if(haptikSliders == YES && sliderVibrateOptions == 3) {
 		
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 			
 		} if(logSwitch) {
 		
@@ -183,8 +252,7 @@ static BOOL logSwitch = YES;
 		
 		if (haptikInduce && inducedVibrateOptions == 1) {
 
-	
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 	
 		} if(logSwitch) {
 		
@@ -198,7 +266,7 @@ static BOOL logSwitch = YES;
 		
 		if (haptikInduce && inducedVibrateOptions == 2) {
 	
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 	
 		} if(logSwitch) {
 		
@@ -212,7 +280,7 @@ static BOOL logSwitch = YES;
 	
 		if(haptikInduce && inducedVibrateOptions == 3) {
 			
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 		
 		} if(logSwitch) {
 		
@@ -224,8 +292,10 @@ static BOOL logSwitch = YES;
 	
 %end
 
-//Code Notification Center:
-//////////////////////////
+		/////////////////////////////
+		//Code Notification Center://
+		/////////////////////////////
+
 //NC Clear Button:
 %hook SBNotificationsClearButton
 
@@ -233,30 +303,11 @@ static BOOL logSwitch = YES;
 		
 		if(haptikClear && arg1 == 1) {
 			
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 		
 		} if(haptikClear && arg1 == 0) {
 			
-			[FeedbackCall vibrateDevice];
-		
-		} if(logSwitch) {
-		
-			%log;
-		
-		}
-	%orig;
-	}
-
-%end;
-
-//NC Actions
-%hook SBNotificationCenterLayoutViewController
-
--(void)todayViewSettingsViewControllerWillPresent:(id)arg1 {
-		
-		if(haptikClear) {
-			
-			[FeedbackCall vibrateDevice];
+			[FeedbackCall actuateVibration];
 		
 		} if(logSwitch) {
 		
@@ -267,6 +318,84 @@ static BOOL logSwitch = YES;
 	}
 
 %end
+
+//Rechability in NC
+%hook SBNotificationCenterViewController
+
+	//NC Reachability Activate
+	-(void)handleReachabilityModeActivated {
+		
+		if(haptikReach && reachVibrateOptions == 1) {
+			
+			[FeedbackCall actuateVibration];
+		
+		} if(haptikReach && reachVibrateOptions == 3) {
+			
+			[FeedbackCall actuateVibration];
+		
+		} if(logSwitch) {
+		
+			%log;
+		
+		}
+	%orig;
+	}
+	
+	//NC Reachability Deactivate
+	-(void)handleReachabilityModeDeactivated {
+		
+		if(haptikReach && reachVibrateOptions == 2) {
+			
+			[FeedbackCall actuateVibration];
+			
+		} if(haptikReach && reachVibrateOptions == 3) {
+			
+			[FeedbackCall actuateVibration];
+		
+		} if(logSwitch) {
+		
+			%log;
+		
+		}
+	%orig;
+	}
+	
+	//Handle Notification Action
+	-(BOOL)handleAction:(id)arg1 forBulletin:(id)arg2 withCompletion:(/*^block*/id)arg3 {
+		
+		if(YES && haptikAction) {
+			
+			[FeedbackCall actuateVibration];
+			
+		} if(logSwitch) {
+			
+			%log;
+			
+		}
+	return %orig;
+	}
+
+%end
+
+//Test Vibration
+void startTestVibration() {
+	
+	[FeedbackCall actuateVibration];
+	
+	id request = [[[%c(BBBulletinRequest) alloc] init] autorelease];
+			[request setTitle: @"HaptikCenter"];
+			[request setMessage: @"Starting Vibration..."];
+			[request setSectionID: @"com.apple.Preferences"];
+			[request setBulletinID: @"com.lacertosusrepo.haptikcenter"];
+			[request setDefaultAction: [%c(BBAction) action]];
+			
+	id ctrl = [%c(SBBulletinBannerController) sharedInstance];
+	if ([ctrl respondsToSelector:@selector(observer:addBulletin:forFeed:)]) {
+		[ctrl observer:nil addBulletin:request forFeed:2];
+	} else if ([ctrl respondsToSelector:@selector(observer:addBulletin:forFeed:playLightsAndSirens:withReply:)]) {
+		[ctrl observer:nil addBulletin:request forFeed:2 playLightsAndSirens:YES withReply:nil];
+	}
+}
 
 //No Respring Preferences
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -293,10 +422,24 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	haptikClear = (g)? [g boolValue]:YES;
 	
 	NSNumber *h = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"logSwitch" inDomain:domainString];
-	logSwitch = (h)? [h boolValue]:YES;	
+	logSwitch = (h)? [h boolValue]:YES;
+	
+	NSNumber *i = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"haptikAction" inDomain:domainString];
+	haptikAction = (i)? [i boolValue]:YES;
+	
+	NSNumber *j = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"haptikReach" inDomain:domainString];
+	haptikReach = (j)? [j boolValue]:YES;
+	
+	NSNumber *k = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"reachVibrateOptions" inDomain:domainString];
+	reachVibrateOptions = (k)? [k intValue]:3;
+	
+	NSNumber *l = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"useTapticEngine" inDomain:domainString];
+	useTapticEngine = (l)? [l boolValue]:NO;
 }
 
 %ctor {
+	
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)startTestVibration, CFSTR("com.lacertosusrepo.haptikcenter-testvibration"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 	
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	//set initial `enable' variable
