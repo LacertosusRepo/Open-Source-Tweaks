@@ -1,3 +1,4 @@
+//Thanks to CPDigitalDarkoom & his tweak "SafariWallSetter"
 @implementation HaptikCenterCustomHeaderCell
 @synthesize headerLabel,subHeaderLabel,subHeaderLabel2,randomLabel;
 
@@ -12,7 +13,7 @@
             [self.headerLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:36]];
             [self.headerLabel setText:@"HaptikCenter"];
             [self.headerLabel setBackgroundColor:[UIColor clearColor]];
-            [self.headerLabel setTextColor:[UIColor colorWithRed:0.16 green:0.50 blue:0.73 alpha:1.0]];
+            [self.headerLabel setTextColor:[UIColor colorWithRed:52/255.0f green:73/255.0f blue:95/255.0f alpha:1.0f]];
             [self.headerLabel setTextAlignment:NSTextAlignmentCenter];
             [self addSubview:self.headerLabel];
             [self.headerLabel setTranslatesAutoresizingMaskIntoConstraints:NO];

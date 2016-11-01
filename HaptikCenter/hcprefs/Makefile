@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = hcprefs
-hcprefs_FILES = hpkRootListController.m
+hcprefs_FILES = hpkRootListController.m HaptikCenterButtonController.m
 hcprefs_INSTALL_PATH = /Library/PreferenceBundles
 hcprefs_FRAMEWORKS = UIKit CoreGraphics
 hcprefs_PRIVATE_FRAMEWORKS = Preferences

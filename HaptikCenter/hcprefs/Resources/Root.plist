@@ -106,6 +106,8 @@
 			<string>sendTestVibration</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>HaptikCenterButtonCell</string>
 			<key>label</key>
 			<string>Test Vibration</string>
 		</dict>
@@ -144,6 +146,8 @@
 			<string>github</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>HaptikCenterButtonCell</string>
 			<key>icon</key>
 			<string>github.png</string>
 			<key>label</key>
@@ -154,6 +158,8 @@
 			<string>twitter</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>HaptikCenterButtonCell</string>
 			<key>icon</key>
 			<string>twitter.png</string>
 			<key>label</key>
@@ -164,6 +170,8 @@
 			<string>paypal</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>HaptikCenterButtonCell</string>
 			<key>icon</key>
 			<string>paypal.png</string>
 			<key>label</key>

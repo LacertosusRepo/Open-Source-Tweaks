@@ -101,13 +101,7 @@ _UITapticEngine *tapticEngine;
 
 - (BOOL)tapticSupported {
 	
-	//iPhone 6s
-	if([[[self platform] substringToIndex: 8] isEqualToString:@"iPhone8,1"]) {
-		
-		return YES;
-	
-	//iPhone 6s+
-	} if([[[self platform] substringToIndex: 8] isEqualToString:@"iPhone8,2"]) {
+	if([[[self platform] substringToIndex: 8] isEqualToString:@"iPhone8,"]) {
 		
 		return YES;
 		
@@ -297,15 +291,11 @@ _UITapticEngine *tapticEngine;
 		/////////////////////////////
 
 //NC Clear Button:
-%hook SBNotificationsClearButton
+%hook SBNotificationCenterHeaderView
 
-	-(void)setState:(long long)arg1 animated:(BOOL)arg2 {
+	-(id)clearButtonFinalAction {
 		
-		if(haptikClear && arg1 == 1) {
-			
-			[FeedbackCall actuateVibration];
-		
-		} if(haptikClear && arg1 == 0) {
+		if(haptikClear) {
 			
 			[FeedbackCall actuateVibration];
 		
@@ -314,7 +304,7 @@ _UITapticEngine *tapticEngine;
 			%log;
 		
 		}
-	%orig;
+	return %orig;
 	}
 
 %end
