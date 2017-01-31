@@ -1,0 +1,3 @@
+Adds haptic feedback to saveral portions 
+of the control center. Customizable vibration
+lenght and intensity.

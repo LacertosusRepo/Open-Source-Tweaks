@@ -1,0 +1,9 @@
+Package: com.lacertosusrepo.centerspring
+Name: CenterSpring
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Lacertosus
+Author: Lacertosus
+Section: Tweaks
