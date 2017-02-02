@@ -97,7 +97,7 @@ UIAlertController* alert;
 	-(void)_endPresentation {
 		
 		//Just a precaution to dismiss the alert incase the CC was accidentally dismissed
-		[self presentViewController:alert animated:YES completion:nil];
+		[alert dismissViewController:alert animated:YES completion:nil];
 		%orig;
 	}
 
