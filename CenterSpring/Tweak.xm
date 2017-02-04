@@ -19,23 +19,22 @@ UIAlertController* alert;
 		if(canShowAlert == YES) {
 			
 			//Initial Alert
-			UIAlertController * alert=   [UIAlertController
-									alertControllerWithTitle:nil
-									message:nil
-                                    preferredStyle:UIAlertControllerStyleAlert];
+			UIAlertController* alert=[UIAlertController alertControllerWithTitle:nil
+								    message:nil
+								    preferredStyle:UIAlertControllerStyleAlert];
 			
 			//Respring Action
 			UIAlertAction* spring = [UIAlertAction actionWithTitle:@"Respring"
-												   style:UIAlertActionStyleDefault
-							handler:^(UIAlertAction * action)
+							       style:UIAlertActionStyleDefault
+							       handler:^(UIAlertAction * action)
                     {
                         [[%c(FBSystemService) sharedInstance] exitAndRelaunch:YES];
                           
                     }];
 					
 			/*UIAlertAction* safemode = [UIAlertAction actionWithTitle:@"SafeMode"
-												   style:UIAlertActionStyleDefault
-							handler:^(UIAlertAction * action)
+								   style:UIAlertActionStyleDefault
+								   handler:^(UIAlertAction * action)
                     {
                         [[%c(FBSystemService) sharedInstance] perfromSelector:@selector(enterSafeMode) withObject:nil afterDelay:0.0];
                           
@@ -43,8 +42,8 @@ UIAlertController* alert;
 			
 			//Reboot Action
 			UIAlertAction* reboot = [UIAlertAction actionWithTitle:@"Reboot"
-												   style:UIAlertActionStyleDefault
-							handler:^(UIAlertAction * action)
+							       style:UIAlertActionStyleDefault
+							       handler:^(UIAlertAction * action)
                     {
                         [[%c(FBSystemService) sharedInstance] shutdownAndReboot:YES];
                           
@@ -52,8 +51,8 @@ UIAlertController* alert;
 			
 			//Shutdown Action
 			UIAlertAction* shutdown = [UIAlertAction actionWithTitle:@"Shutdown"
-												   style:UIAlertActionStyleDefault
-							handler:^(UIAlertAction * action)
+								 style:UIAlertActionStyleDefault
+								 handler:^(UIAlertAction * action)
                     {
                         [[%c(FBSystemService) sharedInstance] shutdownWithOptions:nil];
                           
@@ -61,8 +60,8 @@ UIAlertController* alert;
 			
 			//Dissmiss Alert
 			UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Nevermind"
-												   style:UIAlertActionStyleDefault
-							handler:^(UIAlertAction * action)
+							       style:UIAlertActionStyleDefault
+							       handler:^(UIAlertAction * action)
                     {
                         [alert dismissViewControllerAnimated:YES completion:nil];
 						canShowAlert = NO;
