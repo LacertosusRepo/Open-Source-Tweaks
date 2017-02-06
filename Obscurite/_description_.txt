@@ -3,3 +3,4 @@ Tweak that replaces dimming of the screen with a customizabe blur.
 //To-Do:
 1. Make Icon
 2. Fix colors in preferences
+3. Add option to fade to blurred wallpaper instead
