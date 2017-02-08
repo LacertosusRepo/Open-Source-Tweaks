@@ -14,6 +14,7 @@ static NSString *notificationString = @"com.lacertosusrepo.popuponstart/preferen
 static BOOL enableAlert = YES;
 static BOOL firstUse = YES;
 
+UIAlertController *alert;
 static NSString *titleText = @"Respring Successful";
 static NSString *messageText = @"Device Ready to Use";
 static NSString *cancelText = @"Confirm";
@@ -23,32 +24,39 @@ static NSString *cancelText = @"Confirm";
 
   -(void)applicationDidFinishLaunching:(id)application {
 		
-		%orig;
+		if(enableAlert == YES && firstUse == NO) {
 		
-		if(enableAlert == YES) {
-
-			UIAlertView* alert = [[UIAlertView alloc] initWithTitle:titleText
-					message:messageText
-					delegate:self
-					cancelButtonTitle:cancelText
-					otherButtonTitles:nil];
+			UIAlertController* alert = [UIAlertController alertControllerWithTitle:titleText
+								      message:messageText
+							  	      preferredStyle:UIAlertControllerStyleAlert];
 			
-				[alert show];
-				[alert release];
+			UIAlertAction *cancel = [UIAlertAction actionWithTitle:cancelText
+							       style:UIAlertActionStyleDefault
+							       handler:^(UIAlertAction * action)
+                    {
+                        [alert dismissViewControllerAnimated:YES completion:nil];                          
+                    }];
+
 		} if(enableAlert == YES && firstUse == YES) {
 
 			//This message will appear on first respring
-			UIAlertView* alert1 = [[UIAlertView alloc] initWithTitle:@"Thank You For Installing!"
-					message:@"Configure This Message in Settings!"
-					delegate:self
-					cancelButtonTitle:@"Confirm"
-					otherButtonTitles:nil];
+			UIAlertController* alert = [UIAlertController alertControllerWithTitle:titleText
+								      message:messageText
+							  	      preferredStyle:UIAlertControllerStyleAlert];
 			
-				[alert1 show];
-				[alert1 release];
-				
-				firstUse = NO;
+			UIAlertAction *cancel = [UIAlertAction actionWithTitle:cancelText
+							       style:UIAlertActionStyleDefault
+							       handler:^(UIAlertAction * action)
+                    {
+                        [alert dismissViewControllerAnimated:YES completion:nil];                          
+                    }];
+	
+			firstUse = NO;
 		}
+	[alert addAction:cancel];
+	[self presentViewController:alert animated:YES completion:nil];
+	
+	%orig;
 	}
 %end
 
