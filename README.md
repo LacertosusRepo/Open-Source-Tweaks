@@ -1,4 +1,4 @@
-# Tweaks & Themes That I Leave Open
+# Tweaks That I Leave Open
 
 | Tweak | iOS Compatibility | Version |
 | ----- | ----------------- | ------- |
