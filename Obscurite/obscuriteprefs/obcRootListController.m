@@ -1,7 +1,7 @@
 	//---Definitions---//
 #define Switch_Color [UIColor colorWithRed:0.20 green:0.29 blue:0.37 alpha:1.0]
-#define Main_Color [UIColor colorWithRed:0.42 green:0.49 blue:0.56 alpha:1.0]
-#define Sec_Color [UIColor colorWithRed:0.17 green:0.24 blue:0.31 alpha:1.0];
+#define Main_Color [UIColor colorWithRed:0.77 green:0.79 blue:0.82 alpha:1.0]
+#define Sec_Color [UIColor colorWithRed:0.17 green:0.24 blue:0.31 alpha:1.0]
 
 #include "obcRootListController.h"
 #import "ObscuriteCustomHeaderClassCell.h"
@@ -49,7 +49,28 @@
 		
 		[webButton release];
 		
+		UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/obscuriteprefs.bundle/navbarlogo.png"];
+		icon = [icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		UIImageView *iconView = [[UIImageView alloc] initWithImage:icon];
+		self.navigationItem.titleView = iconView;
+		self.navigationItem.titleView.alpha = 0;
+		
 		[super viewDidLoad];
+		
+		[NSTimer scheduledTimerWithTimeInterval:0.5
+										 target:self
+									   selector:@selector(increaseAlpha)
+									   userInfo:nil
+										repeats:NO];
+										
+	}
+	
+	-(void)increaseAlpha {
+		
+		[UIView animateWithDuration:3.0
+                     animations:^{	self.navigationItem.titleView.alpha = 1;	}
+				
+				completion:nil];
 	
 	}
 

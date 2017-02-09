@@ -33,6 +33,21 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.obscuriteprefs</string>
+			<key>key</key>
+			<string>useWallpaper</string>
+			<key>label</key>
+			<string>Use Wallpaper</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.obscuriteprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
 			<string>PSSegmentCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.obscuriteprefs</string>
@@ -41,16 +56,18 @@
 			<key>label</key>
 			<string>Blur Type</string>
 			<key>default</key>
-			<string>1</string>
+			<string>3</string>
 			<key>validTitles</key>
 			<array>
-				<string>Light Blur</string>
-				<string>Dark Blur</string>
+				<string>Extra Light</string>
+				<string>Light</string>
+				<string>Dark</string>
 			</array>
 			<key>validValues</key>
 			<array>
 				<string>1</string>
 				<string>2</string>
+				<string>3</string>
 			</array>
 			<key>id</key>
 			<string>ModeCell</string>

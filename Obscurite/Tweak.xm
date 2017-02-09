@@ -1,10 +1,12 @@
+//Thanks to ZaneH's tweak UnsplashWallpaper
 //Headers
 #include <CoreFoundation/CFNotificationCenter.h>
 #import <Foundation/NSUserDefaults.h>
 
 //Variables
 static BOOL obscuriteSwitch = YES;
-static int blurOption = 1;
+static BOOL useWallpaper = YES;
+static int blurOption = 3;
 static float blurAlpha = 0.85;
 static float blurTransition = 1.5;
 
@@ -18,18 +20,25 @@ static NSString *notificationString = @"com.lacertosusrepo.obscuriteprefs/prefer
 @end
 
 //Other Variables
+extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
+
 UIWindow* windowBlur;
-UIBlurEffect * blurEffect;
+UIWindow* windowWallpaper;
+UIImageView* homeBG;
+UIBlurEffect* blurEffect;
 static BOOL blurShouldShow;
 UITapGestureRecognizer *tap;
 
 %hook SBBacklightController
 
 	-(void)_userEventsDidIdle {
+		
+		windowBlur.hidden = YES;
+		windowWallpaper.hidden = YES;
 	
 		if(obscuriteSwitch == YES && blurShouldShow == YES) {
 			
-			HBLogInfo(@"Device Idle");
+			//HBLogInfo(@"Device Idle");
 			tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(alphaChanging)];
 			
 			windowBlur = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -39,14 +48,35 @@ UITapGestureRecognizer *tap;
 			windowBlur.windowLevel = UIWindowLevelStatusBar;
 		
 			[windowBlur addGestureRecognizer:tap];
-			HBLogInfo(@"Initializing Blur");
+			//HBLogInfo(@"Initializing Blur");
 			
-			//Light Blur
-			if(blurOption == 1 && obscuriteSwitch) {
+			//Get Homescreen Wallpaper
+			if(useWallpaper == YES && obscuriteSwitch) {
 				
-				HBLogInfo(@"Light Blur Chosen");
+				//HBLogInfo(@"Getting Homescreen Wallpaper);
+				
+				windowWallpaper = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+				windowWallpaper.backgroundColor = [UIColor clearColor];
+				windowWallpaper.hidden = NO;
+				windowWallpaper.alpha = 0;
+				windowWallpaper.windowLevel = UIWindowLevelStatusBar;
+				[windowWallpaper addGestureRecognizer:tap];
+
+				NSData *homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/LockBackground.cpbitmap"];
+				CFDataRef homeWallpaperDataRef = (__bridge CFDataRef)homeWallpaperData;
+				NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, NULL, 1, NULL);
+				UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
+				
+				homeBG = [[UIImageView alloc] initWithImage:homeWallpaper];
+				homeBG.frame = windowWallpaper.bounds;
+				[windowWallpaper addSubview:homeBG];
+				
+			//Extra Light Blur
+			} if(blurOption == 1 && obscuriteSwitch) {
+				
+				//HBLogInfo(@"Extra Light Blur Chosen");
 			
-				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
 		
 				UIVisualEffectView *visualEffect;
 				visualEffect = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
@@ -54,10 +84,23 @@ UITapGestureRecognizer *tap;
 				visualEffect.frame = windowBlur.bounds;
 				[windowBlur addSubview:visualEffect];
 		
-			//Dark Blur
+			//Light Blur
 			} if(blurOption == 2 && obscuriteSwitch) {
 			
-				HBLogInfo(@"Dark Blur Set");
+				//HBLogInfo(@"Light Blur Set");
+				
+				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+		
+				UIVisualEffectView *visualEffect;
+				visualEffect = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+		
+				visualEffect.frame = windowBlur.bounds;
+				[windowBlur addSubview:visualEffect];
+			
+			//Dark Blur
+			} if(blurOption == 3 && obscuriteSwitch) {
+			
+				//HBLogInfo(@"Dark Blur Set");
 				
 				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
 		
@@ -66,8 +109,8 @@ UITapGestureRecognizer *tap;
 		
 				visualEffect.frame = windowBlur.bounds;
 				[windowBlur addSubview:visualEffect];
-		
-			}		
+			
+			}
 		
 		blurShouldShow = NO;
 		
@@ -82,9 +125,8 @@ UITapGestureRecognizer *tap;
 	
 	-(void)_sendResetIdleTimerAction {
 		
-		HBLogInfo(@"Screen Interacted With");
+		//HBLogInfo(@"Screen Interacted With");
 		blurShouldShow = YES;
-		
 		%orig;
 	
 	}
@@ -93,24 +135,40 @@ UITapGestureRecognizer *tap;
 
 	-(void)alphaChanging {
 		
-		HBLogInfo(@"Alpha Changing");
+		//HBLogInfo(@"Alpha Changing");
 		[UIView animateWithDuration:blurTransition
                      animations:^
 						{
 						if(windowBlur.alpha == 0 && blurShouldShow == NO) {
 							
-							HBLogInfo(@"Alpha Increasing");
+							//HBLogInfo(@"Alpha Increasing");
 							[windowBlur setAlpha:blurAlpha];
+							[windowWallpaper setAlpha:1.0f];
 						
 						} if(windowBlur.alpha == blurAlpha && blurShouldShow == YES) {
 							
-							HBLogInfo(@"Alpha Decreasing");
+							//HBLogInfo(@"Alpha Decreasing");
 							[windowBlur setAlpha:0.0f];
-							
+							[windowWallpaper setAlpha:0.0f];
 						}
 					}
 		
 				completion:nil];
+	}
+	
+%end
+
+%hook SpringBoard
+
+	-(BOOL)isLocked {
+		
+		if(YES) {
+			
+			windowBlur.hidden = YES;
+			windowWallpaper.hidden = YES;
+			
+		}
+	return %orig;
 	}
 	
 %end
@@ -121,14 +179,17 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"obscuriteSwitch" inDomain:domainString];
 	obscuriteSwitch = (a)? [a boolValue]:YES;
 	
-	NSNumber *b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurOption" inDomain:domainString];
-	blurOption = (b)? [b intValue]:1;
+	NSNumber *b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"useWallpaper" inDomain:domainString];
+	useWallpaper = (b)? [b boolValue]:YES;
 	
-	NSNumber *c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurAlpha" inDomain:domainString];
-	blurAlpha = (c)? [c floatValue]:0.85;
+	NSNumber *c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurOption" inDomain:domainString];
+	blurOption = (c)? [c intValue]:3;
 	
-	NSNumber *d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurTransition" inDomain:domainString];
-	blurTransition = (d)? [d floatValue]:1.5;
+	NSNumber *d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurAlpha" inDomain:domainString];
+	blurAlpha = (d)? [d floatValue]:0.85;
+	
+	NSNumber *e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurTransition" inDomain:domainString];
+	blurTransition = (e)? [e floatValue]:1.5;
 
 }
 

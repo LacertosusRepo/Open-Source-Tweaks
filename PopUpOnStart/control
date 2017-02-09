@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.popuponstart
 Name: PopUpOnStart
 Depends: mobilesubstrate
-Version: 0.0.1
+Version: 1.2
 Architecture: iphoneos-arm
 Description: An awesome MobileSubstrate tweak!
 Maintainer: Lacertosus
