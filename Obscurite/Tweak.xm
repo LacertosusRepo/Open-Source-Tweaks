@@ -6,6 +6,7 @@
 //Variables
 static BOOL obscuriteSwitch = YES;
 static BOOL useWallpaper = YES;
+static BOOL useAutoLock = NO;
 static int blurOption = 3;
 static float blurAlpha = 0.85;
 static float blurTransition = 1.5;
@@ -153,7 +154,14 @@ UITapGestureRecognizer *tap;
 						}
 					}
 		
-				completion:nil];
+				completion:^(BOOL finished)
+						{
+						if(windowBlur.alpha == blurAlpha && useAutoLock == YES){
+						
+							[[%c(SBBacklightController) sharedInstance] startFadeOutAnimationFromLockSource:1];
+						
+						}
+					}];
 	}
 	
 %end
@@ -190,6 +198,9 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	
 	NSNumber *e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurTransition" inDomain:domainString];
 	blurTransition = (e)? [e floatValue]:1.5;
+	
+	NSNumber *f = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"useAutoLock" inDomain:domainString];
+	useAutoLock = (f)? [f useAutoLock]:NO;
 
 }
 
