@@ -73,9 +73,9 @@
 			<string>3</string>
 			<key>validTitles</key>
 			<array>
-				<string>Extra Light</string>
-				<string>Light</string>
-				<string>Dark</string>
+				<string>Extra Light Blur</string>
+				<string>Light Blur</string>
+				<string>Dark Blur</string>
 			</array>
 			<key>validValues</key>
 			<array>
@@ -145,11 +145,11 @@
 		
 		<dict>
 			<key>label</key>
-			<string>Points of Contact</string>
+			<string>Need Somthing?</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Created by LacertosusDeus ©2016</string>
+			<string>Created by LacertosusDeus ©2017</string>
 		</dict>
 		<dict>
 			<key>action</key>
