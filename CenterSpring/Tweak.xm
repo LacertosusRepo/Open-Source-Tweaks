@@ -1,89 +1,92 @@
-#include <CoreFoundation/CFNotificationCenter.h>
-#import <Foundation/NSUserDefaults.h>
-
-@interface NSUserDefaults (UFS_Category)
-- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
-- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
+@interface FBSystemService : NSObject
++(id)sharedInstance;
+-(void)exitAndRelaunch:(BOOL)arg1;
+-(void)shutdownAndReboot:(BOOL)arg1;
+-(void)shutdownWithOptions:(unsigned long long)arg1;
 @end
 
-//Preference Variables
-static NSString *domainString = @"com.lacertosusrepo.popuponstart";
-static NSString *notificationString = @"com.lacertosusrepo.popuponstart/preferences.changed";
+static BOOL canShowAlert;
+UIAlertController* alert;
 
-//Variables
-static BOOL enableAlert = YES;
-static BOOL firstUse = YES;
+%hook SBControlCenterController
 
-UIAlertController *alert;
-static NSString *titleText = @"Respring Successful";
-static NSString *messageText = @"Device Ready to Use";
-static NSString *cancelText = @"Confirm";
-
-//Tweak Code
-%hook SpringBoard
-
-  -(void)applicationDidFinishLaunching:(id)application {
+	-(void)_showControlCenterGestureEndedWithGestureRecognizer:(id)arg1 {
 		
-		if(enableAlert == YES && firstUse == NO) {
-		
-			UIAlertController* alert = [UIAlertController alertControllerWithTitle:titleText
-								      message:messageText
-							  	      preferredStyle:UIAlertControllerStyleAlert];
-			
-			UIAlertAction *cancel = [UIAlertAction actionWithTitle:cancelText
-							       style:UIAlertActionStyleDefault
-							       handler:^(UIAlertAction * action)
+		if(canShowAlert == YES) {
+
+			UIAlertController * alert=   [UIAlertController
+									alertControllerWithTitle:nil
+									message:nil
+                                    preferredStyle:UIAlertControllerStyleAlert];
+								 
+			UIAlertAction* spring = [UIAlertAction actionWithTitle:@"Respring"
+												   style:UIAlertActionStyleDefault
+							handler:^(UIAlertAction * action)
                     {
-                        [alert dismissViewControllerAnimated:YES completion:nil];                          
+                        [[%c(FBSystemService) sharedInstance] exitAndRelaunch:YES];
+                          
                     }];
 					
-			[alert addAction:cancel];
-
-		} if(enableAlert == YES && firstUse == YES) {
-
-			//This message will appear on first respring
-			UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Thanks For Installing"
-								      message:@"Configure options if settings!"
-							  	      preferredStyle:UIAlertControllerStyleAlert];
-			
-			UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Ok!"
-							       style:UIAlertActionStyleDefault
-							       handler:^(UIAlertAction * action)
+			/*UIAlertAction* safemode = [UIAlertAction actionWithTitle:@"SafeMode"
+												   style:UIAlertActionStyleDefault
+							handler:^(UIAlertAction * action)
                     {
-                        [alert dismissViewControllerAnimated:YES completion:nil];                          
+                        [[%c(FBSystemService) sharedInstance] perfromSelector:@selector(enterSafeMode) withObject:nil afterDelay:0.0];
+                          
+                    }];*/
+					
+			UIAlertAction* reboot = [UIAlertAction actionWithTitle:@"Reboot"
+												   style:UIAlertActionStyleDefault
+							handler:^(UIAlertAction * action)
+                    {
+                        [[%c(FBSystemService) sharedInstance] shutdownAndReboot:YES];
+                          
                     }];
-	
-			firstUse = NO;
+					
+			UIAlertAction* shutdown = [UIAlertAction actionWithTitle:@"Shutdown"
+												   style:UIAlertActionStyleDefault
+							handler:^(UIAlertAction * action)
+                    {
+                        [[%c(FBSystemService) sharedInstance] shutdownWithOptions:nil];
+                          
+                    }];
+					
+			UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Nevermind"
+												   style:UIAlertActionStyleDefault
+							handler:^(UIAlertAction * action)
+                    {
+                        [alert dismissViewControllerAnimated:YES completion:nil];
+						canShowAlert = NO;
+                          
+                    }];
+
+			[alert addAction:spring];
+			//[alert addAction:safemode];
+			[alert addAction:reboot];
+			[alert addAction:shutdown];
 			[alert addAction:cancel];
+			[self presentViewController:alert animated:YES completion:nil];
+			//HBLogInfo(@"Showing Alert");
 		}
-	
-	[self presentViewController:alert animated:YES completion:nil];
-	
 	%orig;
+		
 	}
 	
-%end
-
-//Preferences
-static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+	-(void)_revealSlidingViewToHeight:(double)arg1 {
+		
+		//HBLogInfo(@"CC is at %f",arg1);
+		if(arg1 > 675 && arg1 < 725) {
+			
+			canShowAlert = YES;
+			
+		}
+		%orig;
+	}
 	
-	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"enableAlert" inDomain:domainString];
-	enableAlert = (a)? [a boolValue]:YES;
-	NSString *b = (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"titleText" inDomain:domainString];
-	titleText = (b)? (b):titleText;
-	NSString *c = (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"messageText" inDomain:domainString];
-	messageText = (c)? (c):messageText;
-	NSString *d = (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"cancelText" inDomain:domainString];
-	cancelText = (d)? (d):cancelText;
-}
+	-(void)_endPresentation {
+		
+		[alert dismissViewControllerAnimated:YES completion:nil];
+		%orig;
+	}
 
-//Receiver for preferences 
-%ctor {
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	//set initial `enable' variable
-	notificationCallback(NULL, NULL, NULL, NULL, NULL);
-
-	//Register for notifications
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
-	[pool release];
-}
+%end
