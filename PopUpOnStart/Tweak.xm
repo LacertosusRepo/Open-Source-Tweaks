@@ -36,15 +36,17 @@ static NSString *cancelText = @"Confirm";
                     {
                         [alert dismissViewControllerAnimated:YES completion:nil];                          
                     }];
+					
+			[alert addAction:cancel];
 
 		} if(enableAlert == YES && firstUse == YES) {
 
 			//This message will appear on first respring
-			UIAlertController* alert = [UIAlertController alertControllerWithTitle:titleText
-								      message:messageText
+			UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Thanks For Installing"
+								      message:@"Configure options if settings!"
 							  	      preferredStyle:UIAlertControllerStyleAlert];
 			
-			UIAlertAction *cancel = [UIAlertAction actionWithTitle:cancelText
+			UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Ok!"
 							       style:UIAlertActionStyleDefault
 							       handler:^(UIAlertAction * action)
                     {
@@ -52,12 +54,14 @@ static NSString *cancelText = @"Confirm";
                     }];
 	
 			firstUse = NO;
+			[alert addAction:cancel];
 		}
-	[alert addAction:cancel];
+	
 	[self presentViewController:alert animated:YES completion:nil];
 	
 	%orig;
 	}
+	
 %end
 
 //Preferences
