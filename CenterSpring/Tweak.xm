@@ -15,7 +15,6 @@ static BOOL enableAlert = YES;
 static BOOL firstUse = YES;
 
 UIAlertController *alert;
-UIAlertAction *cancel;
 static NSString *titleText = @"Respring Successful";
 static NSString *messageText = @"Device Ready to Use";
 static NSString *cancelText = @"Confirm";
