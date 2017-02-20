@@ -1,3 +1,7 @@
 Adds haptic feedback to saveral portions 
 of the control center. Customizable vibration
 lenght and intensity.
+
+//To-Do:
+1. Update for iOS 10
+2. Fix test banner
