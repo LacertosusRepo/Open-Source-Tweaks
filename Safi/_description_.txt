@@ -1,0 +1,4 @@
+Tweak that allows simple customization of folders
+
+//To-Do:
+1. Come up with more customization
