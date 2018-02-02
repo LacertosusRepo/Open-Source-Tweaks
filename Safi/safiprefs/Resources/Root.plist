@@ -33,7 +33,7 @@
 			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
 		</dict>
 		
-				<dict>
+		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -65,6 +65,56 @@
 		
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>hideApps</string>
+			<key>label</key>
+			<string>Hide Icons Behind Folder</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Icon Fade Time</string>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.5</string>
+			<key>min</key>
+			<string>0.1</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>fadeTime</string>
+			<key>label</key>
+			<string>Icon Fade Time</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Folder Background Alpha</string>
+		</dict>
+		
+		<dict>
+			<key>cell</key>
 			<string>PSSliderCell</string>
 			<key>default</key>
 			<string>0.0</string>
@@ -73,7 +123,7 @@
 			<key>max</key>
 			<string>1.0</string>
 			<key>showValue</key>
-			<false/>
+			<true/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.safiprefs</string>
 			<key>key</key>
@@ -108,12 +158,14 @@
 			<string>1</string>
 			<key>validTitles</key>
 			<array>
+				<string>No Blur</string>
 				<string>Dark Blur</string>
 				<string>Light Blur</string>
 				<string>Extra Light Blur</string>
 			</array>
 			<key>validValues</key>
 			<array>
+				<string>0</string>
 				<string>1</string>
 				<string>2</string>
 				<string>3</string>

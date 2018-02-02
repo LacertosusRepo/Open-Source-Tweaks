@@ -1,10 +1,10 @@
-	//Headers
+	// [Headers] -------------------------------------------------------
 #import <AudioToolbox/AudioToolbox.h>
 #import <AudioToolbox/AudioServices.h>
 #include <CoreFoundation/CFNotificationCenter.h>
 #import <Foundation/NSUserDefaults.h>
 
-	//Prefs
+	// [Prefs] ---------------------------------------------------------
 static NSString *domainString = @"com.lacertosusrepo.safiprefs";
 static NSString *notificationString = @"com.lacertosusrepo.safiprefs/preferences.changed";
 
@@ -13,31 +13,26 @@ static NSString *notificationString = @"com.lacertosusrepo.safiprefs/preferences
 - (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
 @end
 
-	//Vars
+	// [Vars] ----------------------------------------------------------
 static BOOL safiSwitch = YES;
 static BOOL folderTitle = NO;
 static BOOL folderDots = NO;
+static BOOL hideApps = NO;
 static float folderBackground = 0.0;
+static float fadeTime = 0.5;
 static int blurOption = 1;
 
-//UIView *windowWallpaper;
-//UIImageView* homeBG;
+static BOOL canFadeApps = NO;
+static BOOL canShowApps = NO;
 UIBlurEffect *blurEffect;
 
-extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
-
-	//Folder Name
+	// [Code] ----------------------------------------------------------
 %hook SBFolderView
-
-	-(_Bool)_showsTitle {
-		
-		return folderTitle;
-		
-	}
 	
+	//Folder Title
 	-(void)setFolderName:(id)arg1 {
 		
-		if(folderTitle == NO) {
+		if(safiSwitch == YES && folderTitle == NO) {
 			
 			%orig(nil);
 		
@@ -48,20 +43,26 @@ extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, in
 	
 %end
 
-	//Folder Background
 %hook SBFloatyFolderView
 	
+	//Folder Title
 	-(_Bool)_showsTitle {
 		
 		return folderTitle;
 		
 	}
 	
+	//Folder Background
 	-(void)setBackgroundAlpha:(double)arg1 {
+
+		%orig;
 		
-		%orig(folderBackground);
+		if(safiSwitch == YES) {
+			
+			%orig(folderBackground);
 		
-	}
+		}
+	}		
 	
 %end
 
@@ -69,54 +70,32 @@ extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, in
 %hook SBFolderControllerBackgroundView
 
 	-(id)_blurEffect {
-		
-		if(blurOption == 1) {
 
-			blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+		if (safiSwitch == YES) {
 		
-		} if(blurOption == 2) {
+			if (blurOption == 0) {
 			
-			blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+				blurEffect = nil;
 			
-		} if(blurOption == 3) {
+			} if(blurOption == 1) {
+
+				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+		
+			} if(blurOption == 2) {
 			
-			blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 			
-		}		
+			} if(blurOption == 3) {
+			
+				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+			
+			}
 		
 		return blurEffect;
-		
-	}
-	
-/*	-(void)layoutSubviews {
-		
-		//[super layoutSubviews];
-		
-		if(folderDots == NO) {
-		
-			windowWallpaper = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
-			windowWallpaper.tintColor = [UIColor redColor];
-			[self addSubview:windowWallpaper];
-			
-		} if(folderDots == YES) {
-			
-			windowWallpaper = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-			windowWallpaper.backgroundColor = [UIColor clearColor];
-			windowWallpaper.hidden = NO;
-			windowWallpaper.alpha = 0;
-
-			NSData *homeWallpaperData = [NSData dataWithContentsOfFile:@"/var/mobile/Library/SpringBoard/LockBackground.cpbitmap"];
-			CFDataRef homeWallpaperDataRef = (__bridge CFDataRef)homeWallpaperData;
-			NSArray *imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperDataRef, NULL, 1, NULL);
-			UIImage *homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
-				
-			homeBG = [[UIImageView alloc] initWithImage:homeWallpaper];
-			homeBG.frame = windowWallpaper.bounds;
-			[self addSubview:homeBG];
 		}
-		
-	%orig;
-	}*/
+	
+	return %orig;
+	}
 	
 %end
 
@@ -125,7 +104,7 @@ extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, in
 
 	-(id)initWithFrame:(CGRect)arg1 {
 		
-		if(folderDots == NO) {
+		if(safiSwitch == YES && folderDots == NO) {
 			
 			return nil;
 		
@@ -136,7 +115,48 @@ extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, in
 
 %end
 
-	//Preferences
+%hook SBFolderController
+
+	-(void)prepareToOpen {
+		canFadeApps = YES;
+		%orig;	
+	}
+	
+	-(void)prepareToClose {
+		canShowApps = YES;
+		%orig;
+	}
+	
+%end
+
+%hook SBRootFolderView 
+
+	-(void)_layoutSubviews {
+		
+		if(canFadeApps == YES && hideApps == YES) {
+		
+			//Fade In Icons
+			[UIView animateWithDuration:fadeTime animations:^(void) {
+				[self setAlpha:1];
+				canFadeApps = NO;
+			}];
+			
+		} if(canShowApps == YES && hideApps == YES) {
+		
+			//Fade Out Icons
+			[UIView animateWithDuration:fadeTime animations:^(void) {
+				[self setAlpha:0];
+				canShowApps = NO;
+			}];
+			
+		}
+		
+	%orig;
+	}
+
+%end
+
+	// [Preferences] ------------------------------------------------------
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {	
 	
 	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"safiSwitch" inDomain:domainString];
@@ -153,6 +173,12 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	
 	NSNumber *e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurOption" inDomain:domainString];
 	blurOption = (e)? [e intValue]:1;
+	
+	NSNumber *f = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"fadeTime" inDomain:domainString];
+	fadeTime = (f)? [f floatValue]:0.5;
+	
+	NSNumber *g = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hideApps" inDomain:domainString];
+	hideApps = (g)? [g boolValue]:NO;
 
 }
 
