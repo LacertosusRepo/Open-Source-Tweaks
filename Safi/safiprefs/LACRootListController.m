@@ -38,7 +38,7 @@
 	-(void)viewDidLoad {
 	
 		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/bootstrap/Library/PreferenceBundles/safiprefs.bundle/github.png"];
+		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/safiprefs.bundle/github.png"];
 		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 		UIBarButtonItem *webButton = [[UIBarButtonItem alloc]
 							   initWithImage:iconBar
@@ -51,7 +51,7 @@
 		[webButton release];
 		
 		//Adds Icon to middle of preference pane
-		UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/bootstrap/Library/PreferenceBundles/safiprefs.bundle/navicon@2x.png"];
+		UIImage *icon = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/safiprefs.bundle/navicon@2x.png"];
 		icon = [icon imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 		UIImageView *iconView = [[UIImageView alloc] initWithImage:icon];
 		self.navigationItem.titleView = iconView;
