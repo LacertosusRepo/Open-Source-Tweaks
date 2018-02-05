@@ -2,3 +2,4 @@ Tweak that allows simple customization of folders.
 
 //To-Do:
 1. Come up with more customization
+2. Landscape view breaks folders
