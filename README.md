@@ -8,7 +8,7 @@
 | PopUpOnStart | iOS 8 - 9 | v1.2 | arm7 arm64 | No |
 | Safi | iOS 11 | v1.2 | arm64 | No |
 | SoundSpring | iOS 8 - 9 | v3.5-1 | arm7 arm64 | No |
-| Volbrate | iOS 8 - 11 | v1.2-1 | arm7 arm64 | No |
+| Volbrate | iOS 8 - 11 | v1.2-1 | arm7 arm64 | Yes |
 
 ## Goal
 *Annotate most of the open source tweaks.*

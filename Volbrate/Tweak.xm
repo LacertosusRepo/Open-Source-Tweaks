@@ -14,25 +14,25 @@ static NSString *domainString = @"com.lacertosusrepo.volbrateprefs";
 static NSString *notificationString = @"com.lacertosusrepo.volbrateprefs/preferences.changed";
 
 @interface NSUserDefaults (UFS_Category)
-- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
-- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
+-(id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
+-(void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
 @end
 
 		//---Vibration Implementation---//
 FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, objc_object*, NSDictionary*);
 
 @interface FeedbackCall : NSObject
-+ (void)vibrateDevice;
-+ (void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity;
++(void)vibrateDevice;
++(void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity;
 @end
 
+		//---Vibration Method---//
 @implementation FeedbackCall
-+ (void)vibrateDevice {
-	
++(void)vibrateDevice {	
 	[FeedbackCall vibrateDeviceForTimeLengthIntensity:timeLength vibrationIntensity:vibeIntensity];
 }
 
-+ (void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity {
++(void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity {
 
 	NSMutableDictionary* dict = [NSMutableDictionary dictionary];
 	NSMutableArray* arr = [NSMutableArray array];
@@ -51,6 +51,7 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 }
 @end
 
+		//---Global Vars---//
 	static BOOL volMax;
 	static BOOL volMin;
 	static float x;
@@ -60,10 +61,13 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 	
 		-(void)increaseVolume {
 			
+			//Calls FeedbackCall to vibrate EVERY volume increase
 			if(volVibrationOptions == 2) {
 				
 				[FeedbackCall vibrateDevice];
 				
+				
+			//Calls FeedbackCall to vibrate only at max volume
 			} if(volVibrationOptions == 1 && volMax == YES){
 				
 				[FeedbackCall vibrateDevice];
@@ -77,10 +81,12 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 			
 		-(void)decreaseVolume {
 
+			//Calls FeedbackCall to vibrate EVERY volume decrease
 			if(volVibrationOptions == 2) {
 				
 				[FeedbackCall vibrateDevice];
-				
+
+			//Calls FeedbackCall to vibrate only at min volume
 			} if(volVibrationOptions == 1 && volMin == YES){
 				
 				[FeedbackCall vibrateDevice];
@@ -92,6 +98,7 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 			}
 		}
 		
+		//These are just simple if statements to figure what the volume is at
 		-(float)volume {
 
 			x = %orig;
