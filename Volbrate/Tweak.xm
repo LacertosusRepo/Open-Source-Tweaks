@@ -6,6 +6,7 @@
 
 		//---Variables---//
 static int volVibrationOptions = 1;
+static BOOL hideHUD = NO;
 static float timeLength = 0.05;
 static float vibeIntensity = 0.75;
 
@@ -14,25 +15,25 @@ static NSString *domainString = @"com.lacertosusrepo.volbrateprefs";
 static NSString *notificationString = @"com.lacertosusrepo.volbrateprefs/preferences.changed";
 
 @interface NSUserDefaults (UFS_Category)
--(id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
--(void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
+- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
+- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
 @end
 
 		//---Vibration Implementation---//
 FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, objc_object*, NSDictionary*);
 
 @interface FeedbackCall : NSObject
-+(void)vibrateDevice;
-+(void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity;
++ (void)vibrateDevice;
++ (void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity;
 @end
 
-		//---Vibration Method---//
 @implementation FeedbackCall
-+(void)vibrateDevice {	
++ (void)vibrateDevice {
+	
 	[FeedbackCall vibrateDeviceForTimeLengthIntensity:timeLength vibrationIntensity:vibeIntensity];
 }
 
-+(void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity {
++ (void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity {
 
 	NSMutableDictionary* dict = [NSMutableDictionary dictionary];
 	NSMutableArray* arr = [NSMutableArray array];
@@ -51,78 +52,78 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 }
 @end
 
-		//---Global Vars---//
 	static BOOL volMax;
 	static BOOL volMin;
 	static float x;
 
 		//---Code---//	
-	%hook VolumeControl
+%hook VolumeControl
 	
-		-(void)increaseVolume {
+	-(void)increaseVolume {
 			
-			//Calls FeedbackCall to vibrate EVERY volume increase
-			if(volVibrationOptions == 2) {
+		if(volVibrationOptions == 2) {
 				
-				[FeedbackCall vibrateDevice];
+			[FeedbackCall vibrateDevice];
 				
+		} if(volVibrationOptions == 1 && volMax == YES){
 				
-			//Calls FeedbackCall to vibrate only at max volume
-			} if(volVibrationOptions == 1 && volMax == YES){
+			[FeedbackCall vibrateDevice];
 				
-				[FeedbackCall vibrateDevice];
-				
-			} else {
-				
-				%orig;
-				
-			}
-		}
-			
-		-(void)decreaseVolume {
-
-			//Calls FeedbackCall to vibrate EVERY volume decrease
-			if(volVibrationOptions == 2) {
-				
-				[FeedbackCall vibrateDevice];
-
-			//Calls FeedbackCall to vibrate only at min volume
-			} if(volVibrationOptions == 1 && volMin == YES){
-				
-				[FeedbackCall vibrateDevice];
-				
-			} else {
-				
-				%orig;
-				
-			}
 		}
 		
-		//These are just simple if statements to figure what the volume is at
-		-(float)volume {
-
-			x = %orig;
-
-			if(x == 0){
-				
-				volMin = YES;
-				
-			} if(x == 1){
-				
-				volMax = YES;
+	%orig;
+	}
 			
-			} if(x > 0 && x < 1) {
+	-(void)decreaseVolume {
+
+		if(volVibrationOptions == 2) {
 				
-				volMin = NO;
-				volMax = NO;
+			[FeedbackCall vibrateDevice];
 				
-			}
-			
-		return %orig;
-		
+		} if(volVibrationOptions == 1 && volMin == YES){
+				
+			[FeedbackCall vibrateDevice];
+				
 		}
-	%end
+				
+	%orig;				
+	}
+		
+	-(float)volume {
+
+		x = %orig;
+
+		if(x == 0){
+				
+			volMin = YES;
+				
+		} if(x == 1){
+				
+			volMax = YES;
+			
+		} if(x > 0 && x < 1) {
+				
+			volMin = NO;
+			volMax = NO;
+				
+		}
+			
+	return %orig;
+	}
+
+	-(void)_presentVolumeHUDWithMode:(int)arg1 volume:(float)arg2 {	
 	
+		if(hideHUD == YES) {
+			
+			return ;
+			
+		}
+		
+	%orig;
+	}
+
+%end			
+			
 		//---Preferences---//
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {	
 	
@@ -134,6 +135,9 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	
 	NSNumber *c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"vibeIntensity" inDomain:domainString];
 	vibeIntensity = (c)? [c floatValue]:0.75;
+	
+	NSNumber *d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hideHUD" inDomain:domainString];
+	hideHUD = (d)? [d boolValue]:NO;
 
 }
 

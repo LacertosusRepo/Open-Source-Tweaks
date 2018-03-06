@@ -39,7 +39,8 @@
 	-(void)viewDidLoad {
 	
 		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/volbrateprefs.bundle/navbarlogo2.png"];
+		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/volbrateprefs.bundle/navlogo.png"];
+		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 		UIBarButtonItem *webButton = [[UIBarButtonItem alloc]
 							   initWithImage:iconBar
 							   style:UIBarButtonItemStyleBordered 
@@ -65,8 +66,8 @@
 		[super viewWillAppear:animated];
 				
 			//Changed colors of Navigation Bar, Navigation Text
-			self.navigationController.navigationController.navigationBar.tintColor = Main_Color;
-			self.navigationController.navigationController.navigationBar.barTintColor = Sec_Color;
+			self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
+			self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
 			self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
 		
 		//Changes colors of Slider Filler, Switches when enabled, Segment Switches

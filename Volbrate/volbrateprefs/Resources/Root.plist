@@ -19,6 +19,20 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.volbrateprefs</string>
+			<key>key</key>
+			<string>hideHUD</string>
+			<key>label</key>
+			<string>Hide Volume HUD</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSSegmentCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.volbrateprefs</string>
@@ -43,7 +57,6 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
 		</dict>
-		
 		
 		<dict>
 			<key>cell</key>
