@@ -16,6 +16,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Options</string>
+			<key>footerText</key>
+			<string>Note: Neither length or intensity are able to be changed when using Taptic Engine.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -33,11 +35,25 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.volbrateprefs</string>
+			<key>key</key>
+			<string>useTaptic</string>
+			<key>label</key>
+			<string>Use Taptic Engine</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSSegmentCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.volbrateprefs</string>
 			<key>key</key>
-			<string>volVibrationOptions</string>
+			<string>vibOption</string>
 			<key>label</key>
 			<string>Vibration Options</string>
 			<key>default</key>
@@ -118,7 +134,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Created by LacertosusDeus ©2016</string>
+			<string>Created by LacertosusDeus</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -158,6 +174,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Volbrate</string>
+	<string></string>
 </dict>
 </plist>

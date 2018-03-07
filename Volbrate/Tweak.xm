@@ -3,10 +3,12 @@
 #import <AudioToolbox/AudioServices.h>
 #include <CoreFoundation/CFNotificationCenter.h>
 #import <Foundation/NSUserDefaults.h>
+#import "Headers.h"
 
 		//---Variables---//
-static int volVibrationOptions = 1;
+static int vibOption = 1;
 static BOOL hideHUD = NO;
+static BOOL useTaptic = NO;
 static float timeLength = 0.05;
 static float vibeIntensity = 0.75;
 
@@ -19,21 +21,22 @@ static NSString *notificationString = @"com.lacertosusrepo.volbrateprefs/prefere
 - (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
 @end
 
-		//---Vibration Implementation---//
-FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, objc_object*, NSDictionary*);
-
-@interface FeedbackCall : NSObject
-+ (void)vibrateDevice;
-+ (void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity;
-@end
-
 @implementation FeedbackCall
-+ (void)vibrateDevice {
++(void)vibrateDevice {
 	
-	[FeedbackCall vibrateDeviceForTimeLengthIntensity:timeLength vibrationIntensity:vibeIntensity];
+	if(useTaptic == YES) {
+	
+		[[UIDevice currentDevice]._tapticEngine actuateFeedback:1];
+		
+	} else {
+		
+		[FeedbackCall vibrateDeviceForTimeLengthIntensity:timeLength vibrationIntensity:vibeIntensity];
+
+	}
+		
 }
 
-+ (void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity {
++(void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity {
 
 	NSMutableDictionary* dict = [NSMutableDictionary dictionary];
 	NSMutableArray* arr = [NSMutableArray array];
@@ -52,6 +55,7 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 }
 @end
 
+		//---Global Vars---//
 	static BOOL volMax;
 	static BOOL volMin;
 	static float x;
@@ -61,12 +65,12 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 	
 	-(void)increaseVolume {
 			
-		if(volVibrationOptions == 2) {
+		if(vibOption == 2) {
 				
 			[FeedbackCall vibrateDevice];
 				
-		} if(volVibrationOptions == 1 && volMax == YES){
-				
+		} if(vibOption == 1 && volMax == YES){
+
 			[FeedbackCall vibrateDevice];
 				
 		}
@@ -75,12 +79,12 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 	}
 			
 	-(void)decreaseVolume {
-
-		if(volVibrationOptions == 2) {
+	
+		if(vibOption == 2) {
 				
 			[FeedbackCall vibrateDevice];
 				
-		} if(volVibrationOptions == 1 && volMin == YES){
+		} if(vibOption == 1 && volMin == YES){
 				
 			[FeedbackCall vibrateDevice];
 				
@@ -127,8 +131,8 @@ FOUNDATION_EXTERN void AudioServicesPlaySystemSoundWithVibration(unsigned long, 
 		//---Preferences---//
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {	
 	
-	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"volVibrationOptions" inDomain:domainString];
-	volVibrationOptions = (a)? [a intValue]:1;
+	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"vibOption" inDomain:domainString];
+	vibOption = (a)? [a intValue]:1;
 	
 	NSNumber *b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"timeLength" inDomain:domainString];
 	timeLength = (b)? [b floatValue]:0.05;
@@ -138,6 +142,9 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	
 	NSNumber *d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hideHUD" inDomain:domainString];
 	hideHUD = (d)? [d boolValue]:NO;
+	
+	NSNumber *e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"useTaptic" inDomain:domainString];
+	useTaptic = (e)? [e boolValue]:NO;
 
 }
 

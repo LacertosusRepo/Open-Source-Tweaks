@@ -1,5 +1,5 @@
 export ARCHS = armv7 arm64
-THEOS_DEVICE_IP = 192.168.1.8
+THEOS_DEVICE_IP = 128.198.104.180
 
 include $(THEOS)/makefiles/common.mk
 
