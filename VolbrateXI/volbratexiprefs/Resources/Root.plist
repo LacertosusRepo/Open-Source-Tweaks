@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>VolbrateCustomHeaderCell</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Options</string>
+			<key>footerText</key>
+			<string>Note: Neither length or intensity are able to be changed when using Taptic Engine.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.volbrateprefs</string>
+			<key>key</key>
+			<string>hideHUD</string>
+			<key>label</key>
+			<string>Hide Volume HUD</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.volbrateprefs</string>
+			<key>key</key>
+			<string>useTaptic</string>
+			<key>label</key>
+			<string>Use Taptic Engine</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.volbrateprefs</string>
+			<key>key</key>
+			<string>vibOption</string>
+			<key>label</key>
+			<string>Vibration Options</string>
+			<key>default</key>
+			<string>1</string>
+			<key>validTitles</key>
+			<array>
+				<string>Vibrate Max and Min</string>
+				<string>Vibrate All</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>1</string>
+				<string>2</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Vibration Length (ms)</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.05</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>0.50</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.volbrateprefs</string>
+			<key>key</key>
+			<string>timeLength</string>
+			<key>label</key>
+			<string>TimeLenght</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Vibration Intensity</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.75</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.volbrateprefs</string>
+			<key>key</key>
+			<string>vibeIntensity</string>
+			<key>label</key>
+			<string>VibeIntensity</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.volbrateprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>sendTestVibtration</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>VolbrateButtonCell</string>
+			<key>label</key>
+			<string>Test Vibration</string>
+		</dict>
+		
+		<dict>
+			<key>label</key>
+			<string>Points of Contact</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>VolbrateButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>VolbrateButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>VolbrateButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
