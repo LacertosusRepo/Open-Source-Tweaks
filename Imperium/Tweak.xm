@@ -7,6 +7,21 @@
   UILongPressGestureRecognizer * longPressGesture;
   BOOL killScroll = NO;
 
+  enum mediaActions{
+    doNothing = 0,
+    playPause,
+    skipForward,
+    skipBack,
+    nowPlaying,
+  };
+
+  enum feedbackStrengths{
+    noForce = -1,
+    lightForce,
+    mediumForce,
+    heavyForce
+  };
+
   //--Pref Vars--//
   BOOL showTimeLine;
   int feedbackOption;
@@ -18,35 +33,43 @@
   int downSwipe;
   int longPress;
 
+  
+
 @implementation ImperiumGestureController
 +(void)callImpact {
   //Feedback thanks to CPDigitalDarkroom's MuscicBar! https://github.com/CPDigitalDarkroom/MusicBar/blob/master/CPDDMBBarView.m#L156
+  //Allows scrolling after action is done
+  killScroll = NO;
+
+  //Exit early if 'none' selected in vibration prefs
+  if(feedbackOption == noForce)
+    return;
+
   //Allocate feedback generatorpanGesture
   UIImpactFeedbackGenerator * generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:feedbackOption];
   [generator prepare];
   [generator impactOccurred];
 
-  //Allows scrolling after action is done
-  killScroll = NO;
 }
 +(void)selectGesture:(int)command {
 
   NSLog(@"Command # - %i",command);
-  if(command == 0) {
-    //Do nothing
-  } else if(command == 1) {
+  if(command == doNothing)
+    ;//Do nothing
+  else if(command == playPause)
     MRMediaRemoteSendCommand(kMRTogglePlayPause, nil);
-  } else if(command == 2) {
+  else if(command == skipForward)
     MRMediaRemoteSendCommand(kMRNextTrack, nil);
-  } else if(command == 3) {
+  else if(command == skipBack)
     MRMediaRemoteSendCommand(kMRPreviousTrack, nil);
-  } else if(command == 4) {
+  else if(command == nowPlaying){
     //MusicBar by CPDigitalDarkroom, helpful to say the least
     SBApplication * nowPlaying = ((SBMediaController *)[NSClassFromString(@"SBMediaController") sharedInstance]).nowPlayingApplication;
     [[NSClassFromString(@"SBUIController") sharedInstance] _activateApplicationFromAccessibility:nowPlaying];
-  } else {
-    NSLog(@"Imperium - No action selected! HOW?");
   }
+  else
+    NSLog(@"Imperium - No action selected! HOW?");
+
   [self callImpact];
 }
 @end
@@ -146,26 +169,25 @@
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
 
 NSNumber * a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"feedbackOption" inDomain:domainString];
-feedbackOption = (a)? [a intValue]:0;
+feedbackOption = (a)? [a intValue]:heavyForce;
 
 NSNumber * b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"doubleTap" inDomain:domainString];
-doubleTap = (b)? [b intValue]:1;
+doubleTap = (b)? [b intValue]:playPause;
 
 NSNumber * c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"leftSwipe" inDomain:domainString];
-leftSwipe = (c)? [c intValue]:2;
+leftSwipe = (c)? [c intValue]:skipForward;
 
 NSNumber * d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"rightSwipe" inDomain:domainString];
-rightSwipe = (d)? [d intValue]:3;
+rightSwipe = (d)? [d intValue]:skipBack;
 
 NSNumber * e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"longPress" inDomain:domainString];
-longPress = (e)? [e intValue]:4;
+longPress = (e)? [e intValue]:nowPlaying;
 
 NSNumber * f = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"longPressTime" inDomain:domainString];
 longPressTime = (f)? [f floatValue]:1.0;
 
 NSNumber * g = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"showTimeLine" inDomain:domainString];
 showTimeLine = (g)? [g boolValue]:NO;
-
 }
 
 %ctor {

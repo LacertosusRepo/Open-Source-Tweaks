@@ -24,7 +24,6 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
 		</dict>
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
@@ -47,21 +46,21 @@
 			<key>label</key>
 			<string>Double Tap Action</string>
 			<key>validTitles</key>
-				<array>
-					<string>None</string>
-					<string>Play/Pause</string>
-					<string>Skip Forward</string>
-					<string>Skip Back</string>
-					<string>Open Now Playing</string>
-				</array>
+			<array>
+				<string>None</string>
+				<string>Play/Pause</string>
+				<string>Skip Forward</string>
+				<string>Skip Back</string>
+				<string>Open Now Playing</string>
+			</array>
 			<key>validValues</key>
-				<array>
-					<string>0</string>
-					<string>1</string>
-					<string>2</string>
-					<string>3</string>
-					<string>4</string>
-				</array>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+			</array>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -79,21 +78,21 @@
 			<key>label</key>
 			<string>Right Swipe Action</string>
 			<key>validTitles</key>
-				<array>
-					<string>None</string>
-					<string>Play/Pause</string>
-					<string>Skip Forward</string>
-					<string>Skip Back</string>
-					<string>Open Now Playing</string>
-				</array>
+			<array>
+				<string>None</string>
+				<string>Play/Pause</string>
+				<string>Skip Forward</string>
+				<string>Skip Back</string>
+				<string>Open Now Playing</string>
+			</array>
 			<key>validValues</key>
-				<array>
-					<string>0</string>
-					<string>1</string>
-					<string>2</string>
-					<string>3</string>
-					<string>4</string>
-				</array>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+			</array>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -111,21 +110,21 @@
 			<key>label</key>
 			<string>Left Swipe Action</string>
 			<key>validTitles</key>
-				<array>
-					<string>None</string>
-					<string>Play/Pause</string>
-					<string>Skip Forward</string>
-					<string>Skip Back</string>
-					<string>Open Now Playing</string>
-				</array>
+			<array>
+				<string>None</string>
+				<string>Play/Pause</string>
+				<string>Skip Forward</string>
+				<string>Skip Back</string>
+				<string>Open Now Playing</string>
+			</array>
 			<key>validValues</key>
-				<array>
-					<string>0</string>
-					<string>1</string>
-					<string>2</string>
-					<string>3</string>
-					<string>4</string>
-				</array>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+			</array>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -150,7 +149,7 @@
 				<string>Skip Back</string>
 				<string>Open Now Playing</string>
 			</array>
-		<key>validValues</key>
+			<key>validValues</key>
 			<array>
 				<string>0</string>
 				<string>1</string>
@@ -159,7 +158,6 @@
 				<string>4</string>
 			</array>
 		</dict>
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
@@ -188,14 +186,13 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
 		</dict>
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Vibration</string>
 			<key>footerText</key>
-			<string>There's little diference in these, but thought I would give you the option anyway.</string>
+			<string>There&apos;s little diference in these, but thought I would give you the option anyway.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -207,15 +204,17 @@
 			<key>label</key>
 			<string>Vibration</string>
 			<key>default</key>
-			<string>0</string>
+			<string>3</string>
 			<key>validTitles</key>
 			<array>
+				<string>None</string>
 				<string>Light</string>
 				<string>Medium</string>
 				<string>Heavy</string>
 			</array>
 			<key>validValues</key>
 			<array>
+				<string>-1</string>
 				<string>0</string>
 				<string>1</string>
 				<string>2</string>
@@ -225,7 +224,6 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
 		</dict>
-
 		<dict>
 			<key>label</key>
 			<string>Points of Contact</string>
