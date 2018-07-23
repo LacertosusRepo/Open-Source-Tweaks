@@ -9,6 +9,25 @@
 			<string>PSGroupCell</string>
 			<key>headerCellClass</key>
 			<string>ImperiumCustomHeaderCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>showTimeLine</string>
+			<key>label</key>
+			<string>Hide Time Line</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Gesture Options</string>
 		</dict>
@@ -29,15 +48,19 @@
 			<string>Double Tap Action</string>
 			<key>validTitles</key>
 				<array>
+					<string>None</string>
 					<string>Play/Pause</string>
 					<string>Skip Forward</string>
 					<string>Skip Back</string>
+					<string>Open Now Playing</string>
 				</array>
 			<key>validValues</key>
 				<array>
+					<string>0</string>
 					<string>1</string>
 					<string>2</string>
 					<string>3</string>
+					<string>4</string>
 				</array>
 		</dict>
 		<dict>
@@ -57,15 +80,19 @@
 			<string>Right Swipe Action</string>
 			<key>validTitles</key>
 				<array>
+					<string>None</string>
 					<string>Play/Pause</string>
 					<string>Skip Forward</string>
 					<string>Skip Back</string>
+					<string>Open Now Playing</string>
 				</array>
 			<key>validValues</key>
 				<array>
+					<string>0</string>
 					<string>1</string>
 					<string>2</string>
 					<string>3</string>
+					<string>4</string>
 				</array>
 		</dict>
 		<dict>
@@ -85,16 +112,81 @@
 			<string>Left Swipe Action</string>
 			<key>validTitles</key>
 				<array>
+					<string>None</string>
 					<string>Play/Pause</string>
 					<string>Skip Forward</string>
 					<string>Skip Back</string>
+					<string>Open Now Playing</string>
 				</array>
 			<key>validValues</key>
 				<array>
+					<string>0</string>
 					<string>1</string>
 					<string>2</string>
 					<string>3</string>
+					<string>4</string>
 				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>5</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>longPress</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<key>label</key>
+			<string>Long Press Action</string>
+			<key>validTitles</key>
+			<array>
+				<string>None</string>
+				<string>Play/Pause</string>
+				<string>Skip Forward</string>
+				<string>Skip Back</string>
+				<string>Open Now Playing</string>
+			</array>
+		<key>validValues</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+			</array>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Long Press Time (s)</string>
+			<key>footerText</key>
+			<string>This value changes how long you need to hold to activate long press.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>2.0</string>
+			<key>min</key>
+			<string>1.0</string>
+			<key>max</key>
+			<string>3.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>longPressTime</string>
+			<key>label</key>
+			<string>Long Press Time</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
 		</dict>
 
 		<dict>
@@ -102,8 +194,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Vibration</string>
-			<key>footer</key>
-			<string>There's lttle diference in these, but thought I would give you the option.</string>
+			<key>footerText</key>
+			<string>There's little diference in these, but thought I would give you the option anyway.</string>
 		</dict>
 		<dict>
 			<key>cell</key>

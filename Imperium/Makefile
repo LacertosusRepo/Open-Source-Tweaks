@@ -5,6 +5,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Imperium
 Imperium_FILES = Tweak.xm
+Imperium_FRAMEWORKS = MediaPlayer
 Imperium_PRIVATE_FRAMEWORKS = MediaRemote
 
 include $(THEOS_MAKE_PATH)/tweak.mk
