@@ -1,6 +1,5 @@
 export ARCHS = arm64
 THEOS_DEVICE_IP = 10.0.0.6
-FINAL_PACKAGE = 1
 
 include $(THEOS)/makefiles/common.mk
 
@@ -12,3 +11,5 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 
 after-install::
 	install.exec "killall -9 SpringBoard"
+SUBPROJECTS += imperiumprefs
+include $(THEOS_MAKE_PATH)/aggregate.mk

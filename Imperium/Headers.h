@@ -1,11 +1,20 @@
+  //--Prefs--//
+static NSString * domainString = @"com.lacertosusrepo.imperiumprefs";
+static NSString * notificationString = @"com.lacertosusrepo.imperiumprefs/preferences.changed";
+
 @interface MediaControlsContainerView
 @property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
 @end
 
 @interface MediaControlsParentContainerView : UIView
--(void)lightImpact;
 @end
 
-/*@interface UIScrollView
-@property (assign,getter=isScrollEnabled,nonatomic) BOOL scrollEnabled;
-@end*/
+@interface ImperiumGestureController : NSObject
++(void)callImpact;
++(void)selectGesture:(int)gesture;
+@end
+
+@interface NSUserDefaults (UFS_Category)
+-(id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
+-(void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
+@end

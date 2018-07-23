@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>ImperiumCustomHeaderCell</string>
+			<key>label</key>
+			<string>Gesture Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>1</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>doubleTap</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<key>label</key>
+			<string>Double Tap Action</string>
+			<key>validTitles</key>
+				<array>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>2</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>rightSwipe</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<key>label</key>
+			<string>Right Swipe Action</string>
+			<key>validTitles</key>
+				<array>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>3</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>leftSwipe</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<key>label</key>
+			<string>Left Swipe Action</string>
+			<key>validTitles</key>
+				<array>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+				</array>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Vibration</string>
+			<key>footer</key>
+			<string>There's lttle diference in these, but thought I would give you the option.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>feedbackOption</string>
+			<key>label</key>
+			<string>Vibration</string>
+			<key>default</key>
+			<string>0</string>
+			<key>validTitles</key>
+			<array>
+				<string>Light</string>
+				<string>Medium</string>
+				<string>Heavy</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>label</key>
+			<string>Points of Contact</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>ImperiumButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>ImperiumButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>ImperiumButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
