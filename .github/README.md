@@ -13,6 +13,9 @@
 | HaptikCenter | iOS 8 - 9 | v2.8 | arm7 arm64 | Partially |
 <<<<<<< HEAD
 | Imperium | iOS 10 - 11 | v1.5 | arm64 | Yes |
+=======
+| Imperium | iOS 11 | v1.2 |arm64 | Yes |
+>>>>>>> aba33e96d0ba7dff5bae0c1ebe78eb27813cd870
 | Obscurite | iOS 10 | v1.2 | arm7 arm64 | Partially |
 | PopUpOnStart | iOS 8 - 9 | v1.1 | arm7 arm64 | No |
 | Safi | iOS 10 - 11 | v1.0 | arm64 | Yes |
