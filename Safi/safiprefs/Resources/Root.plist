@@ -10,14 +10,15 @@
 			<key>headerCellClass</key>
 			<string>SafiCustomHeaderCell</string>
 		</dict>
-		
+
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Options</string>
+			<key>footerText</key>
+			<string>Tap-Close allows the user to tap inside blank space in a folder to close it.</string>
 		</dict>
-		
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
@@ -26,125 +27,21 @@
 			<key>defaults</key>
 			<string>com.lacertosusrepo.safiprefs</string>
 			<key>key</key>
-			<string>safiSwitch</string>
+			<string>tapCloseSwitch</string>
 			<key>label</key>
-			<string>Enable</string>
+			<string>Allow Tap-Close in Folder</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
 		</dict>
-		
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.safiprefs</string>
-			<key>key</key>
-			<string>folderTitle</string>
-			<key>label</key>
-			<string>Show Folder Title</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
-		</dict>
-		
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.safiprefs</string>
-			<key>key</key>
-			<string>folderDots</string>
-			<key>label</key>
-			<string>Show Folder Dots</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
-		</dict>
-		
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.safiprefs</string>
-			<key>key</key>
-			<string>hideApps</string>
-			<key>label</key>
-			<string>Hide Icons Behind Folder</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
-		</dict>
-		
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Icon Fade Time</string>
-		</dict>
-		
-		<dict>
-			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<string>0.5</string>
-			<key>min</key>
-			<string>0.1</string>
-			<key>max</key>
-			<string>1.0</string>
-			<key>showValue</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.safiprefs</string>
-			<key>key</key>
-			<string>fadeTime</string>
-			<key>label</key>
-			<string>Icon Fade Time</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
-		</dict>
-		
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Folder Background Alpha</string>
-		</dict>
-		
-		<dict>
-			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<string>0.0</string>
-			<key>min</key>
-			<string>0.0</string>
-			<key>max</key>
-			<string>1.0</string>
-			<key>showValue</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.safiprefs</string>
-			<key>key</key>
-			<string>folderBackground</string>
-			<key>label</key>
-			<string>Folder Background Alpha</string>
-			<key>isSegmented</key>
-			<true/>
-			<key>segmentCount</key>
-			<integer>10</integer>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
-		</dict>
-		
+
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Blur Options</string>
+			<key>footerText</key>
+			<string>Use slider to change blur alpha. Max is 1.0.</string>
 		</dict>
-		
 		<dict>
 			<key>cell</key>
 			<string>PSSegmentCell</string>
@@ -175,7 +72,112 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
 		</dict>
-		
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>1.0</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>blurAlpha</string>
+			<key>label</key>
+			<string>Blur Alpha</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>10</integer>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+
+
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Folder Image Options</string>
+			<key>footerText</key>
+			<string>Open folder to update changes. Use slider to change folder background alpha. Max is 1.0.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>hideFolderIcon</string>
+			<key>label</key>
+			<string>Hide Folder Icon</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>hideFolderTitle</string>
+			<key>label</key>
+			<string>Hide Folder Title</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>hideFolderDots</string>
+			<key>label</key>
+			<string>Hide Folder Dots</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.0</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>folderBackgroundAlpha</string>
+			<key>label</key>
+			<string>Folder Background Alpha</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<integer>10</integer>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+
 		<dict>
 			<key>label</key>
 			<string>Need Something?</string>

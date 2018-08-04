@@ -9,20 +9,42 @@
 			<string>PSGroupCell</string>
 			<key>headerCellClass</key>
 			<string>ImperiumCustomHeaderCell</string>
+			<key>footerText</key>
+			<string>Applications must be restarted after enabling.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.imperiumprefs</string>
-			<key>key</key>
-			<string>showTimeLine</string>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>ImperiumHideItemsListController</string>
+			<key>isController</key>
+			<true/>
 			<key>label</key>
-			<string>Hide Time Line</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<string>Hide Items</string>
+			<key>icon</key>
+			<string>hideitems.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>ImperiumApplicationsListController</string>
+			<key>isController</key>
+			<true/>
+			<key>label</key>
+			<string>Enable in Applications</string>
+			<key>icon</key>
+			<string>applist.png</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>killApplications</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>ImperiumButtonCell</string>
+			<key>label</key>
+			<string>Restart Apps</string>
 		</dict>
 
 		<dict>
@@ -53,6 +75,9 @@
 					<string>Skip Forward</string>
 					<string>Skip Back</string>
 					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
 				</array>
 			<key>validValues</key>
 				<array>
@@ -61,6 +86,9 @@
 					<string>2</string>
 					<string>3</string>
 					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
 				</array>
 		</dict>
 		<dict>
@@ -85,6 +113,9 @@
 					<string>Skip Forward</string>
 					<string>Skip Back</string>
 					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
 				</array>
 			<key>validValues</key>
 				<array>
@@ -93,6 +124,9 @@
 					<string>2</string>
 					<string>3</string>
 					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
 				</array>
 		</dict>
 		<dict>
@@ -117,6 +151,9 @@
 					<string>Skip Forward</string>
 					<string>Skip Back</string>
 					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
 				</array>
 			<key>validValues</key>
 				<array>
@@ -125,7 +162,86 @@
 					<string>2</string>
 					<string>3</string>
 					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
 				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>0</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>upSwipe</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<key>label</key>
+			<string>Up Swipe Action</string>
+			<key>validTitles</key>
+			<array>
+				<string>None</string>
+				<string>Play/Pause</string>
+				<string>Skip Forward</string>
+				<string>Skip Back</string>
+				<string>Open Now Playing</string>
+				<string>Increase Volume</string>
+				<string>Decrease Volume</string>
+				<string>Toggle Mute</string>
+			</array>
+		<key>validValues</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+				<string>5</string>
+				<string>6</string>
+				<string>7</string>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>0</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>downSwipe</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<key>label</key>
+			<string>Down Swipe Action</string>
+			<key>validTitles</key>
+			<array>
+				<string>None</string>
+				<string>Play/Pause</string>
+				<string>Skip Forward</string>
+				<string>Skip Back</string>
+				<string>Open Now Playing</string>
+				<string>Increase Volume</string>
+				<string>Decrease Volume</string>
+				<string>Toggle Mute</string>
+			</array>
+		<key>validValues</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+				<string>3</string>
+				<string>4</string>
+				<string>5</string>
+				<string>6</string>
+				<string>7</string>
+			</array>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -149,6 +265,9 @@
 				<string>Skip Forward</string>
 				<string>Skip Back</string>
 				<string>Open Now Playing</string>
+				<string>Increase Volume</string>
+				<string>Decrease Volume</string>
+				<string>Toggle Mute</string>
 			</array>
 		<key>validValues</key>
 			<array>
@@ -157,6 +276,9 @@
 				<string>2</string>
 				<string>3</string>
 				<string>4</string>
+				<string>5</string>
+				<string>6</string>
+				<string>7</string>
 			</array>
 		</dict>
 
@@ -174,9 +296,9 @@
 			<key>default</key>
 			<string>2.0</string>
 			<key>min</key>
-			<string>1.0</string>
+			<string>0.5</string>
 			<key>max</key>
-			<string>3.0</string>
+			<string>2.5</string>
 			<key>showValue</key>
 			<true/>
 			<key>defaults</key>
@@ -185,6 +307,8 @@
 			<string>longPressTime</string>
 			<key>label</key>
 			<string>Long Press Time</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
 		</dict>
@@ -210,12 +334,14 @@
 			<string>0</string>
 			<key>validTitles</key>
 			<array>
+				<string>None</string>
 				<string>Light</string>
 				<string>Medium</string>
 				<string>Heavy</string>
 			</array>
 			<key>validValues</key>
 			<array>
+				<string>3</string>
 				<string>0</string>
 				<string>1</string>
 				<string>2</string>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+  		<key>cell</key>
+  		<string>PSSwitchCell</string>
+  		<key>default</key>
+  		<true/>
+  		<key>defaults</key>
+  		<string>com.lacertosusrepo.imperiumprefs</string>
+  		<key>key</key>
+  		<string>appleMusicSwitch</string>
+  		<key>label</key>
+  		<string>Enable in Music App</string>
+  		<key>PostNotification</key>
+  		<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+		</dict>
+		<dict>
+  		<key>cell</key>
+  		<string>PSSwitchCell</string>
+  		<key>default</key>
+  		<true/>
+  		<key>defaults</key>
+  		<string>com.lacertosusrepo.imperiumprefs</string>
+  		<key>key</key>
+  		<string>spotifySwitch</string>
+  		<key>label</key>
+  		<string>Enable in Spotify App</string>
+  		<key>PostNotification</key>
+  		<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Not seeing the app you want? Message me!</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>ImperiumButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>

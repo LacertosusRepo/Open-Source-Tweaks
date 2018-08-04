@@ -6,8 +6,7 @@
 #import <Preferences/PSSliderTableCell.h>
 #import <Preferences/PSSwitchTableCell.h>
 #import <Preferences/PSTableCell.h>
-
-#define Switch_Color [UIColor colorWithRed:0.42 green:0.36 blue:0.91 alpha:1.0]
+#import "PreferencesColorDefinitions.h"
 
 @interface SafiButtonCell : PSTableCell
 @end
@@ -15,11 +14,11 @@
 @implementation SafiButtonCell
 
 	- (void)layoutSubviews {
-		
+
 		//Sets UIButton Color
 		[super layoutSubviews];
-		[self.textLabel setTextColor:Switch_Color];
+		[self.textLabel setTextColor:Button_Color];
 
 	}
-	
+
 @end

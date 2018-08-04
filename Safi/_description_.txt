@@ -1,7 +1,0 @@
-Tweak that allows simple customization of folders.
-
-//To-Do:
-1. Allow hiding of the folder icons on homescreen
-2. Landscape view breaks folders blur effect on inactive folders
-3. Fix alpha not updating when leaving a folder
-4. Attempt to add color picker for background folder

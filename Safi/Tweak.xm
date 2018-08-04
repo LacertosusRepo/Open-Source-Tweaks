@@ -1,194 +1,155 @@
-	// [Headers] -------------------------------------------------------
-#import <AudioToolbox/AudioToolbox.h>
-#import <AudioToolbox/AudioServices.h>
-#include <CoreFoundation/CFNotificationCenter.h>
-#import <Foundation/NSUserDefaults.h>
+//--Headers--//
+#import <SpringBoard/SpringBoard.h>
+#import "SafiHeaders.h"
 
-	// [Prefs] ---------------------------------------------------------
-static NSString *domainString = @"com.lacertosusrepo.safiprefs";
-static NSString *notificationString = @"com.lacertosusrepo.safiprefs/preferences.changed";
+//--Vars--//
+NSMutableDictionary * preferences;
+UIBlurEffect * blurEffect;
+UITapGestureRecognizer * tap;
 
-@interface NSUserDefaults (UFS_Category)
-- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
-- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
-@end
+//--Pref Vars--//
+static BOOL hideFolderTitle;
+static BOOL hideFolderDots;
+static BOOL hideFolderIcon;
+static BOOL hideApps;
+static float folderBackgroundAlpha;
+static int blurOption;
+static float blurAlpha;
 
-	// [Vars] ----------------------------------------------------------
-static BOOL safiSwitch = YES;
-static BOOL folderTitle = NO;
-static BOOL folderDots = NO;
-static BOOL hideApps = NO;
-static float folderBackground = 0.0;
-static float fadeTime = 0.5;
-static int blurOption = 1;
-
-static BOOL canFadeApps = NO;
-static BOOL canShowApps = NO;
-UIBlurEffect *blurEffect;
-
-	// [Code] ----------------------------------------------------------
-%hook SBFolderView
-	
-	//Folder Title
-	-(void)setFolderName:(id)arg1 {
-		
-		if(safiSwitch == YES && folderTitle == NO) {
-			
-			%orig(nil);
-		
-		}
-		
-	%orig;
-	}
-	
-%end
+//--SpringBoard--//
 
 %hook SBFloatyFolderView
-	
-	//Folder Title
-	-(_Bool)_showsTitle {
-		
-		return folderTitle;
-		
-	}
-	
-	//Folder Background
-	-(void)setBackgroundAlpha:(double)arg1 {
 
-		%orig;
-		
-		if(safiSwitch == YES) {
-			
-			%orig(folderBackground);
-		
-		}
-	}		
-	
+	//Hide folder title
+	-(BOOL)_showsTitle {
+		return !hideFolderTitle;
+	}
+
+	//Add gesture
+	-(id)initWithFolder:(id)arg1 orientation:(long long)arg2 viewMap:(id)arg3 context:(id)arg4 {
+		tap = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)] autorelease];
+		[self addGestureRecognizer:tap];
+		return %orig;
+	}
+
+%new
+
+	//Closes current folder
+	-(void)handleTap {
+		[[NSClassFromString(@"SBIconController") sharedInstance] _closeFolderController:self animated:YES withCompletion:nil];
+	}
+
 %end
 
-	//Blur Effect
-%hook SBFolderControllerBackgroundView
-
-	-(id)_blurEffect {
-
-		if (safiSwitch == YES) {
-		
-			if (blurOption == 0) {
-			
-				blurEffect = nil;
-			
-			} if(blurOption == 1) {
-
-				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-		
-			} if(blurOption == 2) {
-			
-				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-			
-			} if(blurOption == 3) {
-			
-				blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-			
-			}
-		
-		return blurEffect;
-		}
-	
-	return %orig;
-	}
-	
-%end
-
-	//Page Dots
 %hook SBIconListPageControl
 
-	-(id)initWithFrame:(CGRect)arg1 {
-		
-		if(safiSwitch == YES && folderDots == NO) {
-			
-			return nil;
-		
+	//Hide folder dots
+	-(void)layoutSubviews {
+		if(self.hidden == NO && hideFolderDots) {
+			self.hidden = hideFolderDots;
+		} else {
+		%orig;
 		}
-		
-	return %orig;
 	}
 
 %end
 
-%hook SBFolderController
+%hook SBFolderBackgroundView
 
-	-(void)prepareToOpen {
-		canFadeApps = YES;
-		%orig;	
+	//Folder background alpha
+	-(void)layoutSubviews {
+		self.alpha = folderBackgroundAlpha;
 	}
-	
-	-(void)prepareToClose {
-		canShowApps = YES;
+
+%end
+
+%hook SBFolderIconImageView
+
+	-(void)layoutSubviews {
+		UIView * backgroundView = MSHookIvar<UIView *>(self, "_backgroundView");
+		backgroundView.hidden = hideFolderIcon;
 		%orig;
 	}
-	
+
 %end
 
-%hook SBRootFolderView 
+%hook SBFolderControllerBackgroundView
 
-	-(void)_layoutSubviews {
-		
-		if(canFadeApps == YES && hideApps == YES) {
-		
-			//Fade In Icons
-			[UIView animateWithDuration:fadeTime animations:^(void) {
-				[self setAlpha:1];
-				canFadeApps = NO;
-			}];
-			
-		} if(canShowApps == YES && hideApps == YES) {
-		
-			//Fade Out Icons
-			[UIView animateWithDuration:fadeTime animations:^(void) {
-				[self setAlpha:0];
-				canShowApps = NO;
-			}];
-			
+	//Set blur
+	-(id)_blurEffect {
+		if(blurOption == noBlur) {
+			blurEffect = nil;
+		} else if(blurOption == darkBlur) {
+			blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+		} else if(blurOption == lightBlur) {
+			blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+		} else if(blurOption == extraLightBlur) {
+			blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
 		}
-		
-	%orig;
+		self.alpha = blurAlpha;
+		return blurEffect;
 	}
 
 %end
 
-	// [Preferences] ------------------------------------------------------
-static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {	
-	
-	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"safiSwitch" inDomain:domainString];
-	safiSwitch = (a)? [a boolValue]:YES;
-	
-	NSNumber *b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"folderTitle" inDomain:domainString];
-	folderTitle = (b)? [b boolValue]:NO;
-	
-	NSNumber *c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"folderDots" inDomain:domainString];
-	folderDots = (c)? [c boolValue]:NO;
-	
-	NSNumber *d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"folderBackground" inDomain:domainString];
-	folderBackground = (d)? [d floatValue]:0.0;
-	
-	NSNumber *e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"blurOption" inDomain:domainString];
-	blurOption = (e)? [e intValue]:1;
-	
-	NSNumber *f = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"fadeTime" inDomain:domainString];
-	fadeTime = (f)? [f floatValue]:0.5;
-	
-	NSNumber *g = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hideApps" inDomain:domainString];
-	hideApps = (g)? [g boolValue]:NO;
+//Fade icons when in folder, not working yet
+/*	static BOOL folderIsOpen;
+	static float animationLength = 0.2;
 
+%hook SBIconController
+
+	-(void)loadView {
+
+		%orig;
+	}
+
+%end
+
+%hook SBRootFolderView
+
+	-(void)layoutSubviews {
+		if(folderIsOpen == YES) {
+			[UIView animateWithDuration:animationLength animations:^(void) {
+				self.alpha = 0.0;
+			}];
+		} else if(folderIsOpen == NO) {
+			[UIView animateWithDuration:animationLength animations:^(void) {
+				self.alpha = 1.0;
+			}];
+		}
+		NSLog(@"folder open - %i", folderIsOpen);
+		return %orig;
+	}
+
+%end*/
+
+static void loadPrefs() {
+	static NSString * file = @"/User/Library/Preferences/com.lacertosusrepo.safiprefs.plist";
+	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:file];
+
+	if(!preferences) {
+		preferences = [[NSMutableDictionary alloc] init];
+	} else {
+		hideFolderTitle = [[preferences objectForKey:@"hideFolderTitle"] boolValue];
+		hideFolderDots = [[preferences objectForKey:@"hideFolderDots"] boolValue];
+		hideFolderIcon = [[preferences objectForKey:@"hideFolderIcon"] boolValue];
+		hideApps = [[preferences objectForKey:@"hideApps"] boolValue];
+		folderBackgroundAlpha = [[preferences objectForKey:@"folderBackgroundAlpha"] floatValue];
+		blurOption = [[preferences objectForKey:@"blurOption"] intValue];
+		blurAlpha = [[preferences objectForKey:@"blurAlpha"] floatValue];
+	}
+	[preferences release];
+}
+
+static NSString *nsNotificationString = @"com.lacertosusrepo.safiprefs/preferences.changed";
+static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+	loadPrefs();
 }
 
 %ctor {
-		
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	//set initial `enable' variable
+	loadPrefs();
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
-
-	//register for notifications
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
 	[pool release];
 }

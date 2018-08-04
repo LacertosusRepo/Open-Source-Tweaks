@@ -1,74 +1,44 @@
 #import <MediaRemote/MediaRemote.h>
-#import "Headers.h"
+#import<SpringBoard/SpringBoard.h>
+#import "ImperiumClasses.h"
 
-  //--Vars--//
   UITapGestureRecognizer * tapGesture;
   UIPanGestureRecognizer * panGesture;
   UILongPressGestureRecognizer * longPressGesture;
+
+  //--Vars--//
+  NSMutableDictionary *preferences;
   BOOL killScroll = NO;
 
   //--Pref Vars--//
-  BOOL showTimeLine;
-  int feedbackOption;
-  float longPressTime;
-  int doubleTap;
-  int leftSwipe;
-  int rightSwipe;
-  int upSwipe;
-  int downSwipe;
-  int longPress;
+  static BOOL hideTimeLine;
+  static BOOL hideVolumeSlider;
+  static int feedbackOption;
+  static float longPressTime;
+  static int doubleTap;
+  static int leftSwipe;
+  static int rightSwipe;
+  static int upSwipe;
+  static int downSwipe;
+  static int longPress;
 
-@implementation ImperiumGestureController
-+(void)callImpact {
-  //Feedback thanks to CPDigitalDarkroom's MuscicBar! https://github.com/CPDigitalDarkroom/MusicBar/blob/master/CPDDMBBarView.m#L156
-  //Allocate feedback generatorpanGesture
-  UIImpactFeedbackGenerator * generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:feedbackOption];
-  [generator prepare];
-  [generator impactOccurred];
+       /////////////////
+      // SpringBoard //
+     /////////////////
 
-  //Allows scrolling after action is done
-  killScroll = NO;
-}
-+(void)selectGesture:(int)command {
-
-  NSLog(@"Command # - %i",command);
-  if(command == 0) {
-    //Do nothing
-  } else if(command == 1) {
-    MRMediaRemoteSendCommand(kMRTogglePlayPause, nil);
-  } else if(command == 2) {
-    MRMediaRemoteSendCommand(kMRNextTrack, nil);
-  } else if(command == 3) {
-    MRMediaRemoteSendCommand(kMRPreviousTrack, nil);
-  } else if(command == 4) {
-    //MusicBar by CPDigitalDarkroom, helpful to say the least
-    SBApplication * nowPlaying = ((SBMediaController *)[NSClassFromString(@"SBMediaController") sharedInstance]).nowPlayingApplication;
-    [[NSClassFromString(@"SBUIController") sharedInstance] _activateApplicationFromAccessibility:nowPlaying];
-  } else {
-    NSLog(@"Imperium - No action selected! HOW?");
-  }
-  [self callImpact];
-}
-@end
-
-%hook MediaControlsTransportStackView
-  //Hide the media controls on music widget by setting the view property "hidden" to yes
+     //Hides music controls
+%hook MediaControlsTransportButton
   -(void)layoutSubviews {
     self.hidden = YES;
     %orig;
   }
 %end
-%hook MediaControlsTimeControl
-  -(void)layoutSubviews {
-    self.hidden = showTimeLine;
-  }
-%end
+    //Adds gestures to view
+%hook MediaControlsTransportStackView
+  -(id)initWithFrame:(CGRect)arg1 {
 
-%hook MediaControlsParentContainerView
+    killScroll = NO;
 
-  -(void)layoutSubviews {
-
-    //Creating and adding the gestures
     tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)] autorelease];
     tapGesture.numberOfTapsRequired = 2;
     [self addGestureRecognizer:tapGesture];
@@ -81,100 +51,118 @@
     longPressGesture.allowableMovement = 0;
     [self addGestureRecognizer:longPressGesture];
 
-    //Detects swipe and kills scrolling
     if(panGesture.state == UIGestureRecognizerStateBegan) {
       killScroll = YES;
     }
-
-    %orig;
+    return %orig;
   }
 
-//Need a %new for every method, thanks /u/DGh0st
-%new
+%new    //Need a %new for each method, thanks /u/DGh0st
 
   -(void)handleDoubleTap {
-    [ImperiumGestureController selectGesture:doubleTap];
+    [ImperiumGestureController selectGesture:doubleTap withForceLevel:feedbackOption];
   }
 
 %new
 
   -(void)handleSwipe:(UIPanGestureRecognizer *)sender {
-    //Get UIPanGestureRecognizer x,y swipes
-    CGPoint distance = [sender translationInView: self];
-
+    CGPoint distance = [sender translationInView:self];
     if(sender.state == UIGestureRecognizerStateEnded) {
-      //Left swipe
+        //Left swipe
       if(distance.x < -70 && distance.y > -50 && distance.y < 50) {
-        [ImperiumGestureController selectGesture:leftSwipe];
-      //Right swipe
+        [ImperiumGestureController selectGesture:leftSwipe withForceLevel:feedbackOption];
+        //Right swipe
       } else if(distance.x > -70 && distance.y > -50 && distance.y < 50) {
-        [ImperiumGestureController selectGesture:rightSwipe];
-      //Up swipe
+        [ImperiumGestureController selectGesture:rightSwipe withForceLevel:feedbackOption];
+        //Up swipe
       } else if(distance.y < 0) {
-        [ImperiumGestureController selectGesture:upSwipe];
-      //Down swipe
+        [ImperiumGestureController selectGesture:upSwipe withForceLevel:feedbackOption];
+        //Down swipe
       } else if(distance.y > 0) {
-        [ImperiumGestureController selectGesture:downSwipe];
+        [ImperiumGestureController selectGesture:downSwipe withForceLevel:feedbackOption];
       }
     }
   }
 
 %new
 
-    -(void)handleLongPress:(UILongPressGestureRecognizer *)sender {
-
-      if(sender.state == UIGestureRecognizerStateEnded) {
-        [ImperiumGestureController selectGesture:longPress];
-      }
+  -(void)handleLongPress:(UILongPressGestureRecognizer *)sender {
+    if(sender.state == UIGestureRecognizerStateEnded) {
+      [ImperiumGestureController selectGesture:longPress withForceLevel:feedbackOption];
     }
+  }
+
 %end
-
+    //Stops scrolling, fixes pan gesture
 %hook UIScrollView
-
   -(void)layoutSubviews {
-
-    //Stops page changing on NC/CC, but stops scrolling EVERYWHERE. Theres probably a better way to do this
     if(killScroll) {
       self.scrollEnabled = NO;
     }
     %orig;
   }
-
+%end
+    //Hides time line
+%hook MediaControlsTimeControl
+  -(void)layoutSubviews {
+    self.hidden = hideTimeLine;
+  }
+%end
+    //Hides volume slider
+%hook MediaControlsVolumeContainerView
+  -(UISlider *)volumeSlider{
+    %orig.hidden = hideVolumeSlider;
+    return %orig;
+  }
 %end
 
-  //--Preferences--//
+
+       /////////////////
+      // Preferences //
+     /////////////////
+
+static void killApplications() {
+  //Apple Music
+  FBApplicationProcess * appleMusic = [[NSClassFromString(@"FBProcessManager") sharedInstance] createApplicationProcessForBundleID:@"com.apple.Music"];
+  [appleMusic killForReason:1 andReport:NO withDescription:@"Imperium - Killed Apple Music" completion:nil];
+  //Spotify
+  FBApplicationProcess * spotifyMusic = [[NSClassFromString(@"FBProcessManager") sharedInstance] createApplicationProcessForBundleID:@"com.spotify.client"];
+  [spotifyMusic killForReason:1 andReport:NO withDescription:@"Imperium - Killed Spotify" completion:nil];
+}
+
+static void loadPrefs() {
+  static NSString *file = @"/User/Library/Preferences/com.lacertosusrepo.imperiumprefs.plist";
+  NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:file];
+  if(!preferences) {
+    preferences = [[NSMutableDictionary alloc] init];
+  } else {
+      //Hide items
+    hideTimeLine = [[preferences objectForKey:@"hideTimeLine"] boolValue];
+    hideVolumeSlider = [[preferences objectForKey:@"hideVolumeSlider"] boolValue];
+
+    feedbackOption = [[preferences objectForKey:@"feedbackOption"] intValue];
+    longPressTime = [[preferences objectForKey:@"longPressTime"] floatValue];
+    doubleTap = [[preferences objectForKey:@"doubleTap"] intValue];
+    leftSwipe = [[preferences objectForKey:@"leftSwipe"] intValue];
+    rightSwipe = [[preferences objectForKey:@"rightSwipe"] intValue];
+    upSwipe = [[preferences objectForKey:@"upSwipe"] intValue];
+    downSwipe = [[preferences objectForKey:@"downSwipe"] intValue];
+    longPress = [[preferences objectForKey:@"longPress"] intValue];
+  }
+  [preferences release];
+}
+
+static NSString *nsNotificationString = @"com.lacertosusrepo.imperiumprefs/preferences.changed";
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-
-NSNumber * a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"feedbackOption" inDomain:domainString];
-feedbackOption = (a)? [a intValue]:0;
-
-NSNumber * b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"doubleTap" inDomain:domainString];
-doubleTap = (b)? [b intValue]:1;
-
-NSNumber * c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"leftSwipe" inDomain:domainString];
-leftSwipe = (c)? [c intValue]:2;
-
-NSNumber * d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"rightSwipe" inDomain:domainString];
-rightSwipe = (d)? [d intValue]:3;
-
-NSNumber * e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"longPress" inDomain:domainString];
-longPress = (e)? [e intValue]:4;
-
-NSNumber * f = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"longPressTime" inDomain:domainString];
-longPressTime = (f)? [f floatValue]:1.0;
-
-NSNumber * g = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"showTimeLine" inDomain:domainString];
-showTimeLine = (g)? [g boolValue]:NO;
-
+    loadPrefs();
 }
 
 %ctor {
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)killApplications, CFSTR("com.lacertosusrepo.imperiumprefs-killapplications"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 
-NSAutoreleasePool *pool = [NSAutoreleasePool new];
-//set initial `enable' variable
-notificationCallback(NULL, NULL, NULL, NULL, NULL);
-
-//register for notifications
-CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
-[pool release];
+  NSAutoreleasePool *pool = [NSAutoreleasePool new];
+  loadPrefs();
+  notificationCallback(NULL, NULL, NULL, NULL, NULL);
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+  [pool release];
 }
