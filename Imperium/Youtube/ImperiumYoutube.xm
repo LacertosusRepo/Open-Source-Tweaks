@@ -25,6 +25,24 @@
       //   Youtube   //
      /////////////////
 
+%hook YTPlaybackButton
+  -(id)initWithFrame:(CGRect)arg1 {
+    if(youtubeSwitch) {
+      return nil;
+      self.hidden = YES;
+    } else {
+      return %orig;
+    }
+  }
+%end
+/*%hook YTButton
+  -(void)layoutSubviews {
+    %orig;
+    if(youtubeSwitch) {
+      self.hidden = YES;
+    }
+  }
+%end*/
 
        /////////////////
       // Preferences //
@@ -35,8 +53,8 @@ static void loadPrefs() {
   if(!preferences) {
     preferences = [[NSMutableDictionary alloc] init];
   } else {
-    feedbackOption = [[preferences objectForKey:@"feedbackOption"] intValue];
     youtubeSwitch = [[preferences objectForKey:@"youtubeSwitch"] boolValue];
+    feedbackOption = [[preferences objectForKey:@"feedbackOption"] intValue];
     longPressTime = [[preferences objectForKey:@"longPressTime"] floatValue];
     doubleTap = [[preferences objectForKey:@"doubleTap"] intValue];
     leftSwipe = [[preferences objectForKey:@"leftSwipe"] intValue];
@@ -54,13 +72,9 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 }
 
 %ctor {
-
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
   loadPrefs();
   notificationCallback(NULL, NULL, NULL, NULL, NULL);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
   [pool release];
-
-  %init(_ungrouped, AppleMusicTransportButtons = NSClassFromString(@"Music.NowPlayingTransportButton"),
-    AppleMusicTransportControls = NSClassFromString(@"Music.NowPlayingTransportControlStackView"));
 }

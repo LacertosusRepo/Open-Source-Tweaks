@@ -99,15 +99,13 @@
 			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
 		</dict>
 
-
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Folder Image Options</string>
+			<string>Folder Background Options</string>
 			<key>footerText</key>
-			<string>Open folder to update changes. Use slider to change folder background alpha. Max is 1.0.</string>
+			<string>Use slider to change folder background alpha. Max is 1.0.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -153,6 +151,30 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.safiprefs</string>
+			<key>key</key>
+			<string>folderColorSwitch</string>
+			<key>label</key>
+			<string>Use Custom Color for Folders</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerFolderBackground</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Folder Background Color</string>
+			<key>icon</key>
+			<string>colorpickericon.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSSliderCell</string>
 			<key>default</key>
 			<string>0.0</string>
@@ -176,6 +198,23 @@
 			<integer>10</integer>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.safiprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Some changes may require a respring.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>SafiButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
 		</dict>
 
 		<dict>

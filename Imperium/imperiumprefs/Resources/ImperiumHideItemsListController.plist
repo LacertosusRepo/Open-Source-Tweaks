@@ -38,6 +38,20 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>hideSongTime</string>
+			<key>label</key>
+			<string>Hide Song Time</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>

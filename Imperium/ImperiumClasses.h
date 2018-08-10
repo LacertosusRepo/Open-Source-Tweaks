@@ -25,18 +25,20 @@ enum feedbackStrengths{
 -(id)createApplicationProcessForBundleID:(id)arg1;
 @end
 
+@interface FBSystemService : NSObject
++(id)sharedInstance;
+-(void)exitAndRelaunch:(BOOL)arg1;
+@end
+
 @interface ImperiumGestureController : NSObject
-+(void)selectGesture:(int)command withForceLevel:(int)forceLevel;
++(void)selectGesture:(int)command;
 +(void)callImpact:(int)forceLevel;
 @end
 
 @interface MediaControlsTimeControl
 @property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
-@end
-
-@interface MediaControlsVolumeContainerView
-@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
-@property (nonatomic, assign, readwrite) CGFloat alpha;
+@property (nonatomic,retain) UILabel * elapsedTimeLabel;                                       //@synthesize elapsedTimeLabel=_elapsedTimeLabel - In the implementation block
+@property (nonatomic,retain) UILabel * remainingTimeLabel;
 @end
 
 @interface MediaControlsTransportButton
@@ -45,6 +47,9 @@ enum feedbackStrengths{
 
 @interface MediaControlsTransportStackView : UIView
 @property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
+
+@interface MediaControlsVolumeContainerView
 @end
 
 @interface SBApplication : NSObject

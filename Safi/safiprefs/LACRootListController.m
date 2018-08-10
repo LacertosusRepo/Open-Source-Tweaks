@@ -1,6 +1,7 @@
 #include "LACRootListController.h"
 #import "SafiCustomHeaderClassCell.h"
 #import "PreferencesColorDefinitions.h"
+#import "libcolorpicker.h"
 #import <UIKit/UIKit.h>
 
 @implementation LACRootListController
@@ -88,6 +89,45 @@
 		if (![prefs objectForKey:[specifier.properties objectForKey:@"key"]]) {
 			return [specifier.properties objectForKey:@"default"];
 		}
+
+		NSString * key = specifier.properties[@"key"];
+		id value = [prefs objectForKey:key];
+		if([key isEqualToString:@"folderColorSwitch"]) {
+			BOOL enableCell = YES;
+			UITableViewCellSelectionStyle selectionStyle = UITableViewCellSelectionStyleDefault;
+			UIColor * disabledColor = [UIColor whiteColor];
+			if([value boolValue] == NO) {
+				enableCell = NO;
+				selectionStyle = UITableViewCellSelectionStyleNone;
+				disabledColor = [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0];
+			}
+
+			UITableViewCell * cell = [super tableView:(UITableView *)self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:10 inSection:0]];
+			cell.selectionStyle = selectionStyle;
+      cell.userInteractionEnabled = enableCell;
+      cell.textLabel.enabled = enableCell;
+      cell.detailTextLabel.enabled = enableCell;
+			cell.backgroundColor = disabledColor;
+		}
+
+		if([key isEqualToString:@"blurOption"]) {
+			BOOL enableCell = YES;
+			UITableViewCellSelectionStyle selectionStyle = UITableViewCellSelectionStyleDefault;
+			UIColor * disabledColor = [UIColor whiteColor];
+			if([value boolValue] == NO) {
+				enableCell = NO;
+				selectionStyle = UITableViewCellSelectionStyleNone;
+				disabledColor = [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0];
+			}
+
+			UITableViewCell * cell = [super tableView:(UITableView *)self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:4 inSection:0]];
+			cell.selectionStyle = selectionStyle;
+      cell.userInteractionEnabled = enableCell;
+      cell.textLabel.enabled = enableCell;
+      cell.detailTextLabel.enabled = enableCell;
+			cell.backgroundColor = disabledColor;
+		}
+
 		return [prefs objectForKey:[specifier.properties objectForKey:@"key"]];
 	}
 
@@ -98,21 +138,74 @@
 		if([specifier.properties objectForKey:@"PostNotification"]) {
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
 		}
+
+		NSString * key = specifier.properties[@"key"];
+		if([key isEqualToString:@"folderColorSwitch"]) {
+			BOOL enableCell = YES;
+			UITableViewCellSelectionStyle selectionStyle = UITableViewCellSelectionStyleDefault;
+			UIColor * disabledColor = [UIColor whiteColor];
+			if([value boolValue] == NO) {
+				enableCell = NO;
+				selectionStyle = UITableViewCellSelectionStyleNone;
+				disabledColor = [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0];
+			}
+
+			UITableViewCell * cell = [super tableView:(UITableView *)self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:10 inSection:0]];
+			cell.selectionStyle = selectionStyle;
+      cell.userInteractionEnabled = enableCell;
+      cell.textLabel.enabled = enableCell;
+      cell.detailTextLabel.enabled = enableCell;
+			cell.backgroundColor = disabledColor;
+		}
+
+		if([key isEqualToString:@"blurOption"]) {
+			BOOL enableCell = YES;
+			UITableViewCellSelectionStyle selectionStyle = UITableViewCellSelectionStyleDefault;
+			UIColor * disabledColor = [UIColor whiteColor];
+			if([value intValue] == 0) {
+				enableCell = NO;
+				selectionStyle = UITableViewCellSelectionStyleNone;
+				disabledColor = [UIColor colorWithRed:0.88 green:0.88 blue:0.88 alpha:1.0];
+			}
+
+			UITableViewCell * cell = [super tableView:(UITableView *)self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:4 inSection:0]];
+			cell.selectionStyle = selectionStyle;
+      cell.userInteractionEnabled = enableCell;
+      cell.textLabel.enabled = enableCell;
+      cell.detailTextLabel.enabled = enableCell;
+			cell.backgroundColor = disabledColor;
+		}
+
 		[super setPreferenceValue:value specifier:specifier];
 	}
 
-	-(void)twitter
-	{
+	-(void)colorPickerFolderBackground {
+		NSMutableDictionary * preferences = [NSMutableDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.safiprefs.plist"];
+		UIColor * initialColor = LCPParseColorString([preferences objectForKey:@"folderBackgroundColor"], @"#2f3640");
+		PFColorAlert * alert = [PFColorAlert colorAlertWithStartColor:initialColor showAlpha:NO];
+
+			[alert displayWithCompletion:^void (UIColor * pickedColor) {
+				NSString * hexColor = [UIColor hexFromColor:pickedColor];
+				//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha]; Incase I use the alpha value
+				[preferences setObject:hexColor forKey:@"folderBackgroundColor"];
+				[preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.safiprefs.plist" atomically:YES];
+				CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)@"com.lacertosusrepo.safiprefs/preferences.changed", NULL, NULL, YES);
+			}];
+	}
+
+	-(void)respring {
+		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.safiprefs-respring"), nil, nil, true);
+	}
+
+	-(void)twitter {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
 	}
 
-	-(void)paypal
-	{
+	-(void)paypal {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lacertosusrepo.github.io/depictions/resources/donate.html"] options:@{} completionHandler:nil];
 	}
 
-	-(void)github
-	{
+	-(void)github {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
 	}
 

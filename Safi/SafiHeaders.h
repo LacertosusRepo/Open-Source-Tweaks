@@ -5,15 +5,17 @@ enum blurOptions {
   extraLightBlur,
 };
 
-@interface SBFloatyFolderView : UIView
-@end
-
-@interface SBFolderBackgroundView
-@property (nonatomic, assign, readwrite) CGFloat alpha;
+@interface FBSystemService : NSObject
++(id)sharedInstance;
+-(void)exitAndRelaunch:(BOOL)arg1;
 @end
 
 @interface SBFolderControllerBackgroundView
 @property (nonatomic, assign, readwrite) CGFloat alpha;
+@end
+
+@interface SBFolderIconImageView
+@property (nonatomic, copy, readwrite) CALayer * layer;
 @end
 
 @interface SBIconController : NSObject

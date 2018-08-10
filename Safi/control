@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.safi
 Name: Safi
-Depends: mobilesubstrate
-Version: 1.0
+Depends: mobilesubstrate, org.thebigboss.libcolorpicker
+Version: 1.2
 Architecture: iphoneos-arm
 Description: An awesome MobileSubstrate tweak!
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

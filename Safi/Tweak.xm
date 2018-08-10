@@ -1,5 +1,6 @@
 //--Headers--//
 #import <SpringBoard/SpringBoard.h>
+#import "libcolorpicker.h"
 #import "SafiHeaders.h"
 
 //--Vars--//
@@ -11,15 +12,16 @@ UITapGestureRecognizer * tap;
 static BOOL hideFolderTitle;
 static BOOL hideFolderDots;
 static BOOL hideFolderIcon;
-static BOOL hideApps;
+static BOOL folderColorSwitch;
 static float folderBackgroundAlpha;
+static NSString * folderBackgroundColor;
 static int blurOption;
 static float blurAlpha;
 
 //--SpringBoard--//
+///	SBIconController may have way to add rows/collums
 
 %hook SBFloatyFolderView
-
 	//Hide folder title
 	-(BOOL)_showsTitle {
 		return !hideFolderTitle;
@@ -41,9 +43,8 @@ static float blurAlpha;
 
 %end
 
+		//Hide folder dots
 %hook SBIconListPageControl
-
-	//Hide folder dots
 	-(void)layoutSubviews {
 		if(self.hidden == NO && hideFolderDots) {
 			self.hidden = hideFolderDots;
@@ -51,31 +52,48 @@ static float blurAlpha;
 		%orig;
 		}
 	}
-
 %end
 
+		//Folder background alpha
 %hook SBFolderBackgroundView
-
-	//Folder background alpha
 	-(void)layoutSubviews {
-		self.alpha = folderBackgroundAlpha;
+		%orig;
+		UIImageView * tintView = MSHookIvar<UIImageView *>(self, "_tintView");
+		tintView.alpha = folderBackgroundAlpha;
+		if(folderColorSwitch) {
+			UIColor * folderColor = LCPParseColorString(folderBackgroundColor, @"#2f3640");
+			tintView.backgroundColor = folderColor;
+		}
 	}
-
 %end
 
+		//Homescreen folder icon
 %hook SBFolderIconImageView
+	//Get wallpaper
+	/*-(id)initWithFrame:(CGRect)arg1 {
+		%orig;
+		NSData * homeWallpaperData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/LockBackground.cpbitmap"];
+		CFDataRef homeWallpaperRef = (__bridge CFDataRef)homeWallpaperData;
+		NSAr * imageArray = (__bridge NSArray *)CPBitmapCreateImagesFromData(homeWallpaperRef, NULL, 1, NULL);
+		UIImage * homeWallpaper = [UIImage imageWithCGImage:(CGImageRef)imageArray[0]];
+	}*/
 
+	//Hide folder icon
 	-(void)layoutSubviews {
+		%orig;
 		UIView * backgroundView = MSHookIvar<UIView *>(self, "_backgroundView");
 		backgroundView.hidden = hideFolderIcon;
-		%orig;
+		if(folderColorSwitch) {
+			UIColor * folderColor = LCPParseColorString(folderBackgroundColor, @"#2f3640");
+			CGColor * folderColorConversion = folderColor.CGColor;				//Convert UIColor to CGColor
+			backgroundView.layer.contentsMultiplyColor = folderColorConversion;
+		}
 	}
 
 %end
 
+		//Set blur
 %hook SBFolderControllerBackgroundView
-
-	//Set blur
 	-(id)_blurEffect {
 		if(blurOption == noBlur) {
 			blurEffect = nil;
@@ -89,7 +107,6 @@ static float blurAlpha;
 		self.alpha = blurAlpha;
 		return blurEffect;
 	}
-
 %end
 
 //Fade icons when in folder, not working yet
@@ -123,6 +140,10 @@ static float blurAlpha;
 
 %end*/
 
+static void respring() {
+  [[%c(FBSystemService) sharedInstance] exitAndRelaunch:YES];
+}
+
 static void loadPrefs() {
 	static NSString * file = @"/User/Library/Preferences/com.lacertosusrepo.safiprefs.plist";
 	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:file];
@@ -133,8 +154,9 @@ static void loadPrefs() {
 		hideFolderTitle = [[preferences objectForKey:@"hideFolderTitle"] boolValue];
 		hideFolderDots = [[preferences objectForKey:@"hideFolderDots"] boolValue];
 		hideFolderIcon = [[preferences objectForKey:@"hideFolderIcon"] boolValue];
-		hideApps = [[preferences objectForKey:@"hideApps"] boolValue];
+		folderColorSwitch = [[preferences objectForKey:@"folderColorSwitch"] boolValue];
 		folderBackgroundAlpha = [[preferences objectForKey:@"folderBackgroundAlpha"] floatValue];
+		folderBackgroundColor = [preferences objectForKey:@"folderBackgroundColor"];
 		blurOption = [[preferences objectForKey:@"blurOption"] intValue];
 		blurAlpha = [[preferences objectForKey:@"blurAlpha"] floatValue];
 	}
@@ -151,5 +173,7 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	loadPrefs();
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)respring, CFSTR("com.lacertosusrepo.safiprefs-respring"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+
 	[pool release];
 }

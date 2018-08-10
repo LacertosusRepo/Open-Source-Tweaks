@@ -8,6 +8,8 @@
 
   //--Vars--//
   NSMutableDictionary *preferences;
+  static BOOL firstPlay;
+  SPTStatefulPlayer *playerControl;
 
   //--Pref Vars--//
   static BOOL spotifySwitch;
@@ -23,6 +25,12 @@
        /////////////////
       //   Spotify   //
      /////////////////
+
+%hook SPTStatefulPlayer
+  -(id)initWithPlayer:(id)arg1 {
+    return playerControl = %orig;
+  }
+%end
 
      //Hide music controls
 %hook SPTNowPlayingBaseHeadUnitView
@@ -45,6 +53,7 @@
      //Adds gestures to view
   -(id)initWithTheme:(id)arg1 {
     if(spotifySwitch) {
+      firstPlay = YES;
 
       tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)] autorelease];
       tapGesture.numberOfTapsRequired = 2;
@@ -65,7 +74,13 @@
 %new    //Need a %new for each method, thanks /u/DGh0st
 
   -(void)handleDoubleTap {
-    [ImperiumGestureController selectGesture:doubleTap withForceLevel:feedbackOption];
+    [ImperiumGestureController callImpact:feedbackOption];
+    if(firstPlay) {   //Allows the play action to start spotify and not the apple music app
+      [playerControl setPaused:NO];
+      firstPlay = NO;
+    } else {
+      [ImperiumGestureController selectGesture:doubleTap];
+    }
   }
 
 %new
@@ -73,18 +88,19 @@
   -(void)handleSwipe:(UIPanGestureRecognizer *)sender {
     CGPoint distance = [sender translationInView:self];
     if(sender.state == UIGestureRecognizerStateEnded) {
+      [ImperiumGestureController callImpact:feedbackOption];
         //Left swipe
       if(distance.x < -70 && distance.y > -50 && distance.y < 50) {
-        [ImperiumGestureController selectGesture:leftSwipe withForceLevel:feedbackOption];
+        [ImperiumGestureController selectGesture:leftSwipe];
         //Right swipe
       } else if(distance.x > -70 && distance.y > -50 && distance.y < 50) {
-        [ImperiumGestureController selectGesture:rightSwipe withForceLevel:feedbackOption];
+        [ImperiumGestureController selectGesture:rightSwipe];
         //Up swipe
       } else if(distance.y < 0) {
-        [ImperiumGestureController selectGesture:upSwipe withForceLevel:feedbackOption];
+        [ImperiumGestureController selectGesture:upSwipe];
         //Down swipe
       } else if(distance.y > 0) {
-        [ImperiumGestureController selectGesture:downSwipe withForceLevel:feedbackOption];
+        [ImperiumGestureController selectGesture:downSwipe];
       }
     }
   }
@@ -93,7 +109,8 @@
 
   -(void)handleLongPress:(UILongPressGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateEnded) {
-      [ImperiumGestureController selectGesture:longPress withForceLevel:feedbackOption];
+      [ImperiumGestureController callImpact:feedbackOption];
+      [ImperiumGestureController selectGesture:longPress];
     }
   }
 %end

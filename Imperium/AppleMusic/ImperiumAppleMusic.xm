@@ -56,7 +56,8 @@
 %new
 
   -(void)handleDoubleTap {
-    [ImperiumGestureController selectGesture:doubleTap withForceLevel:feedbackOption];
+    [ImperiumGestureController callImpact:feedbackOption];
+    [ImperiumGestureController selectGesture:doubleTap];
   }
 
 %new
@@ -64,18 +65,19 @@
   -(void)handleSwipe:(UIPanGestureRecognizer *)sender {
     CGPoint distance = [sender translationInView:((AppleMusicTransportControls*)self)];
     if(sender.state == UIGestureRecognizerStateEnded) {
+      [ImperiumGestureController callImpact:feedbackOption];
         //Left swipe
         if(distance.x < -70 && distance.y > -50 && distance.y < 50) {
-          [ImperiumGestureController selectGesture:leftSwipe withForceLevel:feedbackOption];
+          [ImperiumGestureController selectGesture:leftSwipe];
         //Right swipe
         } else if(distance.x > -70 && distance.y > -50 && distance.y < 50) {
-          [ImperiumGestureController selectGesture:rightSwipe withForceLevel:feedbackOption];
+          [ImperiumGestureController selectGesture:rightSwipe];
         //Up swipe
         } else if(distance.y < 0) {
-          [ImperiumGestureController selectGesture:upSwipe withForceLevel:feedbackOption];
+          [ImperiumGestureController selectGesture:upSwipe];
         //Down swipe
         } else if(distance.y > 0) {
-          [ImperiumGestureController selectGesture:downSwipe withForceLevel:feedbackOption];
+          [ImperiumGestureController selectGesture:downSwipe];
         }
       }
     }
@@ -84,18 +86,19 @@
 
   -(void)handleLongPress:(UILongPressGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateEnded) {
-      [ImperiumGestureController selectGesture:longPress withForceLevel:feedbackOption];
+      [ImperiumGestureController callImpact:feedbackOption];
+      [ImperiumGestureController selectGesture:longPress];
     }
   }
 
 %end
 
-    //Acapella-style now playing info
-%hook MusicNowPlayingControlsViewController
+    //Acapella-style now playing info, not done (obvi)
+/*%hook MusicNowPlayingControlsViewController
   -(void)viewDidLoad {
     %orig;
   }
-%end
+%end*/
 
        /////////////////
       // Preferences //

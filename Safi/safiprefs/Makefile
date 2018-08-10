@@ -3,6 +3,7 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = safiprefs
 safiprefs_FILES = LACRootListController.m SafiButtonController.m
+safiprefs_LIBRARIES = colorpicker
 safiprefs_INSTALL_PATH = /Library/PreferenceBundles
 safiprefs_FRAMEWORKS = UIKit CoreGraphics
 safiprefs_PRIVATE_FRAMEWORKS = Preferences

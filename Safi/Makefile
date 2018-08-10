@@ -5,6 +5,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Safi
 Safi_FILES = Tweak.xm
+Safi_LIBRARIES = colorpicker
 Safi_FRAMEWORKS = UIKit
 
 include $(THEOS_MAKE_PATH)/tweak.mk

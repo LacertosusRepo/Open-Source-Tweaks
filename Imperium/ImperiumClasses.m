@@ -4,34 +4,29 @@
 
 @implementation ImperiumGestureController
 
-  +(void)selectGesture:(int)command withForceLevel:(int)forceLevel {
+  +(void)selectGesture:(int)command {
     if(command == doNothing) {
       return; //Do nothing
-    }
-
-    [self callImpact:forceLevel];
-    if(command == playPause) {
+    } if(command == playPause) {
       MRMediaRemoteSendCommand(kMRTogglePlayPause, nil);
-    } else if(command == skipForward) {
+    }  if(command == skipForward) {
       MRMediaRemoteSendCommand(kMRNextTrack, nil);
-    } else if(command == skipBack) {
+    } if(command == skipBack) {
       MRMediaRemoteSendCommand(kMRPreviousTrack, nil);
-    } else if(command == nowPlaying) {
+    } if(command == nowPlaying) {
       //MusicBar by CPDigitalDarkroom, helpful to say the least
       SBApplication * currentlyPlaying = ((SBMediaController *)[NSClassFromString(@"SBMediaController") sharedInstance]).nowPlayingApplication;
       [[NSClassFromString(@"SBUIController") sharedInstance] _activateApplicationFromAccessibility:currentlyPlaying];
-    } else if(command == volumeUp) {
+    } if(command == volumeUp) {
       [[NSClassFromString(@"VolumeControl") sharedVolumeControl] increaseVolume];
       [[NSClassFromString(@"VolumeControl") sharedVolumeControl] cancelVolumeEvent];
-    } else if(command == volumeDown) {
+    } if(command == volumeDown) {
       [[NSClassFromString(@"VolumeControl") sharedVolumeControl] decreaseVolume];
       [[NSClassFromString(@"VolumeControl") sharedVolumeControl] cancelVolumeEvent];
-    } else if(command == volumeMute) {
+    } if(command == volumeMute) {
       [[NSClassFromString(@"VolumeControl") sharedVolumeControl] toggleMute];
-    } else {
-      NSLog(@"Imperium - No action selected! HOW?");
     }
-    NSLog(@"|| Command # - %i || Force - %i ||", command, forceLevel);
+    NSLog(@"|| Command # - %i ||", command);
   }
 
   +(void)callImpact:(int)withForceLevel {
@@ -39,7 +34,7 @@
     if(withForceLevel == noForce) {
       return; //Do nothing
     }
-    //Allocate feedback generatorpanGesture, modidified by hmm-norah on github
+    //Allocate feedback generatorpanGesture, modified by hmm-norah on github
     UIImpactFeedbackGenerator * generator = [[UIImpactFeedbackGenerator alloc] initWithStyle:withForceLevel];
     [generator prepare];
     [generator impactOccurred];

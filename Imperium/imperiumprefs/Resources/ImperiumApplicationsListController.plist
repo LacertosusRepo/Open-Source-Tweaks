@@ -26,13 +26,13 @@
   		<key>cell</key>
   		<string>PSSwitchCell</string>
   		<key>default</key>
-  		<true/>
+  		<false/>
   		<key>defaults</key>
   		<string>com.lacertosusrepo.imperiumprefs</string>
   		<key>key</key>
   		<string>spotifySwitch</string>
   		<key>label</key>
-  		<string>Enable in Spotify App</string>
+  		<string>Enable in Spotify</string>
   		<key>PostNotification</key>
   		<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
 		</dict>

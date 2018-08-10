@@ -107,18 +107,40 @@
 		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.imperiumprefs-killapplications"), nil, nil, true);
 	}
 
-	-(void)twitter
-	{
+	-(void)resetSettings {
+		UIAlertController * resetAlert = [UIAlertController alertControllerWithTitle:@"Imperium"
+																			message:@"Are you sure you want to reset settings? This will also respring your device."
+																			preferredStyle:UIAlertControllerStyleAlert];
+		UIAlertAction * confirmAction = [UIAlertAction actionWithTitle:@"Confirm" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+			NSError * error = nil;
+			[[NSFileManager defaultManager] removeItemAtPath:@"/User/Library/Preferences/com.lacertosusrepo.imperiumprefs.plist" error:&error];
+			if(!error) {
+				CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.imperiumprefs-respring"), nil, nil, true);
+			} else {
+				NSLog(@"error - %@", error);
+				UIAlertController * failedAlert = [UIAlertController alertControllerWithTitle:@"Imperium"
+																					message:@"Something went wrong when deleting the file. You can manually delete it to try to fix the problem."
+																					preferredStyle:UIAlertControllerStyleAlert];
+				UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:nil];
+				[failedAlert addAction:cancelAction];
+				[self presentViewController:failedAlert animated:YES completion:nil];
+			}
+		}];
+		UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+		[resetAlert addAction:confirmAction];
+		[resetAlert addAction:cancelAction];
+		[self presentViewController:resetAlert animated:YES completion:nil];
+	}
+
+	-(void)twitter {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
 	}
 
-	-(void)paypal
-	{
+	-(void)paypal {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.me/Lacertosus"] options:@{} completionHandler:nil];
 	}
 
-	-(void)github
-	{
+	-(void)github {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
 	}
 @end
@@ -198,8 +220,7 @@
 		[super setPreferenceValue:value specifier:specifier];
 	}
 
-	-(void)twitter
-	{
+	-(void)twitter {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
 	}
 @end
@@ -279,8 +300,7 @@
 		[super setPreferenceValue:value specifier:specifier];
 	}
 
-	-(void)twitter
-	{
+	-(void)twitter {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
 	}
 @end
