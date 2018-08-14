@@ -1,0 +1,9 @@
+Package: com.lacertosusrepo.glacies
+Name: Vitrum
+Depends: mobilesubstrate, org.thebigboss.libcolorpicker
+Version: 1.2
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>LacertosusCustomHeaderCell</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Module Options</string>
+			<key>footerText</key>
+			<string>Use slider to change module background alpha. Max is 1.0.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.vitrumprefs</string>
+			<key>key</key>
+			<string>hideCheveron</string>
+			<key>label</key>
+			<string>Hide Cheveron</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.vitrumprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.vitrumprefs</string>
+			<key>key</key>
+			<string>useCustomImage</string>
+			<key>label</key>
+			<string>Custom Image for Background</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.vitrumprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>choosePhoto</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Choose Image</string>
+			<key>icon</key>
+			<string>photopickericon.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.0</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.vitrumprefs</string>
+			<key>key</key>
+			<string>moduleBackgroundAlpha</string>
+			<key>label</key>
+			<string>Module Background Alpha</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.vitrumprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Background Options</string>
+			<key>footerText</key>
+			<string>First slider controls blur alpha, other is for the color alpha.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>1.0</string>
+			<key>min</key>
+			<string>0.01</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.vitrumprefs</string>
+			<key>key</key>
+			<string>backgroundAlpha</string>
+			<key>label</key>
+			<string>CC Background Alpha</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.vitrumprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.vitrumprefs</string>
+			<key>key</key>
+			<string>backgroundColorSwitch</string>
+			<key>label</key>
+			<string>Use Custom Color for CC</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.vitrumprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPicker</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>CC Background Color</string>
+			<key>icon</key>
+			<string>colorpickericon.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.4</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.vitrumprefs</string>
+			<key>key</key>
+			<string>controlCenterColorAlpha</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
+			<key>label</key>
+			<string>CC Background Alpha</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.vitrumprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Some changes may require a respring.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>LacertosusButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+		</dict>
+
+		<dict>
+			<key>label</key>
+			<string>Need Something?</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus 2018</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>LacertosusButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>LacertosusButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>LacertosusButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
