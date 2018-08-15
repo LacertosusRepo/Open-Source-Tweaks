@@ -10,8 +10,10 @@
 | Tweak | iOS Compatibility | Version | Architecture | Annotated |
 | ----- | ----------------- | ------- | ------------ | --------- |
 | CenterSpring | iOS 10 | v1.0 | arm7 arm64 | No |
+| EinsteinVibes | iOS dunno - 11 | v1.0 | arm64 | No |
 | HaptikCenter | iOS 8 - 9 | v2.8 | arm7 arm64 | Partially |
 | Imperium | iOS 10 - 11 | v1.8 | arm64 | Yes |
+| Mea | iOS 10 - 11 | v1.0 | arm64 | No |
 | Obscurite | iOS 10 | v1.2 | arm7 arm64 | Partially |
 | PopUpOnStart | iOS 8 - 9 | v1.1 | arm7 arm64 | No |
 | Safi | iOS 10 - 11 | v1.1 | arm64 | Yes |
