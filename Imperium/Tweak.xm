@@ -2,11 +2,10 @@
 #import<SpringBoard/SpringBoard.h>
 #import "ImperiumClasses.h"
 
+  //--Vars--//
   UITapGestureRecognizer * tapGesture;
   UIPanGestureRecognizer * panGesture;
   UILongPressGestureRecognizer * longPressGesture;
-
-  //--Vars--//
   NSMutableDictionary *preferences;
   BOOL killScroll = NO;
 
@@ -39,8 +38,6 @@
 %hook MediaControlsTransportStackView
   -(id)initWithFrame:(CGRect)arg1 {
 
-    killScroll = NO;
-
     tapGesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap)] autorelease];
     tapGesture.numberOfTapsRequired = 2;
     [self addGestureRecognizer:tapGesture];
@@ -53,9 +50,6 @@
     longPressGesture.allowableMovement = 0;
     [self addGestureRecognizer:longPressGesture];
 
-    if(panGesture.state == UIGestureRecognizerStateBegan) {
-      killScroll = YES;
-    }
     return %orig;
   }
 
@@ -97,14 +91,9 @@
     }
   }
 
-%end
-    //Stops scrolling, fixes pan gesture
-%hook UIScrollView
-  -(void)layoutSubviews {
-    if(killScroll) {
-      self.scrollEnabled = NO;
-    }
-    %orig;
+%new    //Method for SpinXI
+  -(float)longPressTime {
+    return longPressTime;
   }
 %end
     //Hides time line & remaining/elapsed song time
@@ -123,7 +112,6 @@
     return %orig;
   }
 %end
-
 
        /////////////////
       // Preferences //
@@ -183,12 +171,11 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 }
 
 %ctor {
-  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)killApplications, CFSTR("com.lacertosusrepo.imperiumprefs-killapplications"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)respring, CFSTR("com.lacertosusrepo.imperiumprefs-respring"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
   loadPrefs();
   notificationCallback(NULL, NULL, NULL, NULL, NULL);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)killApplications, CFSTR("com.lacertosusrepo.imperiumprefs-killapplications"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)respring, CFSTR("com.lacertosusrepo.imperiumprefs-respring"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
   [pool release];
 }

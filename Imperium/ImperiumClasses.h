@@ -35,6 +35,10 @@ enum feedbackStrengths{
 +(void)callImpact:(int)forceLevel;
 @end
 
+@interface MediaControlsMaterialView
+@property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
+@end
+
 @interface MediaControlsTimeControl
 @property (nonatomic, assign, readwrite, getter=isHidden) BOOL hidden;
 @property (nonatomic,retain) UILabel * elapsedTimeLabel;                                       //@synthesize elapsedTimeLabel=_elapsedTimeLabel - In the implementation block

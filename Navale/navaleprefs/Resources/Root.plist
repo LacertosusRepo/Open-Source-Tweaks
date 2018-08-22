@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>LacertosusCustomHeaderCell</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Options</string>
+			<key>footerText</key>
+			<string>Use slider to change dock alpha.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>usingFloatingDock</string>
+			<key>label</key>
+			<string>Apply to Floating Dock</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>gradientDirection</string>
+			<key>label</key>
+			<string>Gradient Options</string>
+			<key>default</key>
+			<string>0</string>
+			<key>validTitles</key>
+			<array>
+				<string>Verticle Gradient</string>
+				<string>Horizontal Gradient</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>1.0</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>dockAlpha</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Color Options</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerOne</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Color One</string>
+			<key>icon</key>
+			<string>colorpickericonone.png</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerTwo</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Color Two</string>
+			<key>icon</key>
+			<string>colorpickericontwo.png</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Gradient Preview</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>NavaleGradientPreviewCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.5</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentedCount</key>
+			<string>10</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>gradientPosition</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Changes will require a respring.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NavaleButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+		</dict>
+
+		<dict>
+			<key>label</key>
+			<string>Need Something?</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus 2018</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NavaleButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NavaleButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NavaleButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>

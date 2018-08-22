@@ -181,7 +181,8 @@
 
 	-(void)colorPickerFolderBackground {
 		NSMutableDictionary * preferences = [NSMutableDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.safiprefs.plist"];
-		UIColor * initialColor = LCPParseColorString([preferences objectForKey:@"folderBackgroundColor"], @"#2f3640");
+		NSString * folderBackgroundColor = [preferences objectForKey:@"folderBackgroundColor"];
+		UIColor * initialColor = LCPParseColorString(folderBackgroundColor, @"#2f3640");
 		PFColorAlert * alert = [PFColorAlert colorAlertWithStartColor:initialColor showAlpha:NO];
 
 			[alert displayWithCompletion:^void (UIColor * pickedColor) {
