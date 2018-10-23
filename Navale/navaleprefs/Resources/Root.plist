@@ -17,7 +17,7 @@
 			<key>label</key>
 			<string>Options</string>
 			<key>footerText</key>
-			<string>Use slider to change dock alpha.</string>
+			<string>Use slider to change dock alpha. ColorFlow option requires it to be installed (obviously) and will only replace the colors when music is playing.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -30,6 +30,20 @@
 			<string>usingFloatingDock</string>
 			<key>label</key>
 			<string>Apply to Floating Dock</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>useColorFlow</string>
+			<key>label</key>
+			<string>Use ColorFlow 4 Colors</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
 		</dict>
@@ -117,34 +131,22 @@
 			<key>cellClass</key>
 			<string>NavaleGradientPreviewCell</string>
 		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<string>0.5</string>
-			<key>min</key>
-			<string>0.0</string>
-			<key>max</key>
-			<string>1.0</string>
-			<key>showValue</key>
-			<true/>
-			<key>isSegmented</key>
-			<true/>
-			<key>segmentedCount</key>
-			<string>10</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.navaleprefs</string>
-			<key>key</key>
-			<string>gradientPosition</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
-		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Changes will require a respring.</string>
+			<string>Respring to apply FloatingDock and ColorFlow options.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>updateDock</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NavaleButtonCell</string>
+			<key>label</key>
+			<string>Update Dock</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -156,6 +158,7 @@
 			<key>label</key>
 			<string>Respring</string>
 		</dict>
+
 
 		<dict>
 			<key>label</key>

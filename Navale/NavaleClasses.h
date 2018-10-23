@@ -11,6 +11,9 @@ enum gradientDirections {
 @interface SBDockView : UIView
 @end
 
+@interface SBFloatingDockPlatterView : UIView
+@end
+
 @interface SBWallpaperEffectView : UIView
 @property (nonatomic,retain) UIView * blurView;
 @end

@@ -13,7 +13,7 @@
 | EinsteinVibes | iOS dunno - 11 | v1.0 | arm64 | No |
 | HaptikCenter | iOS 8 - 9 | v2.8 | arm7 arm64 | Partially |
 | Imperium | iOS 11 | v2.0 | arm64 | Yes |
-| Navale | iOS 10 - 11 | v1.1 | arm64 | No |
+| Navale | iOS 10 - 11 | v1.3 | arm64 | Yes |
 | Mea | iOS 10 - 11 | v1.0 | arm64 | No |
 | Obscurite | iOS 10 | v1.2 | arm7 arm64 | Partially |
 | PopUpOnStart | iOS 8 - 9 | v1.1 | arm7 arm64 | No |

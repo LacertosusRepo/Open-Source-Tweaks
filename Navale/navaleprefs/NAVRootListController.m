@@ -118,6 +118,10 @@
 			}];
 	}
 
+	-(void)updateDock {
+		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs-updateDock"), nil, nil, true);
+	}
+
 	-(void)respring {
 		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs-respring"), nil, nil, true);
 	}
