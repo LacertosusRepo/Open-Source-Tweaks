@@ -1,1 +1,1 @@
-{ Filter = { Bundles = ( "com.google.chrome.ios" ); }; }
+{ Filter = { Bundles = ( "com.google.chrome.ios", "com.apple.mobilesafari" ); }; }

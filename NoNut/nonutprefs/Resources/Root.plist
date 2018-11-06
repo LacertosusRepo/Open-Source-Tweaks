@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>LacertosusCustomHeaderCell</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Options</string>
+			<key>footerText</key>
+			<string>Why did I put this much effort into this?</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.nonutprefs</string>
+			<key>key</key>
+			<string>onlyOneAlert</string>
+			<key>label</key>
+			<string>Only Once Per Session</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.nonutprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Customize Alert</string>
+			<key>footerText</key>
+			<string>Leaving any of these empty will use the default text for itself. Man, if I put this much work into school I'd have much better grades.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>No Nut November</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.nonutprefs</string>
+			<key>autoCaps</key>
+			<string>sentences</string>
+			<key>placeholder</key>
+			<string>Alert Title</string>
+			<key>key</key>
+			<string>titleNN</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.nonutprefs./preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>No Nut November</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.nonutprefs</string>
+			<key>autoCaps</key>
+			<string>sentences</string>
+			<key>placeholder</key>
+			<string>Alert Message</string>
+			<key>key</key>
+			<string>messageNN</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.nonutprefs./preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>No Nut November</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.nonutprefs</string>
+			<key>autoCaps</key>
+			<string>sentences</string>
+			<key>placeholder</key>
+			<string>Abstain Action</string>
+			<key>key</key>
+			<string>abstainNN</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.nonutprefs./preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>No Nut November</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.nonutprefs</string>
+			<key>autoCaps</key>
+			<string>sentences</string>
+			<key>placeholder</key>
+			<string>Fail Action</string>
+			<key>key</key>
+			<string>failNN</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.nonutprefs./preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>label</key>
+			<string>Need Something?</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Created by LacertosusDeus 2018. Fuck I could've done anything else and been more productive today.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NoNutButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NoNutButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NoNutButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>

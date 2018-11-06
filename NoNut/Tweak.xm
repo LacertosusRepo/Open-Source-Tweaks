@@ -1,5 +1,4 @@
 @interface IncognitoViewController : UIViewController
-//@property (nonatomic, assign, readwrite, getter=isIncognito) BOOL incognito;
 -(void)noNutAlert;
 @end
 
@@ -8,36 +7,148 @@
 -(id)currentTab;
 @end
 
-TabModel * tabControl;
+@interface BrowserController : NSObject
+@property (nonatomic, assign, readwrite, getter=isPrivateBrowsingEnabled) BOOL privateBrowsingEnabled;
+-(void)togglePrivateBrowsingEnabled;
+-(void)noNutAlert;
+@end
 
+  //Pref Vars
+  static NSString * titleNN;
+  static NSString * messageNN;
+  static NSString * abstainNN;
+  static NSString * failNN;
+  static BOOL onlyOneAlert = YES;
+
+  //Vars
+  TabModel * tabControl;
+  BrowserController * browserControl;
+  static BOOL sentAlertThisSession;
+
+
+  //Chrome
 %hook TabModel
   -(id)initWithSessionWindow:(id)arg1 sessionService:(id)arg2 browserState:(id)arg3 {
     return tabControl = %orig;
   }
 %end
 
+%hook TabGridViewController
+  -(id)init {
+    sentAlertThisSession = NO;
+    return %orig;
+  }
+%end
+
 %hook IncognitoViewController
   -(void)wasShown {
-    NSLog(@"Called");
     %orig;
-    [self noNutAlert];
+    if(onlyOneAlert && !sentAlertThisSession) {
+      [self noNutAlert];
+    } else if(!onlyOneAlert) {
+      [self noNutAlert];
+    }
   }
 
 %new
 
--(void)noNutAlert {
-  UIAlertController * pendingNutAlert = [UIAlertController alertControllerWithTitle:@"Zip those pants back up!"
-                                      message:@"Stop! If you continue you shall to fail your duty!"
-                                      preferredStyle:UIAlertControllerStyleAlert];
+  -(void)noNutAlert {
+    if([titleNN isEqualToString:@""]) {
+      titleNN = @"No Nut November";
+    } if([messageNN isEqualToString:@""]) {
+      messageNN = @"Don't fucking move, you can still turn back.";
+    } if([abstainNN isEqualToString:@""]) {
+      abstainNN = @"I Will Abstain!";
+    } if([failNN isEqualToString:@""]) {
+      failNN = @"Submit to the Urge";
+    }
 
-  UIAlertAction * surrenderAction = [UIAlertAction actionWithTitle:@"I will Abstain!" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-    [tabControl closeTab:[tabControl currentTab]];
-  }];
+    UIAlertController * pendingNutAlert = [UIAlertController alertControllerWithTitle:titleNN message:messageNN preferredStyle:UIAlertControllerStyleAlert];
 
-  UIAlertAction * failAction = [UIAlertAction actionWithTitle:@"Submit to the Urge" style:UIAlertActionStyleDestructive handler:nil];
+    UIAlertAction * abstainAction = [UIAlertAction actionWithTitle:abstainNN style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+      [tabControl closeTab:[tabControl currentTab]];
+    }];
 
-  [pendingNutAlert addAction:surrenderAction];
-  [pendingNutAlert addAction:failAction];
-  [self presentViewController:pendingNutAlert animated:YES completion:nil];
-}
+    UIAlertAction * failAction = [UIAlertAction actionWithTitle:failNN style:UIAlertActionStyleDestructive handler:nil];
+
+    [pendingNutAlert addAction:abstainAction];
+    [pendingNutAlert addAction:failAction];
+    [self presentViewController:pendingNutAlert animated:YES completion:^{
+      sentAlertThisSession = YES;
+    }];
+  }
 %end
+
+  //Safari
+%hook BrowserController
+
+  -(void)togglePrivateBrowsingEnabled {
+    %orig;
+    if(self.privateBrowsingEnabled) {
+      if(onlyOneAlert && !sentAlertThisSession) {
+        [self noNutAlert];
+      } else if(!onlyOneAlert) {
+        [self noNutAlert];
+      }
+    }
+  }
+
+%new
+
+  -(void)noNutAlert {
+    if([titleNN isEqualToString:@""]) {
+      titleNN = @"No Nut November";
+    } if([messageNN isEqualToString:@""]) {
+      messageNN = @"Don't fucking move, you can still turn back.";
+    } if([abstainNN isEqualToString:@""]) {
+      abstainNN = @"I Will Abstain!";
+    } if([failNN isEqualToString:@""]) {
+      failNN = @"Submit to the Urge";
+    }
+
+    UIAlertController * pendingNutAlert = [UIAlertController alertControllerWithTitle:titleNN message:messageNN preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction * abstainAction = [UIAlertAction actionWithTitle:abstainNN style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+      [self togglePrivateBrowsingEnabled];
+    }];
+
+    UIAlertAction * failAction = [UIAlertAction actionWithTitle:failNN style:UIAlertActionStyleDestructive handler:nil];
+    [pendingNutAlert addAction:abstainAction];
+    [pendingNutAlert addAction:failAction];
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:pendingNutAlert animated:YES completion:^{
+      sentAlertThisSession = YES;
+    }];
+  }
+%end
+
+static void loadPrefs() {
+  NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.nonutprefs.plist"];
+  if(!preferences) {
+    preferences = [[NSMutableDictionary alloc] init];
+    titleNN = @"No Nut November";
+    messageNN = @"Don't fucking move, you can still turn back.";
+    abstainNN = @"I Will Abstain!";
+    failNN = @"Submit to the Urge";
+    onlyOneAlert = YES;
+    [preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.nonutprefs.plist" atomically:YES];
+  } else {
+    titleNN = [preferences objectForKey:@"titleNN"];
+    messageNN = [preferences objectForKey:@"messageNN"];
+    abstainNN = [preferences objectForKey:@"abstainNN"];
+    failNN = [preferences objectForKey:@"failNN"];
+    onlyOneAlert = [[preferences objectForKey:@"onlyOneAlert"] boolValue];
+  }
+  [preferences release];
+}
+
+static NSString *nsNotificationString = @"com.lacertosusrepo.nonutprefs/preferences.changed";
+static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+	loadPrefs();
+}
+
+%ctor {
+  NSAutoreleasePool *pool = [NSAutoreleasePool new];
+  loadPrefs();
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+  [pool release];
+}
