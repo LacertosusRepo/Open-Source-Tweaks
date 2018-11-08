@@ -5,6 +5,8 @@
 [![GitHub forks](https://img.shields.io/github/forks/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/network)
 [![GitHub forks](https://img.shields.io/github/license/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/license)
 
+*If you're here to issue a pull request, please navigate over to [Projects](https://github.com/LacertosusRepo/Projects) and make one there with the corresponding project.*
+
 ## Information Table
 
 | Tweak | iOS Compatibility | Version | Architecture | Annotated |
