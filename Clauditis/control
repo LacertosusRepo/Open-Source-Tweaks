@@ -1,0 +1,10 @@
+Package: com.lacertosusrepo.clauditis
+Name: Clauditis
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Lock your device from home...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
+Depiction: http://lacertosusrepo.github.io/depictions/com.lacertosusrepo.clauditis/index.html
