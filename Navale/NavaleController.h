@@ -1,13 +1,13 @@
 #import "ColorFlowAPI.h"
 
-@interface NavaleViewController : UIViewController<CFWColorDelegate>
+@interface NavaleController : UIViewController<CFWColorDelegate>
 @property (nonatomic, retain) UIColor *_Nonnull colorOne;
 @property (nonatomic, retain) UIColor *_Nonnull colorTwo;
 @end
 
-@implementation NavaleViewController
+@implementation NavaleController
 +(nonnull id)sharedInstance {
-  static NavaleViewController *sharedInstance = nil;
+  static NavaleController *sharedInstance = nil;
   static dispatch_once_t oncePredicate;
   dispatch_once(&oncePredicate, ^{
     sharedInstance = [[self alloc] init];
@@ -17,7 +17,6 @@
 
 -(nonnull id)init {
   if(self = [super init]) {
-    NSLog(@"Init");
     [[NSClassFromString(@"CFWSBMediaController") sharedInstance] addColorDelegateAndNotify:self];
   }
   return self;

@@ -1,3 +1,4 @@
+  //--Classes--//
 @interface IncognitoViewController : UIViewController
 -(void)noNutAlert;
 @end
@@ -13,6 +14,7 @@
 -(void)noNutAlert;
 @end
 
+
   //Pref Vars
   static NSString * titleNN;
   static NSString * messageNN;
@@ -26,15 +28,17 @@
   static BOOL sentAlertThisSession;
 
 
-  //Chrome
+  //--Chrome--//
 %hook TabModel
   -(id)initWithSessionWindow:(id)arg1 sessionService:(id)arg2 browserState:(id)arg3 {
+      //get TabModel instance
     return tabControl = %orig;
   }
 %end
 
 %hook TabGridViewController
   -(id)init {
+      //set alert as not shown this session
     sentAlertThisSession = NO;
     return %orig;
   }
@@ -43,6 +47,7 @@
 %hook IncognitoViewController
   -(void)wasShown {
     %orig;
+      //check if alert should be shown when a incognito tab is opened
     if(onlyOneAlert && !sentAlertThisSession) {
       [self noNutAlert];
     } else if(!onlyOneAlert) {
@@ -53,6 +58,7 @@
 %new
 
   -(void)noNutAlert {
+      //check if any of the strings are nil, if they are replace it with default
     if([titleNN isEqualToString:@""]) {
       titleNN = @"No Nut November";
     } if([messageNN isEqualToString:@""]) {
@@ -63,14 +69,17 @@
       failNN = @"Submit to the Urge";
     }
 
+      //setup alert
     UIAlertController * pendingNutAlert = [UIAlertController alertControllerWithTitle:titleNN message:messageNN preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction * abstainAction = [UIAlertAction actionWithTitle:abstainNN style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+        //closes current tab if the user chooses to abstain
       [tabControl closeTab:[tabControl currentTab]];
     }];
 
     UIAlertAction * failAction = [UIAlertAction actionWithTitle:failNN style:UIAlertActionStyleDestructive handler:nil];
 
+      //add actions to alert
     [pendingNutAlert addAction:abstainAction];
     [pendingNutAlert addAction:failAction];
     [self presentViewController:pendingNutAlert animated:YES completion:^{
@@ -84,6 +93,7 @@
 
   -(void)togglePrivateBrowsingEnabled {
     %orig;
+      //check if alert should be shown when a private tab is opened
     if(self.privateBrowsingEnabled) {
       if(onlyOneAlert && !sentAlertThisSession) {
         [self noNutAlert];
@@ -96,6 +106,7 @@
 %new
 
   -(void)noNutAlert {
+      //check if any of the strings are nil, if they are replace it with default
     if([titleNN isEqualToString:@""]) {
       titleNN = @"No Nut November";
     } if([messageNN isEqualToString:@""]) {
@@ -106,13 +117,17 @@
       failNN = @"Submit to the Urge";
     }
 
+      //setup alert
     UIAlertController * pendingNutAlert = [UIAlertController alertControllerWithTitle:titleNN message:messageNN preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction * abstainAction = [UIAlertAction actionWithTitle:abstainNN style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+      //closes current tab if the user chooses to abstain
       [self togglePrivateBrowsingEnabled];
     }];
 
     UIAlertAction * failAction = [UIAlertAction actionWithTitle:failNN style:UIAlertActionStyleDestructive handler:nil];
+
+      //add actions to alert
     [pendingNutAlert addAction:abstainAction];
     [pendingNutAlert addAction:failAction];
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:pendingNutAlert animated:YES completion:^{

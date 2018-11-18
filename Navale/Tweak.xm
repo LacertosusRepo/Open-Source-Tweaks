@@ -1,6 +1,6 @@
   //Headers
 #import "NavaleClasses.h"
-#import "NavaleViewController.h"
+#import "NavaleController.h"
 #import "libcolorpicker.h"
 
   //Vars
@@ -20,7 +20,7 @@
     //get dock instance and if using colorflow colors, start listening
   -(id)initWithDockListView:(id)arg1 forSnapshot:(BOOL)arg2 {
     if(useColorFlow) {
-      [[NSClassFromString(@"NavaleViewController") alloc] init];
+      [[NSClassFromString(@"NavaleController") alloc] init];
     }
     return dockView = %orig;
   }
@@ -54,9 +54,9 @@
       }
 
         //if using colorflow and if neither of the colors are null, get the colors from controller
-      if(useColorFlow && !([[NSClassFromString(@"NavaleViewController") sharedInstance] primaryColor] == nil || [[NSClassFromString(@"NavaleViewController") sharedInstance] secondaryColor] == nil)) {
-        colorOne = [[NSClassFromString(@"NavaleViewController") sharedInstance] primaryColor];
-        colorTwo = [[NSClassFromString(@"NavaleViewController") sharedInstance] secondaryColor];
+      if(useColorFlow && !([[NSClassFromString(@"NavaleController") sharedInstance] primaryColor] == nil || [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor] == nil)) {
+        colorOne = [[NSClassFromString(@"NavaleController") sharedInstance] primaryColor];
+        colorTwo = [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor];
       }
 
         //set gradient colors and frame
@@ -72,7 +72,7 @@
     //get dock instance and if using colorflow colors, start listening
   -(id)initWithReferenceHeight:(double)arg1 maximumContinuousCornerRadius:(double)arg2 {
     if(useColorFlow) {
-      [[NSClassFromString(@"NavaleViewController") alloc] init];
+      [[NSClassFromString(@"NavaleControllerNavaleController") alloc] init];
     }
     return floatingDockView = %orig;
   }
@@ -106,9 +106,9 @@
       }
 
         //if using colorflow and if neither of the colors are null, get the colors from controller
-      if(useColorFlow && !([[NSClassFromString(@"NavaleViewController") sharedInstance] primaryColor] == nil || [[NSClassFromString(@"NavaleViewController") sharedInstance] secondaryColor] == nil)) {
-        colorOne = [[NSClassFromString(@"NavaleViewController") sharedInstance] primaryColor];
-        colorTwo = [[NSClassFromString(@"NavaleViewController") sharedInstance] secondaryColor];
+      if(useColorFlow && !([[NSClassFromString(@"NavaleController") sharedInstance] primaryColor] == nil || [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor] == nil)) {
+        colorOne = [[NSClassFromString(@"NavaleController") sharedInstance] primaryColor];
+        colorTwo = [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor];
       }
 
         //set gradient colors and bounds, then get the corner radius
@@ -136,6 +136,7 @@ static void respring() {
 
 static void loadPrefs() {
 	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navaleprefs.plist"];
+    //if preference file doesnt exist, make one and set default values
   if(!preferences) {
 		preferences = [[NSMutableDictionary alloc] init];
     usingFloatingDock = NO;
@@ -143,8 +144,12 @@ static void loadPrefs() {
     gradientDirection = verticle;
     dockAlpha = 1.0;
     //gradientPosition = 0.5;
-	} else if(![[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"]) {
+    [preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.navaleprefs.plist" atomically:YES];
+    //if the colors preference file doesnt exist, make one and set default values
+	} if(![[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"]) {
     NSMutableDictionary * colorData = [[NSMutableDictionary alloc] init];
+    [colorData setValue:@"#FFFFFF" forKey:@"colorOne"];
+    [colorData setValue:@"#FFFFFF" forKey:@"colorTwo"];
     [colorData writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist" atomically:YES];
   } else {
 		usingFloatingDock = [[preferences objectForKey:@"usingFloatingDock"] boolValue];
