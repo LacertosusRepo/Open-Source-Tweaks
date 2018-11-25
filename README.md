@@ -12,7 +12,7 @@
 | Tweak | iOS Compatibility | Version | Architecture | Annotated |
 | ----- | ----------------- | ------- | ------------ | --------- |
 | CenterSpring | iOS 10 | v1.0 | arm7 arm64 |  |
-| Clauditis | iOS 11 | unreleased | arm64 | ✔ |
+| Clauditis | iOS 11 | v1.0 | arm64 | ✔ |
 | EinsteinVibes | iOS dunno - 11 | v1.0 | arm64 |  |
 | HaptikCenter | iOS 8 - 9 | v2.8 | arm7 arm64 |  |
 | Imperium | iOS 11 | v2.0 | arm64 | ✔ |
