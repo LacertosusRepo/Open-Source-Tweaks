@@ -12,11 +12,11 @@
 | Tweak | iOS Compatibility | Version | Architecture | Annotated |
 | ----- | ----------------- | ------- | ------------ | --------- |
 | CenterSpring | iOS 10 | v1.0 | arm7 arm64 |  |
-| Clauditis | iOS 11 | v1.0 | arm64 | ✔ |
+| Clauditis | iOS 11 - 12.1.1 | v1.0 | arm64 | ✔ |
 | EinsteinVibes | iOS dunno - 11 | v1.0 | arm64 |  |
 | HaptikCenter | iOS 8 - 9 | v2.8 | arm7 arm64 |  |
-| Imperium | iOS 11 | v2.0 | arm64 | ✔ |
-| Navale | iOS 10 - 11 | v1.3.1 | arm64 | ✔ |
+| Imperium | iOS 11 - 12.1.1 | v2.0 | arm64 | ✔ |
+| Navale | iOS 10 - 12.1.1 | v1.3.1 | arm64 | ✔ |
 | NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ |
 | Mea | iOS 10 - 11 | v1.0 | arm64 |  |
 | MovieBoxPro Text Fixes | iOS 11 | v1.0 | arm64 | ✔ |
@@ -25,7 +25,7 @@
 | Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ |
 | SoundSpring | iOS 8 - 9 | v3.5 | arm7 arm64 |  |
 | Volbrate | iOS 8 - 9 | v1.4 | arm7 arm64 | ✔ |
-| VolbrateXI | iOS 10 - 11 | v1.0 | arm64 | ✔ |
+| VolbrateXI | iOS 10 - 12.1.1 | v1.0 | arm64 | ✔ |
 
 ## Goal
 *Annotate most of the open source tweaks.*
