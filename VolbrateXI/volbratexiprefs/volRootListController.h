@@ -1,9 +1,8 @@
 #import <Preferences/PSListController.h>
+#import <Preferences/PSTableCell.h>
+#import <Preferences/PSSpecifier.h>
 
 @interface volRootListController : PSListController
-{
-	UIStatusBarStyle prevStatusStyle;
-}
 @end
 
 @interface VolbrateCustomHeaderCell : UIView

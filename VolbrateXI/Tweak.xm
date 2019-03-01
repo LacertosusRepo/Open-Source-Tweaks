@@ -1,169 +1,96 @@
 		//---Headers---//
 #import <AudioToolbox/AudioToolbox.h>
 #import <AudioToolbox/AudioServices.h>
-#include <CoreFoundation/CFNotificationCenter.h>
-#import <Foundation/NSUserDefaults.h>
-#import "JBBulletinManager.h"
 #import "Headers.h"
 
 		//---Variables---//
-static int vibOption = 1;
-static BOOL hideHUD = NO;
-static BOOL useTaptic = NO;
-static float timeLength = 0.05;
-static float vibeIntensity = 0.75;
-
-		//---Preferences---//
-static NSString *domainString = @"com.lacertosusrepo.volbratexiprefs";
-static NSString *notificationString = @"com.lacertosusrepo.volbratexiprefs/preferences.changed";
-
-@interface NSUserDefaults (UFS_Category)
-- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
-- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
-@end
+	static int vibrationChoice;
+	static int forceLevel;
+	static BOOL hideHUD;
+	static BOOL useHaptic;
 
 @implementation FeedbackCall
 +(void)vibrateDevice {
-
-	if(useTaptic == YES) {
-
-		[[UIDevice currentDevice]._tapticEngine actuateFeedback:1];
-
-	} else {
-
-		[FeedbackCall vibrateDeviceForTimeLengthIntensity:timeLength vibrationIntensity:vibeIntensity];
-
+	if(useHaptic) {
+		UIImpactFeedbackGenerator * feedback = [[UIImpactFeedbackGenerator alloc] initWithStyle:forceLevel];
+		[feedback prepare];
+		[feedback impactOccurred];
+	} if(!useHaptic) {
+		AudioServicesPlaySystemSound(1519);
 	}
-
-}
-
-+(void)vibrateDeviceForTimeLengthIntensity:(CGFloat)timeLength vibrationIntensity:(CGFloat)vibeIntensity {
-
-	NSMutableDictionary* dict = [NSMutableDictionary dictionary];
-	NSMutableArray* arr = [NSMutableArray array];
-
-	[arr addObject:[NSNumber numberWithBool:YES]]; //vibrate for time length
-	[arr addObject:[NSNumber numberWithInt:timeLength*1000]];
-
-	[arr addObject:[NSNumber numberWithBool:NO]];
-	[arr addObject:[NSNumber numberWithInt:50]];
-
-	[dict setObject:arr forKey:@"VibePattern"];
-	[dict setObject:[NSNumber numberWithFloat:vibeIntensity] forKey:@"Intensity"];
-
-	AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dict);
-
 }
 @end
 
-		//---Global Vars---//
-	static BOOL volMax;
-	static BOOL volMin;
-	static float x;
-
-		//---Code---//
+		//---Hooks---//
 %hook VolumeControl
-
 	-(void)increaseVolume {
-
-		if(vibOption == 2) {
-
+		if(vibrationChoice == 2) {
 			[FeedbackCall vibrateDevice];
-
-		} if(vibOption == 1 && volMax == YES){
-
+		} if(vibrationChoice == 1 && [[NSClassFromString(@"VolumeControl") sharedVolumeControl] volume] == 1){
 			[FeedbackCall vibrateDevice];
-
 		}
-
 	%orig;
 	}
 
 	-(void)decreaseVolume {
-
-		if(vibOption == 2) {
-
+		if(vibrationChoice == 2) {
 			[FeedbackCall vibrateDevice];
-
-		} if(vibOption == 1 && volMin == YES){
-
+		} if(vibrationChoice == 1 && [[NSClassFromString(@"VolumeControl") sharedVolumeControl] volume] == 0){
 			[FeedbackCall vibrateDevice];
-
 		}
-
 	%orig;
 	}
 
-	-(float)volume {
-
-		x = %orig;
-
-		if(x == 0){
-
-			volMin = YES;
-
-		} if(x == 1){
-
-			volMax = YES;
-
-		} if(x > 0 && x < 1) {
-
-			volMin = NO;
-			volMax = NO;
-
-		}
-
-	return %orig;
-	}
-
 	-(void)_presentVolumeHUDWithMode:(int)arg1 volume:(float)arg2 {
-
 		if(hideHUD == YES) {
-
-			return ;
-
+			return;
+		} else {
+			%orig;
 		}
 	}
-
 %end
 
 		//---Test Vibration---//
 void startTestVibration() {
-
 	[FeedbackCall vibrateDevice];
-	[[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:@"Volbrate!" message:@"Vibration Test" bundleID:@"com.apple.Preferences"];
+}
 
+		//---Respring---//
+static void respring() {
+  [[%c(FBSystemService) sharedInstance] exitAndRelaunch:YES];
 }
 
 		//---Preferences---//
+static void loadPrefs() {
+	static NSString *file = @"/User/Library/Preferences/com.lacertosusrepo.volbratexiprefs.plist";
+	NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:file];
+	if(!preferences) {
+		preferences = [[NSMutableDictionary alloc] init];
+		vibrationChoice = 2;
+		forceLevel = 0;
+		hideHUD = YES;
+		useHaptic = YES;
+		[preferences writeToFile:file atomically:YES];
+	} else {
+		vibrationChoice = [[preferences objectForKey:@"vibrationChoice"] intValue];
+		forceLevel = [[preferences objectForKey:@"forceLevel"] intValue];
+		hideHUD = [[preferences objectForKey:@"hideHUD"] boolValue];
+		useHaptic = [[preferences objectForKey:@"useHaptic"] boolValue];
+	}
+	[preferences release];
+}
+
+static NSString *nsNotificationString = @"com.lacertosusrepo.volbratexiprefs/preferences.changed";
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-
-	NSNumber *a = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"vibOption" inDomain:domainString];
-	vibOption = (a)? [a intValue]:1;
-
-	NSNumber *b = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"timeLength" inDomain:domainString];
-	timeLength = (b)? [b floatValue]:0.05;
-
-	NSNumber *c = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"vibeIntensity" inDomain:domainString];
-	vibeIntensity = (c)? [c floatValue]:0.75;
-
-	NSNumber *d = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hideHUD" inDomain:domainString];
-	hideHUD = (d)? [d boolValue]:NO;
-
-	NSNumber *e = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"useTaptic" inDomain:domainString];
-	useTaptic = (e)? [e boolValue]:NO;
-
+    loadPrefs();
 }
 
 %ctor {
-
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)startTestVibration, CFSTR("com.lacertosusrepo.volbratexi-testvibration"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	//set initial `enable' variable
+	loadPrefs();
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
-
-	//register for notifications
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)startTestVibration, CFSTR("com.lacertosusrepo.volbratexi-testvibration"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)respring, CFSTR("com.lacertosusrepo.volbratexi-respring"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
 	[pool release];
 }
