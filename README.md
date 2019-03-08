@@ -13,7 +13,8 @@
 | ----- | ----------------- | ------- | ------------ | --------- |
 | CenterSpring | iOS 10 | v1.0 | arm7 arm64 |  |
 | Clauditis | iOS 11 - 12.1.2 | v1.0 | arm64 | ✔ |
-| EinsteinVibes | iOS dunno - 11 | v1.0 | arm64 |  |
+| EinsteinVibes | iOS unkown - 11 | v1.0 | arm64 |  |
+| FLEX4Me | iOS 11-12.1.2 | v1.0 | arm64 | ✔ |
 | HaptikCenter | iOS 8 - 9 | v2.8 | arm7 arm64 |  |
 | Imperium | iOS 11 - 12.1.2 | v2.0 | arm64 | ✔ |
 | Navale | iOS 10 - 12.1.2 | v1.3.1 | arm64 | ✔ |
