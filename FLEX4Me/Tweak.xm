@@ -25,3 +25,16 @@
     }
   }
 %end
+
+%ctor {
+  NSString *flexPath = @"/Library/Application Support/FLEXible/FLEX.dylib";
+  NSAutoreleasePool *pool = [NSAutoreleasePool new];
+
+  /*
+   * Check for the FLEX dylib, then load it
+   */
+  if([[NSFileManager defaultManager] fileExistsAtPath:flexPath]) {
+    dlopen([flexPath UTF8String], RTLD_NOW);
+  }
+  [pool release];
+}

@@ -1,10 +1,10 @@
 Package: com.lacertosusrepo.flex4me
 Name: FLEX4Me
-Depends: mobilesubstrate
-Version: 1.0
+Depends: mobilesubstrate, com.shmoopillc.flexible
+Version: 1.1
 Architecture: iphoneos-arm
 Description: Show the FLEX toolbar with force touch...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
 Author: LacertosusDeus <LacertosusThemes@gmail.com>
-Section: Tweaks
+Section: Development
 Depiction: http://lacertosusrepo.github.io/depictions/com.lacertosusrepo.flex4me/
