@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>STLCustomHeaderCell</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Set Image To</string>
+			<key>footerText</key>
+			<string>Choose where the image is applied to.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>key</key>
+			<string>setWallpaperMode</string>
+			<key>label</key>
+			<string>Set Image To</string>
+			<key>default</key>
+			<string>Lockscreen</string>
+			<key>validTitles</key>
+			<array>
+				<string>Both</string>
+				<string>Homescreen</string>
+				<string>Lockscreen</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Refresh Time</string>
+			<key>footerText</key>
+			<string>Choose what time for the image to be updated. It can take up to an hour for the image to update (for fun reasons).</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>STLTimePickerCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
+			<key>height</key>
+			<real>100</real>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Subreddit Settings</string>
+			<key>footerText</key>
+			<string>Just enter the desired subreddit like so: 'spaceporn'. Use the slider to set the number of hot posts to grab, it will choose a random image from one of them.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string>spaceporn</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>placeholder</key>
+			<string>spaceporn</string>
+			<key>noAutoCorrect</key>
+			<true/>
+			<key>icon</key>
+			<string>subreddit.png</string>
+			<key>key</key>
+			<string>subreddit</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>key</key>
+			<string>nsfwFilter</string>
+			<key>icon</key>
+			<string>nsfwIcon.png</string>
+			<key>label</key>
+			<string>Filter</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>3</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>label</key>
+			<string># of Posts:</string>
+			<key>min</key>
+			<string>1</string>
+			<key>max</key>
+			<string>10</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segementCounter</key>
+			<string>10</string>
+			<key>showValue</key>
+			<true/>
+			<key>leftImage</key>
+			<string>numberOfPosts.png</string>
+			<key>key</key>
+			<string>numberOfPostsGrabbed</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>openCurrentRedditPost</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>STLButtonCell</string>
+			<key>label</key>
+			<string>Open Current Reddit Post</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Respring, update the subreddit image, or save the current wallpaper.</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>STLButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>updateSubImage</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>STLButtonCell</string>
+			<key>label</key>
+			<string>Update Wallpaper</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>saveImage</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>STLButtonCell</string>
+			<key>label</key>
+			<string>Save Wallpaper</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Recomended Subreddits</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>label</key>
+			<string>r/earthporn, r/auroraporn, r/starshipporn</string>
+		</dict>
+
+		<dict>
+			<key>label</key>
+			<string>Need Something?</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>STLButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>STLButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>STLButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>

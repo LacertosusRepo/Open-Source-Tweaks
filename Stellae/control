@@ -1,0 +1,10 @@
+Package: com.lacertosusrepo.stellae
+Name: Stellae
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Set a subbreddit's hot posts as your wallpaper...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
+Depiction: http://lacertosusrepo.github.io/depictions/com.lacertosusrepo.stellae/
