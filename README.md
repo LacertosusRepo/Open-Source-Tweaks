@@ -24,7 +24,7 @@
 | Obscurite | iOS 10 | v1.2 | arm7 arm64 |  |
 | PopUpOnStart | iOS 8 - 9 | v1.1 | arm7 arm64 |  |
 | Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ |
-| Stellae | iOS 11-12.1.2 | v1.0 | arm64 | ✔ |
+| Stellae | iOS 11-12.1.2 | v1.1 | arm64 | ✔ |
 | SoundSpring | iOS 8 - 9 | v3.5 | arm7 arm64 |  |
 | Volbrate | iOS 8 - 9 | v1.4 | arm7 arm64 | ✔ |
 | VolbrateXI | iOS 10 - 12.1.2 | v1.2 | arm64 | ✔ |

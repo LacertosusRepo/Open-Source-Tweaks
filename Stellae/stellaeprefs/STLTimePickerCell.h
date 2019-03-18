@@ -7,7 +7,7 @@
 
 
 @implementation STLTimePickerCell
-	NSString *preferencesFile = @"User/Library/Preferences/com.lacertosusrepo.stellaeotherprefs.plist";
+	NSString *preferencesFile = @"User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist";
 
 	-(void)layoutSubviews {
 			timePicker = [[UIDatePicker alloc] init];

@@ -10,6 +10,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Stellae
 Stellae_FILES = Tweak.xm
+Stellae_LIBRARIES = activator
 Stellae_PRIVATE_FRAMEWORKS = PhotoLibrary PersistentConnection AppSupport
 
 include $(THEOS_MAKE_PATH)/tweak.mk
