@@ -2,10 +2,9 @@
  * Tweak.xm
  * Stellae
  *
- * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 3/19/2019.
+ * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 3/11/2019.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
-
 
 #import <PhotoLibrary/PLStaticWallpaperImageViewController.h>
 #import "StellaeClasses.h"
@@ -14,6 +13,7 @@
   /*
    * Preference variables
    */
+  static BOOL stellaeSwitch;
   static BOOL nsfwFilter;
   static int numberOfPostsGrabbed;
   static int wallpaperMode;
@@ -34,6 +34,8 @@
   PCSimpleTimer *timer;
   SBHomeScreenViewController *HomeScreenViewController;
 
+  NSString *mainPrefs = @"/User/Library/Preferences/com.lacertosusrepo.stellaeprefs.plist";
+  NSString *secondaryPrefs = @"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist";
   extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
   /*
@@ -65,7 +67,7 @@ static UIImage* getHotImage() {
    * Sick SnooScreens by Milodarling
    * https://github.com/milodarling/SnooScreens/blob/master/Tweak.xm#L88
    */
-  NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist"];
+  NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:secondaryPrefs];
   int postNumber = arc4random_uniform([dict[@"data"][@"children"] count]);
 
   if(nsfwFilter && [dict[@"data"][@"children"][postNumber][@"data"][@"over_18"] boolValue]) {
@@ -109,7 +111,7 @@ static UIImage* getHotImage() {
   -(void)applicationDidFinishLaunching:(id)arg1 {
     %orig;
 
-    NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist"];
+    NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:secondaryPrefs];
     stellaeInitalAlertShown = [[saveddata objectForKey:@"stellaeInitalAlertShown"] boolValue];
 
     if(!stellaeInitalAlertShown) {
@@ -153,7 +155,9 @@ static UIImage* getHotImage() {
 %property (nonatomic, retain) PCSimpleTimer *apolloTimer;
 
   -(id)initWithNibName:(id)arg1 bundle:(id)arg2 {
-    [self createTimer];
+    if(stellaeSwitch) {
+      [self createTimer];
+    }
     return HomeScreenViewController = %orig;
   }
 
@@ -194,38 +198,40 @@ static UIImage* getHotImage() {
 
 %new
   -(void)setSubWallpaper {
-    NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist"];
-    fireTime = [saveddata objectForKey:@"fireTime"];
+    if(stellaeSwitch) {
+      NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:secondaryPrefs];
+      fireTime = [saveddata objectForKey:@"fireTime"];
 
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *fireTimeComponents = [calendar components:NSCalendarUnitHour|NSCalendarUnitMinute fromDate:fireTime];
-    fireTimeComponents.hour = fireTimeComponents.hour + 1;
-    NSDate *fireTimeGate = [calendar dateFromComponents:fireTimeComponents];
+      NSCalendar *calendar = [NSCalendar currentCalendar];
+      NSDateComponents *fireTimeComponents = [calendar components:NSCalendarUnitHour|NSCalendarUnitMinute fromDate:fireTime];
+      fireTimeComponents.hour = fireTimeComponents.hour + 1;
+      NSDate *fireTimeGate = [calendar dateFromComponents:fireTimeComponents];
 
-		NSDateComponents *components = [calendar components:NSCalendarUnitHour|NSCalendarUnitMinute fromDate:[NSDate date]];
-		NSDate *currentDate = [calendar dateFromComponents:components];
+      NSDateComponents *components = [calendar components:NSCalendarUnitHour|NSCalendarUnitMinute fromDate:[NSDate date]];
+      NSDate *currentDate = [calendar dateFromComponents:components];
 
-    if((([currentDate compare:fireTime] == NSOrderedDescending) && ([currentDate compare:fireTimeGate] == NSOrderedAscending)) || shouldUpdateWallpaper) {
-      UIImage *newWallpaper = getHotImage();
-      shouldUpdateWallpaper = NO;
+      if((([currentDate compare:fireTime] == NSOrderedDescending) && ([currentDate compare:fireTimeGate] == NSOrderedAscending)) || shouldUpdateWallpaper) {
+        UIImage *newWallpaper = getHotImage();
+        shouldUpdateWallpaper = NO;
 
-      if(newWallpaper != nil) {
-        PLStaticWallpaperImageViewController *wallpaperViewController = [[[PLStaticWallpaperImageViewController alloc] initWithUIImage:newWallpaper] autorelease];
-        wallpaperViewController.saveWallpaperData = YES;
-        uintptr_t address = (uintptr_t)&wallpaperMode;
-        object_setInstanceVariable(wallpaperViewController, "_wallpaperMode", *(PLWallpaperMode **)address);
-        [wallpaperViewController _savePhoto];
-      } else {
-        NSLog(@"UIImage (newWallpaper) is empty!");
+        if(newWallpaper != nil) {
+          PLStaticWallpaperImageViewController *wallpaperViewController = [[[PLStaticWallpaperImageViewController alloc] initWithUIImage:newWallpaper] autorelease];
+          wallpaperViewController.saveWallpaperData = YES;
+          uintptr_t address = (uintptr_t)&wallpaperMode;
+          object_setInstanceVariable(wallpaperViewController, "_wallpaperMode", *(PLWallpaperMode **)address);
+          [wallpaperViewController _savePhoto];
+        } else {
+          NSLog(@"UIImage (newWallpaper) is empty!");
+        }
+
+      } if(![self.apolloTimer isValid]) {
+        [self createTimer];
+
+      } if(LD_DEBUG) {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"HH:mm:ss"];
+        NSLog(@"fireTime - %@ || Current Date - %@ || fireTimeGate - %@", [dateFormatter stringFromDate:fireTime], [dateFormatter stringFromDate:currentDate], [dateFormatter stringFromDate:fireTimeGate]);
       }
-
-    } if(![self.apolloTimer isValid]) {
-      [self createTimer];
-
-    } if(LD_DEBUG) {
-      NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-      [dateFormatter setDateFormat:@"HH:mm:ss"];
-      NSLog(@"fireTime - %@ || Current Date - %@ || fireTimeGate - %@", [dateFormatter stringFromDate:fireTime], [dateFormatter stringFromDate:currentDate], [dateFormatter stringFromDate:fireTimeGate]);
     }
   }
 %end
@@ -273,11 +279,12 @@ static void respring() {
    * Loads my preferences. If either plist has less objects than there are suppossed to be they are reset.
    */
 static void loadPrefs() {
-  NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaeprefs.plist"];
-  NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist"];
-  if(!preferences || [preferences count] < 4) {
+  NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:mainPrefs];
+  NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:saveddata];
+  if(!preferences || [preferences count] < 5) {
     NSLog(@"No preferences existed or old prefs(count - %lu). Resetting.", [preferences count]);
     preferences = [[NSMutableDictionary alloc] init];
+    [preferences setObject:[NSNumber numberWithBool:1] forKey:@"stellaeSwitch"];
     [preferences setObject:[NSNumber numberWithInt:2] forKey:@"setWallpaperMode"];
     [preferences setObject:@"spaceporn" forKey:@"subreddit"];
     [preferences setObject:[NSNumber numberWithInt:3] forKey:@"numberOfPostsGrabbed"];
@@ -294,6 +301,7 @@ static void loadPrefs() {
     [saveddata setObject:[NSNumber numberWithBool:0] forKey:@"stellaeInitalAlertShown"];
     [saveddata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist" atomically:YES];
   } else {
+    stellaeSwitch = [[preferences objectForKey:@"stellaeSwitch"] boolValue];
     wallpaperMode = [[preferences objectForKey:@"setWallpaperMode"] intValue];
     subreddit = [preferences objectForKey:@"subreddit"];
     numberOfPostsGrabbed = [[preferences objectForKey:@"numberOfPostsGrabbed"] intValue];
@@ -302,6 +310,7 @@ static void loadPrefs() {
     fireTime = [saveddata objectForKey:@"fireTime"];
     currentImageURL = [saveddata objectForKey:@"currentImageURL"];
     currentRedditURL = [saveddata objectForKey:@"currentRedditURL"];
+    stellaeInitalAlertShown = [saveddata objectForKey:@"stellaeInitalAlertShown"];
   }
 }
 

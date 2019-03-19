@@ -9,7 +9,7 @@ THEOS_DEVIVE_IP = 10.0.0.6
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Stellae
-Stellae_FILES = Tweak.xm
+Stellae_FILES = Tweak.xm Listener.xm
 Stellae_LIBRARIES = activator
 Stellae_PRIVATE_FRAMEWORKS = PhotoLibrary PersistentConnection AppSupport
 

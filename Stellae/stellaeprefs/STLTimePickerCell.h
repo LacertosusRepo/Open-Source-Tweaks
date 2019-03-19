@@ -1,3 +1,11 @@
+/*
+ * STLTimePickerCell.h
+ * Stellae
+ *
+ * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 3/11/2019.
+ * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ */
+
 #import "Preferences/PSTableCell.h"
 
 @interface STLTimePickerCell : PSTableCell {
@@ -7,7 +15,7 @@
 
 
 @implementation STLTimePickerCell
-	NSString *preferencesFile = @"User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist";
+	NSString *preferencesFile = @"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist";
 
 	-(void)layoutSubviews {
 			timePicker = [[UIDatePicker alloc] init];

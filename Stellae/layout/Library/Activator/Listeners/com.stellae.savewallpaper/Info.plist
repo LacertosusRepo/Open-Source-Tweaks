@@ -1,0 +1,6 @@
+{
+  group = "Stellae";
+  title = "Save Wallpaper";
+  description = "Save your current wallpaper";
+  "compatible-modes" = ("springboard", "lockscreen", "application");
+}

@@ -1,0 +1,6 @@
+{
+  group = "Stellae";
+  title = "Update Wallpaper";
+  description = "Refresh your wallpaper from a specifed subreddit";
+  "compatible-modes" = ("springboard", "lockscreen", "application");
+}
