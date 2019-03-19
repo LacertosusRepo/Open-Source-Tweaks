@@ -1,3 +1,12 @@
+/*
+ * Tweak.xm
+ * Stellae
+ *
+ * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 3/19/2019.
+ * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ */
+
+
 #import <PhotoLibrary/PLStaticWallpaperImageViewController.h>
 #import "StellaeClasses.h"
 #define LD_DEBUG NO
