@@ -7,6 +7,8 @@
 
 *If you're here to issue a pull request, please navigate over to [here](https://github.com/LacertosusRepo/LacertosusRepo.github.io) and make one there with the corresponding package.*
 
+*If you're going to copy-paste a project and release it, I'd ask that you email or message me just to let me know out of courtesy.*
+
 ## Information Table
 
 | Tweak | iOS Compatibility | Version | Architecture | Annotated |
