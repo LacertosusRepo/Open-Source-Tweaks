@@ -1,6 +1,5 @@
 #include "STLRootListController.h"
 #import "STLCustomHeaderClassCell.h"
-#import "STLTimePickerCell.h"
 #import "PreferencesColorDefinitions.h"
 
 @implementation STLRootListController
@@ -21,7 +20,7 @@
 
 	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 		if (section == 0) {
-			return 160.0f;
+			return 170.0f;
 		}
 	return (CGFloat)-1;
 	}
@@ -53,6 +52,7 @@
 		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
 		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
 		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+		self.navigationController.navigationController.navigationBar.translucent = NO;
 			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
 		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
 		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
@@ -65,6 +65,7 @@
 		self.navigationController.navigationController.navigationBar.tintColor = nil;
 		self.navigationController.navigationController.navigationBar.barTintColor = nil;
 		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
+		self.navigationController.navigationController.navigationBar.translucent = YES;
 	}
 
 	-(void)_returnKeyPressed:(id)arg1 {
@@ -106,7 +107,7 @@
 
 	-(void)updateSubImage {
 		UIAlertController *updateImageAlert = [UIAlertController alertControllerWithTitle:@"Stellae"
-																			message:@"Are you sure you want to update the wallpaper? You can't save it once its changed!"
+																			message:@"Are you sure you want to update the wallpaper?\n\nYou can't save it once its changed!"
 																			preferredStyle:UIAlertControllerStyleAlert];
 		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Confirm" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
 				CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.stellaeprefs-updateSubImage"), nil, nil, true);

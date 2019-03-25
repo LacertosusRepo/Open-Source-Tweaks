@@ -14,7 +14,7 @@
 						self.iconView.center = CGPointMake(self.bounds.size.width/2, 0);
 						[self addSubview:self.iconView];
 						[self.iconView setTranslatesAutoresizingMaskIntoConstraints:NO];
-						[self addConstraint:[NSLayoutConstraint constraintWithItem:self.iconView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:.2 constant:0]];
+						[self addConstraint:[NSLayoutConstraint constraintWithItem:self.iconView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:0.3 constant:0]];
             [self addConstraint:[NSLayoutConstraint constraintWithItem:self.iconView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
 
             self.headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];

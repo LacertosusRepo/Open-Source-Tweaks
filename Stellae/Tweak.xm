@@ -8,25 +8,26 @@
 
 #import <PhotoLibrary/PLStaticWallpaperImageViewController.h>
 #import "StellaeClasses.h"
+#import "StellaeController.h"
 #define LD_DEBUG NO
 
   /*
    * Preference variables
    */
   static BOOL stellaeSwitch;
+  static BOOL imageSizeFilter;
+  static BOOL useTimer;
   static BOOL nsfwFilter;
   static int numberOfPostsGrabbed;
+  static int stellaeTimerInterval;
   static int wallpaperMode;
-  static NSDate *fireTime;
   static NSString *subreddit;
 
   /*
    * Global variables
    */
   BOOL stellaeInitalAlertShown;
-  BOOL shouldUpdateWallpaper;
   BOOL savedInitalWallpaper;
-  int timerInterval;
   NSData *redditImageData;
   NSString *baseURL = @"https://reddit.com/r/SUB/hot.json?limit=NUM";
   NSString *currentImageURL;
@@ -39,123 +40,83 @@
   extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
   /*
-   * Gets the json data of a reddit URL, then parses and gets the image url.
-   * Also checks if its NSFW and converts imgur links to direct imgur links.
-   * Saves the last used URL so there arent any repeated images.
+   * Thanks /u/andreashenriksson!
+   * https://old.reddit.com/r/jailbreakdevelopers/comments/b3gbec/help_showing_uialert_after_respring/ej6koko/
+   *
+   * Creates a alert that prompts the user to save thier wallpapers if they want
    */
-static UIImage* getHotImage() {
-  if([subreddit isEqualToString:@""] || subreddit == nil || [subreddit containsString:@"r/"]) {
-    subreddit = @"spaceporn";
-    NSLog(@"Something is wrong with the subbreddit - %@", subreddit);
+%subclass StellaeInitialAlertItem : SBAlertItem
+  -(void)configure:(BOOL)arg1 requirePasscodeForActions:(BOOL)arg2 {
+    UIAlertController *alertController = [self alertController];
+    [alertController setTitle:@"Stellae"];
+    [alertController setMessage:@"Thanks for installing Stellae!\n\nWould you like to backup your wallpaper(s) to your photo library?"];
+    [self setIconImage:[UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/stellaeprefs.bundle/icon.png"]];
+
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Sure!" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+      if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/SpringBoard/OriginalHomeBackground.cpbitmap"]) {
+        NSData *homeData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalHomeBackground.cpbitmap"];
+        CFArrayRef homeArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)homeData, NULL, 1, NULL);
+        NSArray *homeArray = (__bridge NSArray*)homeArrayRef;
+        UIImage *homeWallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(homeArray[0])];
+        UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
+        CFRelease(homeArrayRef);
+
+      } if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"]) {
+        NSData *lockData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"];
+        CFArrayRef lockArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)lockData, NULL, 1, NULL);
+        NSArray *lockArray = (__bridge NSArray*)lockArrayRef;
+        UIImage *lockWallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(lockArray[0])];
+        UIImageWriteToSavedPhotosAlbum(lockWallpaper, nil, nil, nil);
+        CFRelease(lockArrayRef);
+      }
+      [self dismiss];
+    }];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"No Thanks" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+      [self dismiss];
+    }];
+
+    [alertController addAction:confirmAction];
+    [alertController addAction:cancelAction];
   }
 
-  NSString *finalString = [baseURL stringByReplacingOccurrencesOfString:@"SUB" withString:subreddit];
-  finalString = [finalString stringByReplacingOccurrencesOfString:@"NUM" withString:[NSString stringWithFormat:@"%d", numberOfPostsGrabbed]];
-
-  NSURL *url = [NSURL URLWithString:[finalString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-  NSData *data = [NSData dataWithContentsOfURL:url];
-  NSError *error = nil;
-  NSDictionary *dict;
-  if(data == nil) {
-    NSLog(@"Data is nil || Maybe there is no connection");
-    return nil;
-  } else {
-    dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+  -(BOOL)reappearsAfterUnlock {
+    return YES;
   }
 
-  /*
-   * Sick SnooScreens by Milodarling
-   * https://github.com/milodarling/SnooScreens/blob/master/Tweak.xm#L88
-   */
-  NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:secondaryPrefs];
-  int postNumber = arc4random_uniform([dict[@"data"][@"children"] count]);
-
-  if(nsfwFilter && [dict[@"data"][@"children"][postNumber][@"data"][@"over_18"] boolValue]) {
-    NSLog(@"Photo is NSFW and NSFW filter is on");
-    return nil;
-
-  } else {
-    NSString *imageURL = dict[@"data"][@"children"][postNumber][@"data"][@"url"];
-    if([imageURL isEqualToString:currentImageURL] && numberOfPostsGrabbed > 1) {
-      NSLog(@"URL was a duplicate, trying again");
-      getHotImage();
-
-    } if([imageURL containsString:@"imgur.com"] && ![imageURL containsString:@"i.imgur"]) {
-      imageURL = [imageURL stringByAppendingString:@".jpg"];
-    }
-
-    NSString *redditURL = @"https://reddit.com/";
-    redditURL = [redditURL stringByAppendingString:dict[@"data"][@"children"][postNumber][@"data"][@"permalink"]];
-    [saveddata setObject:imageURL forKey:@"currentImageURL"];
-    [saveddata setObject:redditURL forKey:@"currentRedditURL"];
-    [saveddata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist" atomically:YES];
-
-    redditImageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:imageURL]];
-    UIImage *redditImage = [UIImage imageWithData:redditImageData];
-
-    if(LD_DEBUG){
-      NSLog(@"JSON children - %lu", [dict[@"data"][@"children"] count]);
-      NSLog(@"postNumber - %d", postNumber);
-      NSLog(@"subredditURL - %@", finalString);
-      NSLog(@"imageURL - %@", imageURL);
-    }
-
-    return redditImage;
-  }
-}
-
-  /*
-  * Shows inital alert after install. Allows user to save current wallpapers if they want
-  */
-%hook SpringBoard
-  -(void)applicationDidFinishLaunching:(id)arg1 {
+  -(void)dismiss {
     %orig;
+  }
+%end
 
+%hook SBDashBoardViewController
+  -(void)finishUIUnlockFromSource:(int)arg1 {
+    %orig;
     NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:secondaryPrefs];
     stellaeInitalAlertShown = [[saveddata objectForKey:@"stellaeInitalAlertShown"] boolValue];
-
-    if(!stellaeInitalAlertShown) {
+    if(!stellaeInitalAlertShown || LD_DEBUG) {
       [saveddata setObject:[NSNumber numberWithBool:1] forKey:@"stellaeInitalAlertShown"];
-      [saveddata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist" atomically:YES];
+      [saveddata writeToFile:secondaryPrefs atomically:YES];
 
-      UIAlertController *stellaeInitalAlert = [UIAlertController alertControllerWithTitle:@"Stellae" message:@"Thanks for installing Stellae! Would you like to backup your wallpaper(s) to your photo library?" preferredStyle:UIAlertControllerStyleAlert];
-      UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Sure!" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-        if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/SpringBoard/OriginalHomeBackground.cpbitmap"]) {
-          NSData *homeData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalHomeBackground.cpbitmap"];
-          CFArrayRef homeArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)homeData, NULL, 1, NULL);
-          NSArray *homeArray = (__bridge NSArray*)homeArrayRef;
-          UIImage *homeWallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(homeArray[0])];
-          UIImageWriteToSavedPhotosAlbum(homeWallpaper, nil, nil, nil);
-          CFRelease(homeArrayRef);
-
-        } if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"]) {
-          NSData *lockData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"];
-          CFArrayRef lockArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)lockData, NULL, 1, NULL);
-          NSArray *lockArray = (__bridge NSArray*)lockArrayRef;
-          UIImage *lockWallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(lockArray[0])];
-          UIImageWriteToSavedPhotosAlbum(lockWallpaper, nil, nil, nil);
-          CFRelease(lockArrayRef);
-        }
-      }];
-      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"No Thanks" style:UIAlertActionStyleCancel handler:nil];
-
-      [stellaeInitalAlert addAction:confirmAction];
-      [stellaeInitalAlert addAction:cancelAction];
-      [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:stellaeInitalAlert animated:YES completion:nil];
+      SBAlertItem *item = [[%c(StellaeInitialAlertItem) alloc] init];
+      [[%c(SBAlertItemsController) sharedInstance] activateAlertItem:item];
     }
+    [saveddata release];
   }
 %end
 
   /*
-   * Main chunk of it all. Creates timer on init, gets the current time and fire time and converts them to NSDates with time only.
-   * Once the timer fires it calls setSubWallpaper, invalidates the timer and creates another checking if the current time is
-   * within an hour of the fireTime.
+   * Main chunk of it all. Sends the subreddit name, posts to grab, NSFW filter setting, and current image url to
+   * StellaeController, which spits out a UIImage from that information.
+   *
+   * Creates timer on init, goes off based on amount of seconds (1-5 hs)
+   * Once the timer fires it calls setStellaeWallpaper, invalidates the timer and creates another
    */
 %hook SBHomeScreenViewController
 %property (nonatomic, retain) PCSimpleTimer *apolloTimer;
 
   -(id)initWithNibName:(id)arg1 bundle:(id)arg2 {
-    if(stellaeSwitch) {
+    if(stellaeSwitch && useTimer) {
       [self createTimer];
     }
     return HomeScreenViewController = %orig;
@@ -167,12 +128,6 @@ static UIImage* getHotImage() {
    * https://github.com/tateu/TimerExample/blob/master/Tweak.xm
    */
   -(void)createTimer {
-    if(LD_DEBUG) {
-      timerInterval = 30;
-    } else {
-      timerInterval = 1800;
-    }
-
     if(timer) {
       [timer invalidate];
       [self.apolloTimer invalidate];
@@ -181,56 +136,44 @@ static UIImage* getHotImage() {
       self.apolloTimer = nil;
     }
 
-    timer = [[%c(PCSimpleTimer) alloc] initWithTimeInterval:timerInterval serviceIdentifier:@"com.lacertosusrepo.stellae" target:self selector:@selector(setSubWallpaper) userInfo:nil];
+    if(stellaeTimerInterval < 3600) {
+      stellaeTimerInterval = 3600;
+    } else if (LD_DEBUG) {
+      stellaeTimerInterval = 30;
+    }
+    timer = [[%c(PCSimpleTimer) alloc] initWithTimeInterval:stellaeTimerInterval serviceIdentifier:@"com.lacertosusrepo.stellae" target:self selector:@selector(setStellaeWallpaper) userInfo:nil];
     timer.disableSystemWaking = NO;
     [timer scheduleInRunLoop:[NSRunLoop mainRunLoop]];
     self.apolloTimer = timer;
 
     if(LD_DEBUG) {
-      NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-      [dateFormatter setDateFormat:@"HH:mm:ss"];
       NSLog(@"Timer - %@", timer);
       NSLog(@"Timer isValid - %d", [timer isValid]);
-      NSLog(@"fireTime - %@", [dateFormatter stringFromDate:fireTime]);
-      NSLog(@"shouldUpdateWallpaper - %d", shouldUpdateWallpaper);
     }
   }
 
 %new
-  -(void)setSubWallpaper {
+  -(void)setStellaeWallpaper {
     if(stellaeSwitch) {
       NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:secondaryPrefs];
-      fireTime = [saveddata objectForKey:@"fireTime"];
+      currentImageURL = [saveddata objectForKey:@"currentImageURL"];
 
-      NSCalendar *calendar = [NSCalendar currentCalendar];
-      NSDateComponents *fireTimeComponents = [calendar components:NSCalendarUnitHour|NSCalendarUnitMinute fromDate:fireTime];
-      fireTimeComponents.hour = fireTimeComponents.hour + 1;
-      NSDate *fireTimeGate = [calendar dateFromComponents:fireTimeComponents];
+      UIImage *newWallpaper = [[StellaeController sharedInstance] getImageFromReddit:subreddit numberOfPostsGrabbed:numberOfPostsGrabbed nsfwFiltered:nsfwFilter currentImageURL:currentImageURL];
 
-      NSDateComponents *components = [calendar components:NSCalendarUnitHour|NSCalendarUnitMinute fromDate:[NSDate date]];
-      NSDate *currentDate = [calendar dateFromComponents:components];
+      if(newWallpaper == nil) {
+        [self setStellaeWallpaper];
+      } if((newWallpaper.size.width != [UIScreen mainScreen].bounds.size.width && newWallpaper.size.height != [UIScreen mainScreen].bounds.size.height) && imageSizeFilter) {
+        NSLog(@"Stellae || Image is smaller than current device");
+      } else {
+        PLStaticWallpaperImageViewController *wallpaperViewController = [[[PLStaticWallpaperImageViewController alloc] initWithUIImage:newWallpaper] autorelease];
+        wallpaperViewController.saveWallpaperData = YES;
+        uintptr_t address = (uintptr_t)&wallpaperMode;
+        object_setInstanceVariable(wallpaperViewController, "_wallpaperMode", *(PLWallpaperMode **)address);
+        [wallpaperViewController _savePhoto];
+      }
 
-      if((([currentDate compare:fireTime] == NSOrderedDescending) && ([currentDate compare:fireTimeGate] == NSOrderedAscending)) || shouldUpdateWallpaper) {
-        UIImage *newWallpaper = getHotImage();
-        shouldUpdateWallpaper = NO;
-
-        if(newWallpaper != nil) {
-          PLStaticWallpaperImageViewController *wallpaperViewController = [[[PLStaticWallpaperImageViewController alloc] initWithUIImage:newWallpaper] autorelease];
-          wallpaperViewController.saveWallpaperData = YES;
-          uintptr_t address = (uintptr_t)&wallpaperMode;
-          object_setInstanceVariable(wallpaperViewController, "_wallpaperMode", *(PLWallpaperMode **)address);
-          [wallpaperViewController _savePhoto];
-        } else {
-          NSLog(@"UIImage (newWallpaper) is empty!");
-        }
-
-      } if(![self.apolloTimer isValid]) {
+      if(![self.apolloTimer isValid] && useTimer) {
         [self createTimer];
-
-      } if(LD_DEBUG) {
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"HH:mm:ss"];
-        NSLog(@"fireTime - %@ || Current Date - %@ || fireTimeGate - %@", [dateFormatter stringFromDate:fireTime], [dateFormatter stringFromDate:currentDate], [dateFormatter stringFromDate:fireTimeGate]);
       }
     }
   }
@@ -240,8 +183,7 @@ static UIImage* getHotImage() {
    * Simple function to manually update the wallpaper
    */
 static void updateSubImage() {
-  shouldUpdateWallpaper = YES;
-  [HomeScreenViewController setSubWallpaper];
+  [HomeScreenViewController setStellaeWallpaper];
 }
 
   /*
@@ -280,37 +222,36 @@ static void respring() {
    */
 static void loadPrefs() {
   NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:mainPrefs];
-  NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:saveddata];
-  if(!preferences || [preferences count] < 5) {
-    NSLog(@"No preferences existed or old prefs(count - %lu). Resetting.", [preferences count]);
+  NSMutableDictionary *saveddata = [[NSMutableDictionary alloc] initWithContentsOfFile:secondaryPrefs];
+  if(!preferences) {
     preferences = [[NSMutableDictionary alloc] init];
-    [preferences setObject:[NSNumber numberWithBool:1] forKey:@"stellaeSwitch"];
-    [preferences setObject:[NSNumber numberWithInt:2] forKey:@"setWallpaperMode"];
-    [preferences setObject:@"spaceporn" forKey:@"subreddit"];
-    [preferences setObject:[NSNumber numberWithInt:3] forKey:@"numberOfPostsGrabbed"];
-    [preferences setObject:[NSNumber numberWithBool:1] forKey:@"nsfwFilter"];
-    [preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaeprefs.plist" atomically:YES];
-  } if(!saveddata || [saveddata count] < 4) {
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitHour|NSCalendarUnitMinute fromDate:[NSDate date]];
-    NSDate *defaultTime = [[NSCalendar currentCalendar] dateFromComponents:components];
-
+    stellaeSwitch = YES;
+    imageSizeFilter = NO;
+    wallpaperMode = 2;
+    useTimer = NO;
+    stellaeTimerInterval = 3600;
+    subreddit = @"spaceporn";
+    numberOfPostsGrabbed = 3;
+    nsfwFilter = YES;
+  } else if(!saveddata) {
     saveddata = [[NSMutableDictionary alloc] init];
-    [saveddata setObject:defaultTime forKey:@"fireTime"];
     [saveddata setObject:@"" forKey:@"currentRedditURL"];
     [saveddata setObject:@"" forKey:@"currentImageURL"];
     [saveddata setObject:[NSNumber numberWithBool:0] forKey:@"stellaeInitalAlertShown"];
-    [saveddata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist" atomically:YES];
+    [saveddata writeToFile:secondaryPrefs atomically:YES];
   } else {
     stellaeSwitch = [[preferences objectForKey:@"stellaeSwitch"] boolValue];
+    imageSizeFilter = [[preferences objectForKey:@"imageSizeFilter"] boolValue];
     wallpaperMode = [[preferences objectForKey:@"setWallpaperMode"] intValue];
+    useTimer = [[preferences objectForKey:@"useTimer"] boolValue];
+    stellaeTimerInterval = [[preferences objectForKey:@"stellaeTimerInterval"] intValue];
     subreddit = [preferences objectForKey:@"subreddit"];
     numberOfPostsGrabbed = [[preferences objectForKey:@"numberOfPostsGrabbed"] intValue];
     nsfwFilter = [[preferences objectForKey:@"nsfwFilter"] boolValue];
 
-    fireTime = [saveddata objectForKey:@"fireTime"];
     currentImageURL = [saveddata objectForKey:@"currentImageURL"];
     currentRedditURL = [saveddata objectForKey:@"currentRedditURL"];
-    stellaeInitalAlertShown = [saveddata objectForKey:@"stellaeInitalAlertShown"];
+    stellaeInitalAlertShown = [[saveddata objectForKey:@"stellaeInitalAlertShown"] boolValue];
   }
 }
 
@@ -325,6 +266,7 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 %ctor {
   NSAutoreleasePool *pool = [NSAutoreleasePool new];
   loadPrefs();
+  notificationCallback(NULL, NULL, NULL, NULL, NULL);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)updateSubImage, CFSTR("com.lacertosusrepo.stellaeprefs-updateSubImage"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)saveImage, CFSTR("com.lacertosusrepo.stellaeprefs-saveImage"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);

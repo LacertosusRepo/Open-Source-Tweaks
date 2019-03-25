@@ -16,6 +16,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Options</string>
+			<key>footerText</key>
+			<string>The size filter keeps from having lowing quality images set being set as your wallpaper.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -31,6 +33,20 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>key</key>
+			<string>imageSizeFilter</string>
+			<key>label</key>
+			<string>Screen Size Filter</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>
@@ -38,7 +54,7 @@
 			<key>label</key>
 			<string>Set Image To</string>
 			<key>footerText</key>
-			<string>Choose where the image is applied to.</string>
+			<string>Choose where the image is applied to and set custom actions through Activator.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -68,6 +84,30 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Update Wallpaper Action</string>
+			<key>isController</key>
+			<true/>
+			<key>bundle</key>
+			<string>LibActivator</string>
+			<key>activatorListener</key>
+			<string>com.stellae.updatewallpaper</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Save Wallpaper Action</string>
+			<key>isController</key>
+			<true/>
+			<key>bundle</key>
+			<string>LibActivator</string>
+			<key>activatorListener</key>
+			<string>com.stellae.saveWallpaper</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>
@@ -75,15 +115,53 @@
 			<key>label</key>
 			<string>Refresh Time</string>
 			<key>footerText</key>
-			<string>Choose what time for the image to be updated. It can take up to an hour for the image to update (for fun reasons).</string>
+			<string>Use a custom timer to update the image every x-hours. Timer starts on respring and requires one to apply a new time interval.</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>STLTimePickerCell</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>key</key>
+			<string>useTimer</string>
+			<key>label</key>
+			<string>Use Custom Timer</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
-			<key>height</key>
-			<real>100</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>key</key>
+			<string>setWallpaperMode</string>
+			<key>label</key>
+			<string>Set Image To</string>
+			<key>default</key>
+			<string>Lockscreen</string>
+			<key>validTitles</key>
+			<array>
+				<string>1 Hour</string>
+				<string>2 Hours</string>
+				<string>3 Hours</string>
+				<string>4 Hours</string>
+				<string>5 Hours</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>3600</string>
+				<string>7200</string>
+				<string>10800</string>
+				<string>14400</string>
+				<string>18000</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
 		</dict>
 
 		<dict>
@@ -92,7 +170,7 @@
 			<key>label</key>
 			<string>Subreddit Settings</string>
 			<key>footerText</key>
-			<string>Just enter the desired subreddit like so: 'spaceporn'. Use the slider to set the number of hot posts to grab, it will choose a random image from one of them.</string>
+			<string>Enter the subreddit name only (no r/). Use the slider to set the number of hot posts to grab, it will choose a random image from one of them.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -168,8 +246,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Respring, update the subreddit image, or save the current wallpaper.</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -200,19 +276,6 @@
 			<string>STLButtonCell</string>
 			<key>label</key>
 			<string>Save Wallpaper</string>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Recomended Subreddits</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>label</key>
-			<string>r/earthporn, r/auroraporn, r/starshipporn</string>
 		</dict>
 
 		<dict>
