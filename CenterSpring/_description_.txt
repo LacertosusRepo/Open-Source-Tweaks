@@ -1,4 +1,0 @@
-Tweak that pops up a alert menu when pulling 
-the control center to the top of the screen.
-The menu allows the user to respring, reboot,
-and shutdown easily.

@@ -1,3 +1,0 @@
-Just a example tweak for people to learn from.
-
-Currently working on iOS 10 support, but broken right now.

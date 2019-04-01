@@ -1,4 +1,0 @@
-Adds vibration options for volume controls.
-
-//To-Do:
-1. Add option to disable volume hud
