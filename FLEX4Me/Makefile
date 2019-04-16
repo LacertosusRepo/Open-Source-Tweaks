@@ -1,4 +1,4 @@
-export ARCHS = arm64
+export ARCHS = arm64 arm64e
 SDKVERSION = 11.2
 THEOS_DEVIVE_IP = 10.0.0.1
 

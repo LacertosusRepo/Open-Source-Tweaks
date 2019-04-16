@@ -6,6 +6,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = MovieBoxProTextFixes
 MovieBoxProTextFixes_FILES = Tweak.xm
+MovieBoxProTextFixes_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

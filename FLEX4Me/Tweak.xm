@@ -9,7 +9,7 @@
      * https://stackoverflow.com/questions/32771947/3d-touch-force-touch-implementation
      *
      * maximumPossibleForce - gets maximumPossibleForce from UITouch
-     * force - gest the amount of force from UITouch
+     * force - gets the amount of force from UITouch
      * normalizedForce - normalize the total force
      * forceThreshold - custom set force amount that is needed to activate FLEX
      */
@@ -21,14 +21,20 @@
 
     //check if force is enough to pass the threshold
     if(normalizedForce >= forceThreshold) {
-      [[NSClassFromString(@"FLEXManager") sharedManager] showExplorer];
+      [[%c(FLEXManager) sharedManager] showExplorer];
     }
+  }
+%end
+
+%hook UIWindow
+  //Allows the flex window on the lockscreen
+  -(BOOL)_isSecure {
+    return NO;
   }
 %end
 
 %ctor {
   NSString *flexPath = @"/Library/Application Support/FLEXible/FLEX.dylib";
-  NSAutoreleasePool *pool = [NSAutoreleasePool new];
 
   /*
    * Check for the FLEX dylib, then load it
@@ -36,5 +42,4 @@
   if([[NSFileManager defaultManager] fileExistsAtPath:flexPath]) {
     dlopen([flexPath UTF8String], RTLD_NOW);
   }
-  [pool release];
 }

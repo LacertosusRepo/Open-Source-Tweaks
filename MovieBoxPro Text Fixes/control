@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.movieboxprotextfixes
 Name: MovieBoxPro Text Fixes
-Depends: 
-Version: 1.1
+Depends: mobilesubstrate
+Version: 1.2
 Architecture: iphoneos-arm
 Description: Fix poorly translated text in MovieBoxPro
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

@@ -1,43 +1,45 @@
-// Based on CPDigitalDarkroom's CloudtoButt
-// https://github.com/CPDigitalDarkroom/TweakBattles/blob/master/cloudtobutt
+/*
+ * Tweak.xm
+ * MovieBoxProTextFixes
+ *
+ * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 4/16/2019.
+ * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ */
+
+  static NSDictionary *labelReplacements = @{
+      //Featured corrections
+    @"Maybe Like Movie" : @"Movies You Might Like",
+    @"Continue Play" : @"Continue Watching",
+    @"Today Hot Movie" : @"Todays Hot Movies",
+    @"This Week Hot Movie" : @"This Weeks Hot Movies",
+    @"Today Hot TV" : @"Todays Hot TV Shows",
+    @"This Week Hot TV" : @"This Weeks Hot TV Shows",
+    @"IMDB Rating Movie" : @"Highly Rated Movies by IMDB",
+    @"Latest Upload Movie" : @"Recently Uploaded Movies",
+    @"Latest Update TV" : @"Recently Updated TV Shows",
+    @"Action Movie" : @"Action Movies",
+    @"Adventure Movie" : @"Adventure Movies",
+    @"Sci-fi Movie" : @"Sci-fi Movies",
+      //Movielist corrections
+    @"My collect" : @"My Collection",
+    @"Day Hot List" : @"Todays Hot Lists",
+    @"Week Hot List" : @"This Weeks Hot Lists",
+    @"Latest List" : @"New Lists",
+      //Tab corrections
+    @"MOVIELIST" : @"MOVIE LISTS",
+    @"FAVORITE" : @"FAVORITES",
+      //Misc
+    @"WEEK" : @"THIS WEEK",
+  };
 
 %hook UILabel
   -(void)setText:(NSString *)arg1 {
-      //Featured corrections
-    //arg1 = [arg1 stringByReplacingOccurrencesOfString:@"0000" withString:@"0000"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Maybe Like Movie" withString:@"Movies You Might Like"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Continue Play" withString:@"Continue Watching"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Today Hot Movie" withString:@"Todays Hot Movies"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"This Week Hot Movie" withString:@"This Weeks Hot Movies"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Today Hot TV" withString:@"Todays Hot Shows"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"This Week Hot TV" withString:@"This Weeks Hot Shows"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"IMDB Rating Movie" withString:@"Highly Rated Movies by IMDB"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Latest Upload Movie" withString:@"Recently Uploaded Movies"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Latest Update TV" withString:@"Recently Updated Shows"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Action Movie" withString:@"Action Movies"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Adventure Movie" withString:@"Adventure Movies"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Sci-fi Movie" withString:@"Sci-fi Movies"];
-      //Movielist corrections
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Mine" withString:@"Your Lists"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Hot List" withString:@"Hot Lists"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Latest List" withString:@"New Lists"];
-      //Misc corrections
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Update This Week" withString:@"Updated This Week"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"No Download Movie" withString:@"No Downloads"];
-    arg1 = [arg1 stringByReplacingOccurrencesOfString:@"Expire Date" withString:@"Expiration Date"];
-    %orig(arg1);
-  }
-%end
-
-%hook _UINavigationBarContentView
-  -(void)setTitle:(NSString *)arg1 {
-      //tab corrections
-    if([arg1 isEqualToString:@"FAVORITE"]) {
-      %orig(@"FAVORITES");
-    } else if([arg1 isEqualToString:@"DOWNLOAD"]) {
-      %orig(@"DOWNLOADS");
-    } else {
-      %orig(arg1);
+    if(labelReplacements[arg1]) {
+      arg1 = labelReplacements[arg1];
+      if([arg1 isEqualToString:@"MOVIE LISTS"] || [arg1 isEqualToString:@"FAVORITES"]) {
+        self.textColor = [UIColor whiteColor];
+      }
     }
+    %orig(arg1);
   }
 %end

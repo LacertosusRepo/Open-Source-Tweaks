@@ -16,17 +16,17 @@
 | CenterSpring | iOS 10 | v1.0 | arm7 arm64 |  |
 | Clauditis | iOS 11 - 12.1.2 | v1.0 | arm64 | ✔ |
 | EinsteinVibes | iOS 10 - 11 | v1.0 | arm64 |  |
-| FLEX4Me | iOS 11-12.1.2 | v1.1 | arm64 | ✔ |
-| Imperium | iOS 11 - 12.1.2 | v2.0 | arm64 | ✔ |
+| FLEX4Me | iOS 11-12.1.2 | v1.2 | arm64 arm64e | ✔ |
+| Imperium | iOS 11 - 12.1.2 | v2.0.2 | arm64 arm64e | ✔ |
 | Navale | iOS 10 - 12.1.2 | v1.3.1 | arm64 | ✔ |
 | NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ |
 | Mea | iOS 10 - 11 | v1.0 | arm64 |  |
-| MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.1 | arm64 | ✔ |
+| MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ |
 | Obscurite | iOS 10 | v1.2 | arm7 arm64 |  |
 | Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ |
 | Stellae | iOS 11-12.1.2 | v1.2 | arm64 | ✔ |
-| ToneItDown | iOS 11 - 12.1.2 | v1.0 | arm64 | ✔ |
-| VolbrateXI | iOS 10 - 12.1.2 | v1.2 | arm64 | ✔ |
+| ToneItDown | iOS 11 - 12.1.2 | v1.0.1 | arm64 arm64e | ✔ |
+| VolbrateXI | iOS 10 - 12.1.2 | v1.2.1 | arm64 arm64e | ✔ |
 
 ## Goal
 *Annotate most of the open source tweaks.*

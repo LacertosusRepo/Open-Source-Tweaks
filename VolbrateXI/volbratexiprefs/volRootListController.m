@@ -69,6 +69,7 @@
 			self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
 			self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
 			self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+			self.navigationController.navigationController.navigationBar.translucent = NO;
 
 		//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
 				[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
@@ -85,6 +86,7 @@
 			self.navigationController.navigationController.navigationBar.tintColor = nil;
 			self.navigationController.navigationController.navigationBar.barTintColor = nil;
 			self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
+			self.navigationController.navigationController.navigationBar.translucent = YES;
 
 	}
 
