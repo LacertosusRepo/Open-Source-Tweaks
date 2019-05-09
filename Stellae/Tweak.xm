@@ -101,7 +101,6 @@
       SBAlertItem *item = [[%c(StellaeInitialAlertItem) alloc] init];
       [[%c(SBAlertItemsController) sharedInstance] activateAlertItem:item];
     }
-    [saveddata release];
   }
 %end
 
@@ -165,7 +164,7 @@
       } if((newWallpaper.size.width != [UIScreen mainScreen].bounds.size.width && newWallpaper.size.height != [UIScreen mainScreen].bounds.size.height) && imageSizeFilter) {
         NSLog(@"Stellae || Image is smaller than current device");
       } else {
-        PLStaticWallpaperImageViewController *wallpaperViewController = [[[PLStaticWallpaperImageViewController alloc] initWithUIImage:newWallpaper] autorelease];
+        PLStaticWallpaperImageViewController *wallpaperViewController = [[PLStaticWallpaperImageViewController alloc] initWithUIImage:newWallpaper];
         wallpaperViewController.saveWallpaperData = YES;
         uintptr_t address = (uintptr_t)&wallpaperMode;
         object_setInstanceVariable(wallpaperViewController, "_wallpaperMode", *(PLWallpaperMode **)address);
@@ -264,12 +263,10 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
    * Setup notifications
    */
 %ctor {
-  NSAutoreleasePool *pool = [NSAutoreleasePool new];
   loadPrefs();
   notificationCallback(NULL, NULL, NULL, NULL, NULL);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)updateSubImage, CFSTR("com.lacertosusrepo.stellaeprefs-updateSubImage"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)saveImage, CFSTR("com.lacertosusrepo.stellaeprefs-saveImage"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)respring, CFSTR("com.lacertosusrepo.stellaeprefs-respring"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-  [pool release];
 }

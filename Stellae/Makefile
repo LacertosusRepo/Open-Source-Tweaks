@@ -1,4 +1,4 @@
-export ARCHS = arm64
+export ARCHS = arm64 arm64e
 export SDKVERSION = 11.2
 THEOS_DEVIVE_IP = 10.0.0.6
 
@@ -9,9 +9,10 @@ THEOS_DEVIVE_IP = 10.0.0.6
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Stellae
-Stellae_FILES = Tweak.xm Listener.xm
+Stellae_FILES = Tweak.xm Listener.xm StellaeController.m
 Stellae_LIBRARIES = activator
 Stellae_PRIVATE_FRAMEWORKS = PhotoLibrary PersistentConnection AppSupport
+#Stellae_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

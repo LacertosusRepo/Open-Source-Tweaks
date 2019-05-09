@@ -6,8 +6,8 @@
 @end
 
 @interface STLCustomHeaderCell : UIView
-@property (nonatomic,strong) UIImageView *iconView;
-@property (nonatomic,assign) UILabel *headerLabel;
-@property (nonatomic,assign) UILabel *subHeaderLabel;
-@property (nonatomic,readonly) NSArray *randomQuotes;
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, assign) UILabel *headerLabel;
+@property (nonatomic, assign) UILabel *subHeaderLabel;
+@property (nonatomic, readonly) NSArray *randomQuotes;
 @end

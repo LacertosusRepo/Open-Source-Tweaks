@@ -113,61 +113,6 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Refresh Time</string>
-			<key>footerText</key>
-			<string>Use a custom timer to update the image every x-hours. Timer starts on respring and requires one to apply a new time interval.</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.stellaeprefs</string>
-			<key>key</key>
-			<string>useTimer</string>
-			<key>label</key>
-			<string>Use Custom Timer</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSegmentCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.stellaeprefs</string>
-			<key>key</key>
-			<string>setWallpaperMode</string>
-			<key>label</key>
-			<string>Set Image To</string>
-			<key>default</key>
-			<string>Lockscreen</string>
-			<key>validTitles</key>
-			<array>
-				<string>1 Hour</string>
-				<string>2 Hours</string>
-				<string>3 Hours</string>
-				<string>4 Hours</string>
-				<string>5 Hours</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<string>3600</string>
-				<string>7200</string>
-				<string>10800</string>
-				<string>14400</string>
-				<string>18000</string>
-			</array>
-			<key>id</key>
-			<string>ModeCell</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
 			<string>Subreddit Settings</string>
 			<key>footerText</key>
 			<string>Enter the subreddit name only (no r/). Use the slider to set the number of hot posts to grab, it will choose a random image from one of them.</string>
@@ -234,13 +179,68 @@
 		</dict>
 		<dict>
 			<key>action</key>
-			<string>openCurrentRedditPost</string>
+			<string>viewCurrentRedditImage</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
 			<string>STLButtonCell</string>
 			<key>label</key>
-			<string>Open Current Reddit Post</string>
+			<string>View Current Reddit Image</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Refresh Time</string>
+			<key>footerText</key>
+			<string>Use a custom timer to update the image every x-hours. Timer starts on respring and requires one to apply a new time interval.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>key</key>
+			<string>useTimer</string>
+			<key>label</key>
+			<string>Use Custom Timer</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.stellaeprefs</string>
+			<key>key</key>
+			<string>setWallpaperMode</string>
+			<key>label</key>
+			<string>Set Image To</string>
+			<key>default</key>
+			<string>Lockscreen</string>
+			<key>validTitles</key>
+			<array>
+				<string>1 Hour</string>
+				<string>2 Hours</string>
+				<string>3 Hours</string>
+				<string>4 Hours</string>
+				<string>5 Hours</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>3600</string>
+				<string>7200</string>
+				<string>10800</string>
+				<string>14400</string>
+				<string>18000</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/preferences.changed</string>
 		</dict>
 
 		<dict>

@@ -131,7 +131,7 @@
 		}];
 	}
 
-	-(void)openCurrentRedditPost {
+	-(void)viewCurrentRedditImage {
 		NSMutableDictionary *preferences = [NSMutableDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.stellaesaveddata.plist"];
 		NSString *currentRedditURL = [preferences objectForKey:@"currentRedditURL"];
 		if([currentRedditURL isEqualToString:@""] || currentRedditURL == nil) {

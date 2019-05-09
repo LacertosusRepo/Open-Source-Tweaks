@@ -49,4 +49,32 @@
 - (NSArray *)randomQuotes {
 	return @[@"\"I didn't feel like a giant. I felt very, very small.\" - Neil Armstrong",@"\"Across the sea of space, the stars are other suns\" - Carl Sagan",@"\"Contact light.\" - Buzz Aldrin",@"\"I would like to die on Mars. Just not on impact\" - Elon Musk"];
 }
+
+-(void)didMoveToSuperview {
+	[super didMoveToSuperview];
+	self.iconView.alpha = 0;
+	self.headerLabel.alpha = 0;
+	self.subHeaderLabel.alpha = 0;
+	[self fadeInIconImage];
+	[self fadeInHeaderLabel];
+	[self fadeInSubLabel];
+}
+
+-(void)fadeInHeaderLabel {
+	[UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		self.headerLabel.alpha = 1;
+	} completion:nil];
+}
+
+-(void)fadeInSubLabel {
+	[UIView animateWithDuration:1.0 delay:0.5 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		self.subHeaderLabel.alpha = 1;
+	} completion:nil];
+}
+
+-(void)fadeInIconImage {
+	[UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+		self.iconView.alpha = 1;
+	} completion:nil];
+}
 @end
