@@ -1,128 +1,174 @@
-  //Headers
+/*
+ * Tweak.xm
+ * Navale
+ *
+ * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 4/30/2019.
+ * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ */
+
+#define LD_DEBUG NO
 #import "NavaleClasses.h"
-#import "NavaleController.h"
+#import "ColorsFromImage.h"
+#import "ColorFlowAPI.h"
 #import "libcolorpicker.h"
+extern "C" CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
   //Vars
-  CAGradientLayer * gradientLayer;
-  SBFloatingDockPlatterView * floatingDockView;
-  SBDockView * dockView;
+  CAGradientLayer *gradientLayer;
+  SBFloatingDockPlatterView *floatingDockView;
+  SBDockView *dockView;
+  UIColor *colorOne;
+  UIColor *colorTwo;
 
-  //Pref Vars
+  //Prefs
   static BOOL usingFloatingDock;
   static BOOL useColorFlow;
   static int gradientDirection;
   static float dockAlpha;
-  //static float gradientPosition;
 
-  //Default Dock Hook
+  /*
+   * Regular Dock
+   */
+%group RegularDockHooks
 %hook SBDockView
-    //get dock instance and if using colorflow colors, start listening
+%property (nonatomic, copy) UIColor *primaryColor;
+%property (nonatomic, copy) UIColor *secondaryColor;
+
   -(id)initWithDockListView:(id)arg1 forSnapshot:(BOOL)arg2 {
     if(useColorFlow) {
-      [[NSClassFromString(@"NavaleController") alloc] init];
+      [[%c(CFWSBMediaController) sharedInstance] addColorDelegate:self];
     }
     return dockView = %orig;
   }
 
   -(void)layoutSubviews {
     %orig;
-      //check that user is not using floating dock
-    if(!usingFloatingDock) {
-        //hide dock blur and set alpha
-      SBWallpaperEffectView * backgroundView = MSHookIvar<SBWallpaperEffectView *>(self, "_backgroundView");
-      backgroundView.blurView.hidden = YES;
-      backgroundView.alpha = dockAlpha;
 
-        //get colors from other plist. regular preferences and color data are stored seperate due to libcolorpicker resetting colors often
-      NSMutableDictionary * colorData = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"];
-      UIColor * colorOne = LCPParseColorString([colorData objectForKey:@"colorOne"], @"#2c3e50");
-      UIColor * colorTwo = LCPParseColorString([colorData objectForKey:@"colorTwo"], @"#2980b9");
+      //Get background view and set alpha
+    SBWallpaperEffectView *backgroundView = MSHookIvar<SBWallpaperEffectView *>(self, "_backgroundView");
+    backgroundView.blurView.hidden = YES;
+    backgroundView.alpha = dockAlpha;
 
-        //if theres no gradient layer yet, make one;
-      if(!gradientLayer) {
-        gradientLayer = [CAGradientLayer layer];
-      }
-
-        //sets the gradient either verticle or horizontal
-      if(gradientDirection == verticle) {
-        gradientLayer.startPoint = CGPointMake(0.5, 0.0);
-        gradientLayer.endPoint = CGPointMake(0.5, 1.0);
-      } if(gradientDirection == horizontal) {
-        gradientLayer.startPoint = CGPointMake(0.0, 0.5);
-        gradientLayer.endPoint = CGPointMake(1.0, 0.5);
-      }
-
-        //if using colorflow and if neither of the colors are null, get the colors from controller
-      if(useColorFlow && !([[NSClassFromString(@"NavaleController") sharedInstance] primaryColor] == nil || [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor] == nil)) {
-        colorOne = [[NSClassFromString(@"NavaleController") sharedInstance] primaryColor];
-        colorTwo = [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor];
-      }
-
-        //set gradient colors and frame
-      gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
-      gradientLayer.frame = backgroundView.bounds;
-      [backgroundView.layer insertSublayer:gradientLayer atIndex:6];
+      //Create gradient layer
+    if(!gradientLayer) {
+      gradientLayer = [CAGradientLayer layer];
     }
+
+      //Set gradient layer orientation
+    if(gradientDirection == verticle) {
+      gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+      gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+    } if(gradientDirection == horizontal) {
+      gradientLayer.startPoint = CGPointMake(0.0, 0.5);
+      gradientLayer.endPoint = CGPointMake(1.0, 0.5);
+    }
+
+    if(self.primaryColor == nil || self.secondaryColor == nil) {
+      NSMutableDictionary *colorData = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"];
+      colorOne = LCPParseColorString([colorData objectForKey:@"colorOne"], @"000000");
+      colorTwo = LCPParseColorString([colorData objectForKey:@"colorTwo"], @"000000");
+    } else {
+      colorOne = self.primaryColor;
+      colorTwo = self.secondaryColor;
+    }
+
+    gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
+    gradientLayer.frame = backgroundView.bounds;
+    [backgroundView.layer insertSublayer:gradientLayer atIndex:6];
+  }
+
+%new
+  -(void)songAnalysisComplete:(MPModelSong *)song artwork:(UIImage *)artwork colorInfo:(CFWColorInfo *)colorInfo {
+    self.primaryColor = colorInfo.primaryColor;
+    self.secondaryColor = colorInfo.secondaryColor;
+    [self layoutSubviews];
+  }
+
+%new
+  -(void)songHadNoArtwork:(MPModelSong *)song {
+    self.primaryColor = nil;
+    self.secondaryColor = nil;
+    [self layoutSubviews];
   }
 %end
+%end
 
-  //Floating Dock Hook
+  /*
+   * Floating Dock
+   */
+%group FloatingDockHooks
 %hook SBFloatingDockPlatterView
-    //get dock instance and if using colorflow colors, start listening
+%property (nonatomic, copy) UIColor *primaryColor;
+%property (nonatomic, copy) UIColor *secondaryColor;
+
   -(id)initWithReferenceHeight:(double)arg1 maximumContinuousCornerRadius:(double)arg2 {
     if(useColorFlow) {
-      [[NSClassFromString(@"NavaleControllerNavaleController") alloc] init];
+      [[%c(CFWSBMediaController) sharedInstance] addColorDelegate:self];
     }
     return floatingDockView = %orig;
   }
 
   -(void)layoutSubviews {
     %orig;
-      //check that user is using floating dock
-    if(usingFloatingDock) {
-        //remove lightening effect and set dock alpha
-      _UIBackdropView * backgroundView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
-      backgroundView.backdropEffectView.hidden = YES;
-      backgroundView.alpha = dockAlpha;
+    NSLog(@"Dock Updated");
 
-        //get colors from other plist. regular preferences and color data are stored seperate due to libcolorpicker resetting colors often
-      NSMutableDictionary * colorData = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"];
-      UIColor * colorOne = LCPParseColorString([colorData objectForKey:@"colorOne"], @"#2c3e50");
-      UIColor * colorTwo = LCPParseColorString([colorData objectForKey:@"colorTwo"], @"#2980b9");
+      //Get background view and set alpha
+    _UIBackdropView *backgroundView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
+    backgroundView.backdropEffectView.hidden = YES;
+    backgroundView.alpha = dockAlpha;
 
-        //if theres no gradient layer yet, make one;
-      if(!gradientLayer) {
-        gradientLayer = [CAGradientLayer layer];
-      }
-
-        //sets the gradient either verticle or horizontal
-      if(gradientDirection == verticle) {
-        gradientLayer.startPoint = CGPointMake(0.5, 0.0);
-        gradientLayer.endPoint = CGPointMake(0.5, 1.0);
-      } if(gradientDirection == horizontal) {
-        gradientLayer.startPoint = CGPointMake(0.0, 0.5);
-        gradientLayer.endPoint = CGPointMake(1.0, 0.5);
-      }
-
-        //if using colorflow and if neither of the colors are null, get the colors from controller
-      if(useColorFlow && !([[NSClassFromString(@"NavaleController") sharedInstance] primaryColor] == nil || [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor] == nil)) {
-        colorOne = [[NSClassFromString(@"NavaleController") sharedInstance] primaryColor];
-        colorTwo = [[NSClassFromString(@"NavaleController") sharedInstance] secondaryColor];
-      }
-
-        //set gradient colors and bounds, then get the corner radius
-      gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
-      gradientLayer.frame = backgroundView.bounds;
-      gradientLayer.cornerRadius = [backgroundView _cornerRadius];
-      [backgroundView.layer insertSublayer:gradientLayer atIndex:0];
+      //Create gradient layer
+    if(!gradientLayer) {
+      gradientLayer = [CAGradientLayer layer];
     }
+
+      //Set gradient layer orientation
+    if(gradientDirection == verticle) {
+      gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+      gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+    } if(gradientDirection == horizontal) {
+      gradientLayer.startPoint = CGPointMake(0.0, 0.5);
+      gradientLayer.endPoint = CGPointMake(1.0, 0.5);
+    }
+
+    if(self.primaryColor == nil || self.secondaryColor == nil) {
+      NSMutableDictionary *colorData = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"];
+      colorOne = LCPParseColorString([colorData objectForKey:@"colorOne"], @"000000");
+      colorTwo = LCPParseColorString([colorData objectForKey:@"colorTwo"], @"000000");
+    } else {
+      colorOne = self.primaryColor;
+      colorTwo = self.secondaryColor;
+    }
+
+    gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
+    gradientLayer.frame = backgroundView.bounds;
+    gradientLayer.cornerRadius = [self maximumContinuousCornerRadius];
+    [backgroundView.layer insertSublayer:gradientLayer atIndex:0];
   }
 
+%new
+  -(void)songAnalysisComplete:(MPModelSong *)song artwork:(UIImage *)artwork colorInfo:(CFWColorInfo *)colorInfo {
+    NSLog(@"Color Analysis Finished - %@", colorInfo);
+    self.primaryColor = colorInfo.primaryColor;
+    self.secondaryColor = colorInfo.secondaryColor;
+    [self layoutSubviews];
+  }
+
+%new
+  -(void)songHadNoArtwork:(MPModelSong *)song {
+    NSLog(@"Color Analysis");
+    self.primaryColor = nil;
+    self.secondaryColor = nil;
+    [self layoutSubviews];
+  }
+%end
 %end
 
+static void respring() {
+  [[%c(FBSystemService) sharedInstance] exitAndRelaunch:YES];
+}
+
 static void updateDock() {
-    //call layoutSubviews to update the colors
   if(usingFloatingDock) {
     [floatingDockView layoutSubviews];
   } else {
@@ -130,35 +176,46 @@ static void updateDock() {
   }
 }
 
-static void respring() {
-  [[%c(FBSystemService) sharedInstance] exitAndRelaunch:YES];
+static void colorsFromWallpaper() {
+  UIImage *homeWallpaper;
+  if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/SpringBoard/OriginalHomeBackground.cpbitmap"]) {
+    NSData *homeData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalHomeBackground.cpbitmap"];
+    CFArrayRef homeArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)homeData, NULL, 1, NULL);
+    NSArray *homeArray = (__bridge NSArray*)homeArrayRef;
+    homeWallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(homeArray[0])];
+    CFRelease(homeArrayRef);
+  } else {
+    NSLog(@"Navale || Home wallpaper not found");
+    return;
+  }
+
+  NSDictionary *colors = [[%c(ColorsFromImage) sharedInstance] colorsFromImage:homeWallpaper fromEdge:3];
+  NSString *primaryColor = [UIColor hexFromColor:colors[@"primary"]];
+  NSString *secondaryColor = [UIColor hexFromColor:colors[@"secondary"]];
+  //NSLog(@"colors - %@ || primaryColor - %@ || secondaryColor - %@", colors, primaryColor, secondaryColor);
+
+  NSMutableDictionary *colorData = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"];
+  [colorData setObject:primaryColor forKey:@"colorOne"];
+  [colorData setObject:secondaryColor forKey:@"colorTwo"];
+  [colorData writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist" atomically:YES];
+
+  updateDock();
 }
 
 static void loadPrefs() {
-	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navaleprefs.plist"];
-    //if preference file doesnt exist, make one and set default values
+  NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navaleprefs.plist"];
   if(!preferences) {
-		preferences = [[NSMutableDictionary alloc] init];
+    preferences = [[NSMutableDictionary alloc] init];
     usingFloatingDock = NO;
     useColorFlow = NO;
-    gradientDirection = verticle;
+    gradientDirection = horizontal;
     dockAlpha = 1.0;
-    //gradientPosition = 0.5;
-    [preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.navaleprefs.plist" atomically:YES];
-    //if the colors preference file doesnt exist, make one and set default values
-	} if(![[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"]) {
-    NSMutableDictionary * colorData = [[NSMutableDictionary alloc] init];
-    [colorData setValue:@"#FFFFFF" forKey:@"colorOne"];
-    [colorData setValue:@"#FFFFFF" forKey:@"colorTwo"];
-    [colorData writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist" atomically:YES];
   } else {
-		usingFloatingDock = [[preferences objectForKey:@"usingFloatingDock"] boolValue];
+    usingFloatingDock = [[preferences objectForKey:@"usingFloatingDock"] boolValue];
     useColorFlow = [[preferences objectForKey:@"useColorFlow"] boolValue];
     gradientDirection = [[preferences objectForKey:@"gradientDirection"] intValue];
     dockAlpha = [[preferences objectForKey:@"dockAlpha"] floatValue];
-    //gradientPosition = [[preferences objectForKey:@"gradientPosition"] floatValue];
-	}
-	[preferences release];
+  }
 }
 
 static NSString *nsNotificationString = @"com.lacertosusrepo.navaleprefs/preferences.changed";
@@ -167,10 +224,15 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 }
 
 %ctor {
-	NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	loadPrefs();
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+  loadPrefs();
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)colorsFromWallpaper, CFSTR("com.lacertosusrepo.navaleprefs-colorsFromWallpaper"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)updateDock, CFSTR("com.lacertosusrepo.navaleprefs-updateDock"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)respring, CFSTR("com.lacertosusrepo.navaleprefs-respring"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-  [pool release];
+
+  if(usingFloatingDock) {
+    %init(FloatingDockHooks);
+  } else {
+    %init(RegularDockHooks);
+  }
 }

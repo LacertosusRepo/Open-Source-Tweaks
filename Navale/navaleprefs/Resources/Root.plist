@@ -99,6 +99,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Color Options</string>
+			<key>footerText</key>
+			<string>Note the generated colors may not be to your liking.</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -119,6 +121,16 @@
 			<string>Color Two</string>
 			<key>icon</key>
 			<string>colorpickericontwo.png</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorsFromWallpaper</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>NAVButtonCell</string>
+			<key>label</key>
+			<string>Use Colors From Wallpaper</string>
 		</dict>
 
 		<dict>
@@ -144,7 +156,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NavaleButtonCell</string>
+			<string>NAVButtonCell</string>
 			<key>label</key>
 			<string>Update Dock</string>
 		</dict>
@@ -154,7 +166,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NavaleButtonCell</string>
+			<string>NAVButtonCell</string>
 			<key>label</key>
 			<string>Respring</string>
 		</dict>
@@ -174,7 +186,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NavaleButtonCell</string>
+			<string>NAVButtonCell</string>
 			<key>icon</key>
 			<string>github.png</string>
 			<key>label</key>
@@ -186,7 +198,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NavaleButtonCell</string>
+			<string>NAVButtonCell</string>
 			<key>icon</key>
 			<string>twitter.png</string>
 			<key>label</key>
@@ -198,7 +210,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NavaleButtonCell</string>
+			<string>NAVButtonCell</string>
 			<key>icon</key>
 			<string>paypal.png</string>
 			<key>label</key>

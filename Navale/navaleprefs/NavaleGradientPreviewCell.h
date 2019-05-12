@@ -5,17 +5,14 @@
 @end
 
 @implementation NavaleGradientPreviewCell
-	CAGradientLayer * gradientLayer;
+	CAGradientLayer *gradientLayer;
 	static int gradientDirection;
-	//static int gradientPosition;
-	UIColor * colorOne;
-	UIColor * colorTwo;
+	UIColor *colorOne;
+	UIColor *colorTwo;
 
 -(void)layoutSubviews {
 	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navaleprefs.plist"];
 	gradientDirection = [[preferences objectForKey:@"gradientDirection"] intValue];
-	//gradientPosition = [[preferences objectForKey:@"gradientPosition"] floatValue];
-
 	NSMutableDictionary * colors = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"];
 	colorOne = LCPParseColorString([colors objectForKey:@"colorOne"], @"#FFFFFF");
   colorTwo = LCPParseColorString([colors objectForKey:@"colorTwo"], @"#FFFFFF");
@@ -34,9 +31,6 @@
 
   [self.contentView.layer insertSublayer:gradientLayer atIndex:0];
 	[self.contentView.layer setMasksToBounds:YES];
-	[self.contentView.layer setCornerRadius:5.0f];
-	[self.contentView.layer setBorderColor:[UIColor blackColor].CGColor];
-	[self.contentView.layer setBorderWidth:1.0f];
 
 	[preferences release];
 	[colors release];
@@ -45,8 +39,6 @@
 +(void)reloadCell {
 	NSMutableDictionary * preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navaleprefs.plist"];
 	gradientDirection = [[preferences objectForKey:@"gradientDirection"] intValue];
-	//gradientPosition = [[preferences objectForKey:@"gradientPosition"] floatValue];
-
 	NSMutableDictionary * colors = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist"];
  	colorOne = LCPParseColorString([colors objectForKey:@"colorOne"], @"#FFFFFF");
  	colorTwo = LCPParseColorString([colors objectForKey:@"colorTwo"], @"#FFFFFF");

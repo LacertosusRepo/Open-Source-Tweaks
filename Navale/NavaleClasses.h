@@ -1,3 +1,5 @@
+#import "ColorFlowAPI.h"
+
 enum gradientDirections {
   verticle = 0,
   horizontal
@@ -8,10 +10,19 @@ enum gradientDirections {
 -(void)exitAndRelaunch:(BOOL)arg1;
 @end
 
-@interface SBDockView : UIView
+@interface SBDockView : UIView <CFWColorDelegate>
+@property (nonatomic, copy) UIColor *primaryColor;
+@property (nonatomic, copy) UIColor *secondaryColor;
+-(void)songAnalysisComplete:(MPModelSong *)song artwork:(UIImage *)artwork colorInfo:(CFWColorInfo *)colorInfo;
+-(void)songHadNoArtwork:(MPModelSong *)song;
 @end
 
-@interface SBFloatingDockPlatterView : UIView
+@interface SBFloatingDockPlatterView : UIView <CFWColorDelegate>
+@property (nonatomic, copy) UIColor *primaryColor;
+@property (nonatomic, copy) UIColor *secondaryColor;
+-(double)maximumContinuousCornerRadius;
+-(void)songAnalysisComplete:(MPModelSong *)song artwork:(UIImage *)artwork colorInfo:(CFWColorInfo *)colorInfo;
+-(void)songHadNoArtwork:(MPModelSong *)song;
 @end
 
 @interface SBWallpaperEffectView : UIView

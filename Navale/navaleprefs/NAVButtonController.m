@@ -8,12 +8,12 @@
 #import <Preferences/PSTableCell.h>
 #import "PreferencesColorDefinitions.h"
 
-@interface NavaleButtonCell : PSTableCell
+@interface NAVButtonCell : PSTableCell
 @end
 
-@implementation NavaleButtonCell
+@implementation NAVButtonCell
 
-	- (void)layoutSubviews {
+	-(void)layoutSubviews {
 
 		//Sets UIButton Color
 		[super layoutSubviews];

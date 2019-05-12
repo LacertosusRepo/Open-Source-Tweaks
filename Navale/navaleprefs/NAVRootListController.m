@@ -1,9 +1,8 @@
 #include "NAVRootListController.h"
-#import "LacertosusCustomHeaderClassCell.h"
-#import "NavaleGradientPreviewCell.h"
+#import "NAVCustomHeaderClassCell.h"
 #import "PreferencesColorDefinitions.h"
+#import "NavaleGradientPreviewCell.h"
 #import "libcolorpicker.h"
-#import <UIKit/UIKit.h>
 
 @implementation NAVRootListController
 
@@ -16,28 +15,23 @@
 
 	-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 		if (section == 0) {
-			return (UIView *)[[LacertosusCustomHeaderCell alloc] init];
+			return (UIView *)[[NAVCustomHeaderCell alloc] init];
 		}
     return nil;
 	}
 
 	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 		if (section == 0) {
-			return 95.0f;
+			return 170.0f;
 		}
 	return (CGFloat)-1;
 	}
 
 	-(void)viewDidLoad {
 		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/navaleprefs.bundle/navbarlogo.png"];
-		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-		UIBarButtonItem *webButton = [[UIBarButtonItem alloc]
-							   initWithImage:iconBar
-							   style:UIBarButtonItemStylePlain
-                               target:self
-                               action:@selector(webButtonAction)];
-
+		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/navaleprefs.bundle/barbutton.png"];
+		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
 		self.navigationItem.rightBarButtonItem = webButton;
 
 		[webButton release];
@@ -50,22 +44,24 @@
 
 	-(void)viewWillAppear:(BOOL)animated {
 		[super viewWillAppear:animated];
-		//Changed colors of Navigation Bar, Navigation Text
-			self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
-			self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
-			self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-		//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
-				[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-				[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
-				[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
+			//Changed colors of Navigation Bar, Navigation Text
+		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
+		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
+		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+		self.navigationController.navigationController.navigationBar.translucent = NO;
+			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
+		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
+		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
+		[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
 	}
 
 	-(void)viewWillDisappear:(BOOL)animated {
 		[super viewWillDisappear:animated];
-		//Returns normal colors to Navigation Bar
-			self.navigationController.navigationController.navigationBar.tintColor = nil;
-			self.navigationController.navigationController.navigationBar.barTintColor = nil;
-			self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
+				//Returns normal colors to Navigation Bar
+		self.navigationController.navigationController.navigationBar.tintColor = nil;
+		self.navigationController.navigationController.navigationBar.barTintColor = nil;
+		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
+		self.navigationController.navigationController.navigationBar.translucent = YES;
 	}
 
 	//https://github.com/angelXwind/KarenPrefs/blob/master/KarenPrefsListController.m
@@ -100,6 +96,7 @@
 				[preferences setObject:hexColor forKey:@"colorOne"];
 				[preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist" atomically:YES];
 				[NavaleGradientPreviewCell reloadCell];
+				[self updateDock];
 			}];
 	}
 
@@ -115,7 +112,24 @@
 				[preferences setObject:hexColor forKey:@"colorTwo"];
 				[preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.navalecolors.plist" atomically:YES];
 				[NavaleGradientPreviewCell reloadCell];
+				[self updateDock];
 			}];
+	}
+
+	-(void)colorsFromWallpaper {
+		UIAlertController *wallpaperColorsAlert = [UIAlertController alertControllerWithTitle:@"Navale" message:@"Would you like to generate and use the primary and secondary colors from your homescreen wallpaper?\n\nThis will replace your current colors." preferredStyle:UIAlertControllerStyleAlert];
+
+		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Get Colors" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs-colorsFromWallpaper"), nil, nil, true);
+		}];
+		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Nevermind" style:UIAlertActionStyleCancel handler:nil];
+		[wallpaperColorsAlert addAction:confirmAction];
+		[wallpaperColorsAlert addAction:cancelAction];
+		[self presentViewController:wallpaperColorsAlert animated:YES completion:nil];
+
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			[NavaleGradientPreviewCell reloadCell];
+		});
 	}
 
 	-(void)updateDock {
@@ -123,7 +137,15 @@
 	}
 
 	-(void)respring {
-		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs-respring"), nil, nil, true);
+		UIAlertController *respringAlert = [UIAlertController alertControllerWithTitle:@"Stellae" message:@"Are you sure you want Respring?" preferredStyle:UIAlertControllerStyleAlert];
+
+		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Confirm" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs-respring"), nil, nil, true);
+		}];
+		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+		[respringAlert addAction:confirmAction];
+		[respringAlert addAction:cancelAction];
+		[self presentViewController:respringAlert animated:YES completion:nil];
 	}
 
 	-(void)twitter {

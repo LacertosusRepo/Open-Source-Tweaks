@@ -5,7 +5,9 @@
 @interface NAVRootListController : PSListController
 @end
 
-@interface LacertosusCustomHeaderCell : UIView
-@property (nonatomic,assign) UILabel *headerLabel;
-@property (nonatomic,assign) UILabel *subHeaderLabel;
+@interface NAVCustomHeaderCell : UIView
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, assign) UILabel *headerLabel;
+@property (nonatomic, assign) UILabel *subHeaderLabel;
+@property (nonatomic, readonly) NSArray *randomLabels;
 @end
