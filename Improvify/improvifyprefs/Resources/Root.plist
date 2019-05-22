@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>headerCellClass</key>
+			<string>IFYCustomHeaderCell</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Playlist URI</string>
+			<key>footerText</key>
+			<string>This URI is a unique idenitifer for your playlist you would like to save the currently playing song to. You can get this link by tapping the name of a playlist while viewing it.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Playlist URI</string>
+			<key>key</key>
+			<string>playlistURI</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.nonutprefs./improvifyprefs.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Playlist Song Deletion Gesture</string>
+			<key>footerText</key>
+			<string>Adds a gesture to delete a song by long pressing on it for a set amount of time. Default is 2 seconds.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>2</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>label</key>
+			<string>Seconds till delete</string>
+			<key>min</key>
+			<string>1</string>
+			<key>max</key>
+			<string>10</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segementCounter</key>
+			<string>10</string>
+			<key>showValue</key>
+			<true/>
+			<key>key</key>
+			<string>pressDuration</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.stellaeprefs/improvifyprefs.changed</string>
+		</dict>
+
+		<dict>
+			<key>label</key>
+			<string>Need Something?</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>github</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>IFYButtonCell</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>label</key>
+			<string>Github</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>IFYButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>paypal</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>IFYButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
