@@ -1,6 +1,6 @@
 Package: com.lacertosusrepo.improvify
 Name: Improvify
-Depends: mobilesubstrate
+Depends: mobilesubstrate, org.thebigboss.libcolorpicker
 Version: 1.0
 Architecture: iphoneos-arm
 Description: If you're seeing this, I forgot to add a description...

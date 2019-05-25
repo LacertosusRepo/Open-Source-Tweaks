@@ -3,6 +3,7 @@ include $(THEOS)/makefiles/common.mk
 BUNDLE_NAME = improvifyprefs
 improvifyprefs_FILES = IFYRootListController.m IFYButtonController.m
 improvifyprefs_INSTALL_PATH = /Library/PreferenceBundles
+improvifyprefs_LIBRARIES = colorpicker
 improvifyprefs_FRAMEWORKS = UIKit
 improvifyprefs_PRIVATE_FRAMEWORKS = Preferences
 

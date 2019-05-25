@@ -15,9 +15,23 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Playlist URI</string>
+			<string>Quick add to playlist</string>
 			<key>footerText</key>
-			<string>This URI is a unique idenitifer for your playlist you would like to save the currently playing song to. You can get this link by tapping the name of a playlist while viewing it.</string>
+			<string>The URI is a unique identifier for songs/artists/playlists/etc. Enter the playlist URI where you want music to be saved to when listening to music. To get this URI link for a playlist just double-tap the name of the playlist while viewing it.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>key</key>
+			<string>useAddToPlaylistButton</string>
+			<key>label</key>
+			<string>Add to Playlist Button</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -31,16 +45,87 @@
 			<key>key</key>
 			<string>playlistURI</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.nonutprefs./improvifyprefs.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Playlist Song Deletion Gesture</string>
+			<string>Add to Playlist Button Customization</string>
+			<key>footerText</key>
+			<string>Using a custom color disables ColorFlow4 support. Use the slider to set the offset for the button, default is -6.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>key</key>
+			<string>addToPlaylistCustomColor</string>
+			<key>label</key>
+			<string>Use Custom Color</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPicker</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Button Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>-6</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>label</key>
+			<string>Button Offset</string>
+			<key>min</key>
+			<string>-10</string>
+			<key>max</key>
+			<string>10</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segementCounter</key>
+			<string>20</string>
+			<key>showValue</key>
+			<true/>
+			<key>leftImage</key>
+			<string>offseticon.png</string>
+			<key>key</key>
+			<string>addToPlayistButtonOffset</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Quick-delete gesture</string>
 			<key>footerText</key>
 			<string>Adds a gesture to delete a song by long pressing on it for a set amount of time. Default is 2 seconds.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>key</key>
+			<string>useQuickDeleteGesture</string>
+			<key>label</key>
+			<string>Add Quick-delete Gesture</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -61,10 +146,12 @@
 			<string>10</string>
 			<key>showValue</key>
 			<true/>
+			<key>leftImage</key>
+			<string>durationicon.png</string>
 			<key>key</key>
 			<string>pressDuration</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.stellaeprefs/improvifyprefs.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
 
 		<dict>

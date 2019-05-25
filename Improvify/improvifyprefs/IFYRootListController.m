@@ -1,6 +1,7 @@
 #include "IFYRootListController.h"
 #import "IFYCustomHeaderClassCell.h"
 #import "PreferencesColorDefinitions.h"
+#import "libcolorpicker.h"
 
 @implementation IFYRootListController
 
@@ -79,6 +80,20 @@
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
 		}
 		[super setPreferenceValue:value specifier:specifier];
+	}
+
+	-(void)colorPicker {
+		NSMutableDictionary * preferences = [NSMutableDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+		NSString * buttonColor = [preferences objectForKey:@"buttonColor"];
+		UIColor * initialColor = LCPParseColorString(buttonColor, @"#FFFFFF");
+		PFColorAlert * alert = [PFColorAlert colorAlertWithStartColor:initialColor showAlpha:NO];
+
+			[alert displayWithCompletion:^void (UIColor * pickedColor) {
+				NSString * hexColor = [UIColor hexFromColor:pickedColor];
+				//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
+				[preferences setObject:hexColor forKey:@"buttonColor"];
+				[preferences writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist" atomically:YES];
+			}];
 	}
 
 	-(void)_returnKeyPressed:(id)arg1 {

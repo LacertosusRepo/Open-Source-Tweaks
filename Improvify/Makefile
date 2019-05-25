@@ -10,6 +10,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Improvify
 Improvify_FILES = Tweak.xm
+Improvify_LIBRARIES = colorpicker
 Improvify_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
