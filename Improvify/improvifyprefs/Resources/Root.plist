@@ -52,7 +52,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Add to Playlist Button Customization</string>
+			<string>Playlist Button Customization</string>
 			<key>footerText</key>
 			<string>Using a custom color disables ColorFlow4 support. Use the slider to set the offset for the button, default is -6.</string>
 		</dict>
@@ -66,7 +66,7 @@
 			<key>key</key>
 			<string>addToPlaylistCustomColor</string>
 			<key>label</key>
-			<string>Use Custom Color</string>
+			<string>Use Custom Selected Color</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
@@ -76,7 +76,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
-			<string>Button Color</string>
+			<string>Selected Button Color</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -152,6 +152,37 @@
 			<string>pressDuration</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>All changes require Spotify to be restarted.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>ImprovifyMiscellaneousSettingsViewController</string>
+			<key>isController</key>
+			<true/>
+			<key>label</key>
+			<string>Miscellaneous Settings</string>
+			<key>icon</key>
+			<string>miscsettingsicon.png</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>killSpotify</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>IFYButtonCell</string>
+			<key>icon</key>
+			<string>killspotifyicon</string>
+			<key>label</key>
+			<string>Kill Spotify</string>
 		</dict>
 
 		<dict>

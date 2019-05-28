@@ -23,6 +23,42 @@
   static BOOL useQuickDeleteGesture;
   static float pressDuration;
 
+  static BOOL suppressRateAlert;
+  static BOOL disableSongVideos;
+  static BOOL disableGenius;
+
+  /*
+   * Initial popup
+   */
+%hook SpotifyAppDelegate
+  -(BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
+    NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+    if(![[improvifydata objectForKey:@"improvifyInitialPopup"] boolValue]) {
+      SPTPopupButton *cancelAction = [%c(SPTPopupButton) buttonWithTitle:@"Cool!"];
+      SPTPopupButton *githubAction = [%c(SPTPopupButton) buttonWithTitle:@"Github" actionHandler:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+      }];
+      SPTPopupButton *twitterAction = [%c(SPTPopupButton) buttonWithTitle:@"Twitter" actionHandler:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
+      }];
+      SPTPopupButton *paypalAction = [%c(SPTPopupButton) buttonWithTitle:@"Donate" actionHandler:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://paypal.me/Lacertosus?locale.x=en_US"] options:@{} completionHandler:nil];
+      }];
+      NSArray *buttons = [[NSArray alloc] initWithObjects:cancelAction, githubAction, twitterAction, paypalAction, nil];
+
+      SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Improvify" message:@"Thanks for installing my tweak! Make sure to copy your favorite playlist's URI and paste it into the settings. \n\nIf you would like to know more about this tweak, you can find the code on my GitHub below.\n\nIf you have a suggestion or an issue feel free to message me on Twitter.\n\nIf you would like to fund my computer building addiction you can donate to me via PayPal.\n\n(Tested on Spotify v8.5.7.)" buttons:buttons];
+
+      [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:copyURIPopup];
+      [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
+
+      [improvifydata setObject:[NSNumber numberWithBool:1] forKey:@"improvifyInitialPopup"];
+      [improvifydata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist" atomically:YES];
+    }
+
+    return %orig;
+  }
+%end
+
   /*
    * Get instances needed later
    */
@@ -83,31 +119,20 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
       self.addToPlayistButton.icon = 49;
       self.addToPlayistButton.iconSize = CGSizeMake(20, 20);
       self.addToPlayistButton.opaque = YES;
-
-      if(addToPlaylistCustomColor) {
-        NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
-          self.addToPlayistButton.iconColor = LCPParseColorString([improvifydata objectForKey:@"buttonColor"], @"#C7CCCD");
-      } else {
-          self.addToPlayistButton.iconColor = [UIColor colorWithRed:0.78 green:0.80 blue:0.80 alpha:1.0];
-      }
+      [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.78 green:0.80 blue:0.80 alpha:1.0]];
 
       [self.addToPlayistButton addTarget:self action:@selector(handleAddToPlaylist) forControlEvents:UIControlEventTouchUpInside];
       [self.view addSubview:self.addToPlayistButton];
-      [self.addToPlayistButton applyIcon];
-
-      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkIsNowPlayingSongInPlaylist) name:(__bridge NSString *)kMRMediaRemoteNowPlayingApplicationIsPlayingDidChangeNotification object:nil];
-
     }
   }
 
   -(void)cfw_colorizeNotification:(NSNotification *)arg1 {
     %orig;
 
-    if(useAddToPlaylistButton) {
+    if(useAddToPlaylistButton && !addToPlaylistCustomColor) {
       NSDictionary *userInfo = [arg1 userInfo];
       CFWColorInfo *colorInfo = userInfo[@"CFWColorInfo"];
-      self.addToPlayistButton.iconColor = colorInfo.primaryColor;
-      [self.addToPlayistButton applyIcon];
+      [self setAddToPlaylistButtonColor:colorInfo.primaryColor];
     }
   }
 
@@ -135,7 +160,12 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     [playlistModel playlistContainsTrackURLs:currentTrack playlistURL:finalPlaylistURI completion:^(NSSet *set) {
       if(![set containsObject:playerTrack.URI]) {
         addSongToPlaylist(currentTrack, finalPlaylistURI);
-        [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.12 green:0.73 blue:0.32 alpha:1.0]];
+        if(addToPlaylistCustomColor) {
+          NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+          [self setAddToPlaylistButtonColor:LCPParseColorString([improvifydata objectForKey:@"buttonColor"], @"#1DB954")];
+        } else {
+          [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.12 green:0.73 blue:0.32 alpha:1.0]];
+        }
 
       } else {
         SPTPopupButton *removeFromPlaylistAction = [%c(SPTPopupButton) buttonWithTitle:@"Remove From Playlist" actionHandler:^{
@@ -145,7 +175,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
         SPTPopupButton *cancelAction = [%c(SPTPopupButton) buttonWithTitle:@"Cancel"];
         NSArray *buttons = [[NSArray alloc] initWithObjects:removeFromPlaylistAction, cancelAction, nil];
 
-        SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Error" message:[NSString stringWithFormat:@"\"%@\" is already in your playlist.", playerTrack.advertiserTitle] buttons:buttons];
+        SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Song Already In Playlist" message:[NSString stringWithFormat:@"\"%@\" is already in your playlist.", playerTrack.advertiserTitle] buttons:buttons];
 
         [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:copyURIPopup];
         [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
@@ -172,7 +202,13 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
 
     [playlistModel playlistContainsTrackURLs:currentTrack playlistURL:finalPlaylistURI completion:^(NSSet *set) {
       if([set containsObject:playerTrack.URI]) {
-        [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.12 green:0.73 blue:0.32 alpha:1.0]];
+        if(addToPlaylistCustomColor) {
+          NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+          [self setAddToPlaylistButtonColor:LCPParseColorString([improvifydata objectForKey:@"buttonColor"], @"#1DB954")];
+        } else {
+          [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.12 green:0.73 blue:0.32 alpha:1.0]];
+        }
+
       } else {
         [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.78 green:0.80 blue:0.80 alpha:1.0]];
       }
@@ -181,7 +217,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
 
 %new
   -(void)setAddToPlaylistButtonColor:(UIColor *)color {
-    self.addToPlayistButton.iconColor = color;
+    [self.addToPlayistButton setIconColor:color];
     [self.addToPlayistButton applyIcon];
   }
 %end
@@ -212,7 +248,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
 %end
 
   /*
-   * Added ability to delete songs in playlist with a long longPressGesture
+   * Added ability to delete songs in playlist with a long longPressGesture, add tap gesture to playlist name to copy it's URI
    */
 %hook SPTFreeTierPlaylistViewController
   -(id)tableView:(id)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
@@ -272,6 +308,72 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   }
 %end
 
+/*
+ * MISCELLANEOUS SETTINGS
+ * Get rid of that pesky rate me popup, thanks for spamming it spotify
+ */
+%hook SPTRateMeController
+-(void)showAlert {
+  if(suppressRateAlert) {
+    //Suppressing fire!
+  } else {
+    %orig;
+  }
+}
+
+-(void)showLegacyAlert {
+  if(suppressRateAlert) {
+    //Suppressing fire!
+  } else {
+    %orig;
+  }
+}
+%end
+
+  /*
+   * Stop the video clips from playing on some songs
+   */
+%hook SPTCanvasTrackCheckerImplementation
+  -(BOOL)isCanvasEnabledForTrack:(id)arg1 {
+    if(disableSongVideos) {
+      return NO;
+    }
+
+    return %orig;
+  }
+%end
+
+  /*
+   * Get rid of the Genius facts/lyric view
+   */
+%hook SPTGeniusService
+-(BOOL)isTrackGeniusEnabled:(id)arg1 {
+  if(disableGenius) {
+    return NO;
+  }
+
+  return %orig;
+}
+%end
+
+  /*
+   * Change color of heart icon
+   */
+%hook SPTNowPlayingFreeTierFeedbackButton
+  -(id)selectedColor {
+    if(addToPlaylistCustomColor) {
+      NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+      return LCPParseColorString([improvifydata objectForKey:@"buttonColor"], @"#1DB954");
+    }
+
+    return %orig;
+  }
+%end
+
+static void killSpotify() {
+  exit(0);
+}
+
 static void loadPrefs() {
   NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifyprefs.plist"];
   if(!preferences) {
@@ -282,6 +384,10 @@ static void loadPrefs() {
     addToPlayistButtonOffset = -6;
     useQuickDeleteGesture = YES;
     pressDuration = 2.0;
+
+    suppressRateAlert = YES;
+    disableSongVideos = YES;
+    disableGenius = NO;
   } else {
     useAddToPlaylistButton = [[preferences objectForKey:@"useAddToPlaylistButton"] boolValue];
     playlistURI = [NSURL URLWithString:[preferences objectForKey:@"playlistURI"]];
@@ -289,6 +395,10 @@ static void loadPrefs() {
     addToPlayistButtonOffset = [[preferences objectForKey:@"addToPlayistButtonOffset"] floatValue];
     useQuickDeleteGesture = [[preferences objectForKey:@"useQuickDeleteGesture"] boolValue];
     pressDuration = [[preferences objectForKey:@"pressDuration"] floatValue];
+
+    suppressRateAlert = [[preferences objectForKey:@"suppressRateAlert"] boolValue];
+    disableSongVideos = [[preferences objectForKey:@"disableSongVideos"] boolValue];
+    disableGenius = [[preferences objectForKey:@"disableGenius"] boolValue];
   }
 }
 
@@ -300,10 +410,12 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 %ctor {
   loadPrefs();
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)killSpotify, CFSTR("com.lacertosusrepo.improvifyprefs-killSpotify"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 
   if(![[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"]) {
     NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] init];
-    [improvifydata setObject:@"FFFFFF" forKey:@"buttonColor"];
+    [improvifydata setObject:@"#1DB954" forKey:@"buttonColor"];
+    [improvifydata setObject:[NSNumber numberWithBool:0] forKey:@"improvifyInitialPopup"];
     [improvifydata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist" atomically:YES];
   }
 }

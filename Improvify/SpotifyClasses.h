@@ -1,3 +1,4 @@
+  //Playlist/Now Playing stuff
 @interface SPTPlaylistCosmosModel : NSObject
 @property (nonatomic) NSArray *tracks;
 -(void)addTrackURLs:(id)arg1 toPlaylistURL:(id)arg2 completion:(id)arg3;
@@ -18,10 +19,13 @@
 @interface SPTNowPlayingButton : UIButton
 @property(nonatomic) struct CGSize iconSize;
 @property(nonatomic) long long icon;
-@property(nonatomic) unsigned long long buttonState;
 @property(nonatomic, copy, readwrite) UIColor *iconColor;
 -(void)applyIcon;
 -(void)setIconColor:(UIColor *)arg1;
+@end
+
+@interface SPTNowPlayingFreeTierFeedbackButton : SPTNowPlayingButton
+@property(nonatomic, strong, readwrite) UIColor *selectedColor;
 @end
 
 @interface SPTNowPlayingFooterUnitViewController : UIViewController
@@ -40,6 +44,7 @@
 -(NSURL *)spt_pageURI;
 @end
 
+  //Playlist label buried deep in several classes
 @interface GLUELabel : UILabel
 @end
 
@@ -70,6 +75,7 @@
 @property(nonatomic, copy, readwrite) NSString *subtitle;
 @end
 
+  //Popup classes
 @interface SPTPopupDialog : UIViewController
 +(id)popupWithTitle:(NSString *)title message:(NSString *)message dismissButtonTitle:(NSString *)buttonTitle;
 +(id)popupWithTitle:(NSString *)title message:(NSString *)message buttons:(id)buttons;
@@ -85,4 +91,10 @@
 @property(nonatomic, readwrite, assign) NSMutableArray *presentationQueue;
 +(SPTPopupManager *)sharedManager;
 -(void)presentNextQueuedPopup;
+@end
+
+  //Now playing cells
+@interface SPTNowPlayingScrollCell : UICollectionViewCell
+-(void)setModuleView:(id)arg1;
+-(void)setModuleViewMaxWidth:(CGFloat)arg1;
 @end
