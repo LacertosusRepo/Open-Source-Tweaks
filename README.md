@@ -20,7 +20,7 @@
 | Improvify | iOS 11 - 12.1.2 | v1.2 | arm64 arm64e | ✔ |
 | Navale | iOS 10 - 12.1.2 | v2.0 | arm64 | ✔ |
 | NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ |
-| Return2Sender2 | iOS 12 | arm64 arm64e | |
+| Return2Sender2 | iOS 12 | v1.0 | arm64 arm64e | |
 | Mea | iOS 10 - 11 | v1.0 | arm64 |  |
 | MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ |
 | Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ |
