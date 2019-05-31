@@ -101,7 +101,25 @@
 	}
 
 	-(void)killSpotify {
-		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.improvifyprefs-killSpotify"), nil, nil, true);
+		UIAlertController *killSpotifyAlert = [UIAlertController alertControllerWithTitle:@"Improvify" message:@"Are you sure you want to restart Spotify?" preferredStyle:UIAlertControllerStyleAlert];
+		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Kill" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.improvifyprefs-killSpotify"), nil, nil, true);
+		}];
+		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+		[killSpotifyAlert addAction:confirmAction];
+		[killSpotifyAlert addAction:cancelAction];
+		[self presentViewController:killSpotifyAlert animated:YES completion:nil];
+	}
+
+	-(void)resetSpotifyPlayHistory {
+		UIAlertController *resetSpotifyHistoryAlert = [UIAlertController alertControllerWithTitle:@"Improvify" message:@"Are you sure you want to reset your play history? You cannot recover it after deletion.\n\n Spotify must be running for this to work." preferredStyle:UIAlertControllerStyleAlert];
+		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.improvifyprefs-resetSpotifyPlayHistory"), nil, nil, true);
+		}];
+		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+		[resetSpotifyHistoryAlert addAction:confirmAction];
+		[resetSpotifyHistoryAlert addAction:cancelAction];
+		[self presentViewController:resetSpotifyHistoryAlert animated:YES completion:nil];
 	}
 
 	-(void)twitter {

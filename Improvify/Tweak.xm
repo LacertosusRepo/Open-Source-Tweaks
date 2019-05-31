@@ -22,6 +22,8 @@
   static float addToPlayistButtonOffset;
   static BOOL useQuickDeleteGesture;
   static float pressDuration;
+  static BOOL songHistorySwitch;
+  static float minimumSongDuration;
 
   static BOOL suppressRateAlert;
   static BOOL disableSongVideos;
@@ -86,15 +88,32 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
 }
 
   /*
-   * Calls a method to update the button's color based on if its already in the playlist or not, also has a small check to see it it has already checked that song to stop repeat calling (doesnt work well)
+   * Saves the song as being "played" if its listened to for more than 60s
+   * Calls a method to update the button's color based on if its already in the playlist or not)
+   * Thanks to Andreas Henriksson and his SpotifyHistory <3 - https://github.com/Nosskirneh/SpotifyHistory
    */
-%hook SPTNowPlayingInformationUnitViewController
-  -(void)viewModelTrackDidChange:(SPTNowPlayingInformationUnitViewModelImplementation *)arg1 {
+%hook SPTNowPlayingBarContainerViewController
+  -(void)setCurrentTrack:(SPTPlayerTrack *)arg1 {
+    if(songHistorySwitch) {
+      static double songElapsedTime;
+
+      if([self.currentTrack.URI.absoluteString length] > 1) {
+        double currentTime = [[NSDate date] timeIntervalSince1970];
+        if(((currentTime - songElapsedTime) > minimumSongDuration) && minimumSongDuration >= 1) {
+          NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+          NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
+          songHistory[self.currentTrack.URI.absoluteString] = @([songHistory[self.currentTrack.URI.absoluteString] intValue] +1);
+          [improvifydata setObject:songHistory forKey:@"songHistory"];
+          [improvifydata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist" atomically:YES];
+        }
+      }
+
+      songElapsedTime = [[NSDate date] timeIntervalSince1970];
+    }
+
     %orig;
 
-    SPTNowPlayingInformationUnitViewModelImplementation *lastTrack;
-    if(![lastTrack.subtitle isEqualToString:arg1.subtitle]) {
-      lastTrack = arg1;
+    if(useAddToPlaylistButton) {
       [footerViewController checkIsNowPlayingSongInPlaylist];
     }
   }
@@ -248,7 +267,9 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
 %end
 
   /*
-   * Added ability to delete songs in playlist with a long longPressGesture, add tap gesture to playlist name to copy it's URI
+   * Added ability to delete songs in playlist with a long longPressGesture
+   * Song play history for playlists, radios, liked songs, albums (has to be in the title as the subtitle kept getting reset)
+   * Add tap gesture to playlist name to copy it's URI
    */
 %hook SPTFreeTierPlaylistViewController
   -(id)tableView:(id)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
@@ -264,6 +285,18 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
       [defaultPressGesture requireGestureRecognizerToFail:longPressGesture];
     }
 
+    if(songHistorySwitch) {
+      NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+      NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
+      SPTPlaylistPlatformPlaylistTrackFieldsImplementation *trackInfo = self.playlistViewModel.tracks[arg2.row];
+      NSString *songURL = trackInfo.URL.absoluteString;
+      if([songHistory[songURL] intValue] > 0) {
+        if([cell respondsToSelector:@selector(subtitleLabel)]) {
+          cell.subtitleLabel.text = [[NSString stringWithFormat:@"%@ Plays \u2022 ", [songHistory valueForKey:songURL]] stringByAppendingString:cell.subtitleLabel.text];
+        }
+      }
+    }
+
     return cell;
   }
 
@@ -273,8 +306,10 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTitleLabelTap:)];
     tapGesture.numberOfTapsRequired = 2;
 
-    [self.headerViewController.configurator.contentView.titleLabel addGestureRecognizer:tapGesture];
-    self.headerViewController.configurator.contentView.titleLabel.userInteractionEnabled = YES;
+    if([self.headerViewController respondsToSelector:@selector(configurator)]) {
+      [self.headerViewController.configurator.contentView.titleLabel addGestureRecognizer:tapGesture];
+      self.headerViewController.configurator.contentView.titleLabel.userInteractionEnabled = YES;
+    }
   }
 
 %new
@@ -308,10 +343,70 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   }
 %end
 
-/*
- * MISCELLANEOUS SETTINGS
- * Get rid of that pesky rate me popup, thanks for spamming it spotify
- */
+%hook SPTStationViewController
+  -(id)tableView:(id)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
+    GLUETrackRowTableViewCell *cell = %orig;
+
+    if(songHistorySwitch) {
+      NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+      NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
+      NSURL *trackInfo = self.viewModel.trackURIs[arg2.row];
+      NSString *songURL = trackInfo.absoluteString;
+      if([songHistory[songURL] intValue] > 0) {
+        if([cell respondsToSelector:@selector(subtitleLabel)]) {
+          cell.subtitleLabel.text = [[NSString stringWithFormat:@"%@ Plays \u2022 ", [songHistory valueForKey:songURL]] stringByAppendingString:cell.subtitleLabel.text];
+        }
+      }
+    }
+
+    return cell;
+  }
+%end
+
+%hook SPTFreeTierCollectionSongsViewController
+  -(id)tableView:(id)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
+    GLUETrackRowTableViewCell *cell = %orig;
+
+    if(songHistorySwitch) {
+      NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+      NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
+      NSURL *songNSURL = [self.viewModel trackURIAtIndexPath:arg2];
+      NSString *songURL = songNSURL.absoluteString;
+      if([songHistory[songURL] intValue] > 0) {
+        if([cell respondsToSelector:@selector(subtitleLabel)]) {
+          cell.subtitleLabel.text = [[NSString stringWithFormat:@"%@ Plays \u2022 ", [songHistory valueForKey:songURL]] stringByAppendingString:cell.subtitleLabel.text];
+        }
+      }
+    }
+
+    return cell;
+  }
+%end
+
+%hook SPTAlbumViewController
+  -(id)tableView:(id)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
+    GLUETrackRowTableViewCell *cell = %orig;
+
+    if(songHistorySwitch) {
+      NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+      NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
+      SPTAlbumTrackData *trackInfo = self.viewModel.albumData.playableTracks[arg2.row];
+      NSString *songURL = trackInfo.trackURL.absoluteString;
+      if([songHistory[songURL] intValue] > 0) {
+        if([cell respondsToSelector:@selector(titleLabel)]) {
+          cell.titleLabel.text = [[NSMutableString stringWithFormat:@"%@ Plays \u2022 ", [songHistory valueForKey:songURL]] stringByAppendingString:cell.titleLabel.text];
+        }
+      }
+    }
+
+    return cell;
+  }
+%end
+
+  /*
+   * MISCELLANEOUS SETTINGS
+   * Get rid of that pesky rate me popup, thanks for spamming it spotify
+   */
 %hook SPTRateMeController
 -(void)showAlert {
   if(suppressRateAlert) {
@@ -370,8 +465,18 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   }
 %end
 
+  /*
+   * Preferences & Functions
+   */
+
 static void killSpotify() {
   exit(0);
+}
+
+static void resetSpotifyPlayHistory() {
+  NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
+  [improvifydata removeObjectForKey:@"songHistory"];
+  [improvifydata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist" atomically:YES];
 }
 
 static void loadPrefs() {
@@ -384,6 +489,8 @@ static void loadPrefs() {
     addToPlayistButtonOffset = -6;
     useQuickDeleteGesture = YES;
     pressDuration = 2.0;
+    songHistorySwitch = YES;
+    minimumSongDuration = 60;
 
     suppressRateAlert = YES;
     disableSongVideos = YES;
@@ -395,6 +502,8 @@ static void loadPrefs() {
     addToPlayistButtonOffset = [[preferences objectForKey:@"addToPlayistButtonOffset"] floatValue];
     useQuickDeleteGesture = [[preferences objectForKey:@"useQuickDeleteGesture"] boolValue];
     pressDuration = [[preferences objectForKey:@"pressDuration"] floatValue];
+    songHistorySwitch = [[preferences objectForKey:@"songHistorySwitch"] boolValue];
+    minimumSongDuration = [[preferences objectForKey:@"minimumSongDuration"] floatValue];
 
     suppressRateAlert = [[preferences objectForKey:@"suppressRateAlert"] boolValue];
     disableSongVideos = [[preferences objectForKey:@"disableSongVideos"] boolValue];
@@ -411,6 +520,7 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
   loadPrefs();
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)killSpotify, CFSTR("com.lacertosusrepo.improvifyprefs-killSpotify"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)resetSpotifyPlayHistory, CFSTR("com.lacertosusrepo.improvifyprefs-resetSpotifyPlayHistory"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 
   if(![[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"]) {
     NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] init];

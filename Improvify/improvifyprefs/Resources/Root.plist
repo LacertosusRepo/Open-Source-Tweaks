@@ -153,6 +153,54 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Song Played Count</string>
+			<key>footerText</key>
+			<string>Adds a number in the playlist and radio list showing how many times you have played a song. It will start from 0 since Spotify does not provide this data. The slider sets the minimum time a song must play before it counts.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>key</key>
+			<string>songHistorySwitch</string>
+			<key>label</key>
+			<string>Song Play #s</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>60</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>label</key>
+			<string>Required Seconds Before Save</string>
+			<key>min</key>
+			<string>1</string>
+			<key>max</key>
+			<string>120</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segementCounter</key>
+			<string>120</string>
+			<key>showValue</key>
+			<true/>
+			<key>leftImage</key>
+			<string>durationicon.png</string>
+			<key>key</key>
+			<string>minimumSongDuration</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>
@@ -171,6 +219,18 @@
 			<string>Miscellaneous Settings</string>
 			<key>icon</key>
 			<string>miscsettingsicon.png</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>resetSpotifyPlayHistory</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>IFYButtonCell</string>
+			<key>icon</key>
+			<string>killspotifyicon</string>
+			<key>label</key>
+			<string>Reset Song Play History</string>
 		</dict>
 		<dict>
 			<key>action</key>
