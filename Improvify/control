@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.improvify
 Name: Improvify
 Depends: mobilesubstrate, me.nepeta.libcolorpicker
-Version: 1.3
+Version: 1.4.2
 Architecture: iphoneos-arm
 Description: Add features Spotify should have already had...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

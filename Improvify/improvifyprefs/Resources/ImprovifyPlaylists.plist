@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string> <!-- dumb fix for bug causing switches to be too high -->
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Favorite Playlist</string>
+			<key>footerText</key>
+			<string>This will be the playlist where songs are usually saved. To save to other playlists double-tap the button.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Favorite Playlist URI</string>
+			<key>key</key>
+			<string>playlistFavorite</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Alternate Playlist 1</string>
+			<key>footerText</key>
+			<string>Add this option to the list of alternate playlists. First line is name and second is the URI.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Alternate Playlist 1 Name</string>
+			<key>key</key>
+			<string>playlistAlternateOneTitle</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Alternate Playlist 1 URI</string>
+			<key>key</key>
+			<string>playlistAlternateOne</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Alternate Playlist 2</string>
+			<key>footerText</key>
+			<string>Add this option to the list of alternate playlists. First line is name and second is the URI.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Alternate Playlist 2 Name</string>
+			<key>key</key>
+			<string>playlistAlternateTwoTitle</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Alternate Playlist 2 URI</string>
+			<key>key</key>
+			<string>playlistAlternateTwo</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Alternate Playlist 3</string>
+			<key>footerText</key>
+			<string>Add this option to the list of alternate playlists. First line is name and second is the URI.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Alternate Playlist 3 Name</string>
+			<key>key</key>
+			<string>playlistAlternateThreeTitle</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>placeholder</key>
+			<string>Alternate Playlist 3 URI</string>
+			<key>key</key>
+			<string>playlistAlternateThree</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>What is a URI?</string>
+			<key>footerText</key>
+			<string>The URI is a unique identifier for songs/artists/playlists/etc. Enter the playlist URI where you want songs to be saved to when listening to Spotify. To get this URI link for a playlist just double-tap the name of the playlist while viewing it.</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Set Playlists</string>
+</dict>
+</plist>

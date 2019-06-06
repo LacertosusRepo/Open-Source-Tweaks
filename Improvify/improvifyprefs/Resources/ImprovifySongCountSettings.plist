@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string> <!-- dumb fix for bug causing switches to be too high -->
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Minimum Song Duration</string>
+			<key>footerText</key>
+			<string>How long a song needs to be played before being added to your history. Default is 60 seconds.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>60</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.improvifyprefs</string>
+			<key>label</key>
+			<string>Required Seconds Before Save</string>
+			<key>min</key>
+			<string>1</string>
+			<key>max</key>
+			<string>120</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>segementCounter</key>
+			<string>120</string>
+			<key>showValue</key>
+			<true/>
+			<key>leftImage</key>
+			<string>durationicon.png</string>
+			<key>key</key>
+			<string>minimumSongDuration</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>resetSpotifyPlayHistory</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>IFYButtonCell</string>
+			<key>icon</key>
+			<string>killspotifyicon</string>
+			<key>label</key>
+			<string>Reset Song Play History</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Song Count Settings</string>
+</dict>
+</plist>

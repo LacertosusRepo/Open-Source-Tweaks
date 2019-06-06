@@ -15,9 +15,9 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Quick add to playlist</string>
+			<string>Options</string>
 			<key>footerText</key>
-			<string>The URI is a unique identifier for songs/artists/playlists/etc. Enter the playlist URI where you want music to be saved to when listening to music. To get this URI link for a playlist just double-tap the name of the playlist while viewing it.</string>
+			<string>Adds a button in the now playing view that allows you to quickly save songs to set playlists.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -29,89 +29,40 @@
 			<key>key</key>
 			<string>useAddToPlaylistButton</string>
 			<key>label</key>
-			<string>Add to Playlist Button</string>
+			<string>Quick-Add to Playlist Button</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSEditTextCell</string>
-			<key>default</key>
-			<string></string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.improvifyprefs</string>
-			<key>placeholder</key>
-			<string>Playlist URI</string>
-			<key>key</key>
-			<string>playlistURI</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Playlist Button Customization</string>
-			<key>footerText</key>
-			<string>Using a custom color disables ColorFlow4 support. Use the slider to set the offset for the button, default is -6.</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.improvifyprefs</string>
-			<key>key</key>
-			<string>addToPlaylistCustomColor</string>
-			<key>label</key>
-			<string>Use Custom Selected Color</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>colorPicker</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>ImprovifyPlaylistsListController</string>
+			<key>isController</key>
+			<true/>
 			<key>label</key>
-			<string>Selected Button Color</string>
+			<string>Set Playlists</string>
+			<key>icon</key>
+			<string>playlistsicon.png</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<string>-6</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.improvifyprefs</string>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>ImprovifyQuickAddSettingsListController</string>
+			<key>isController</key>
+			<true/>
 			<key>label</key>
-			<string>Button Offset</string>
-			<key>min</key>
-			<string>-10</string>
-			<key>max</key>
-			<string>10</string>
-			<key>isSegmented</key>
-			<true/>
-			<key>segementCounter</key>
-			<string>20</string>
-			<key>showValue</key>
-			<true/>
-			<key>leftImage</key>
-			<string>offseticon.png</string>
-			<key>key</key>
-			<string>addToPlayistButtonOffset</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>Quick-Add Settings</string>
+			<key>icon</key>
+			<string>gearicon.png</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Quick-delete gesture</string>
 			<key>footerText</key>
-			<string>Adds a gesture to delete a song by long pressing on it for a set amount of time. Default is 2 seconds.</string>
+			<string>Adds a gesture to delete a song by long pressing on it for a set amount of time.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -123,43 +74,28 @@
 			<key>key</key>
 			<string>useQuickDeleteGesture</string>
 			<key>label</key>
-			<string>Add Quick-delete Gesture</string>
+			<string>Quick-delete Gesture</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<string>2</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.improvifyprefs</string>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>ImprovifyQuickDeleteSettingsListController</string>
+			<key>isController</key>
+			<true/>
 			<key>label</key>
-			<string>Seconds till delete</string>
-			<key>min</key>
-			<string>1</string>
-			<key>max</key>
-			<string>10</string>
-			<key>isSegmented</key>
-			<true/>
-			<key>segementCounter</key>
-			<string>10</string>
-			<key>showValue</key>
-			<true/>
-			<key>leftImage</key>
-			<string>durationicon.png</string>
-			<key>key</key>
-			<string>pressDuration</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>Quick-Delete Settings</string>
+			<key>icon</key>
+			<string>gearicon.png</string>
 		</dict>
+
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Song Played Count</string>
 			<key>footerText</key>
-			<string>Adds a number in the playlist and radio list showing how many times you have played a song. It will start from 0 since Spotify does not provide this data. The slider sets the minimum time a song must play before it counts.</string>
+			<string>Adds a number in the now playing view, playlist, and radio list showing how many times you have played a song. It will start from 0 since Spotify does not provide this data.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -171,35 +107,21 @@
 			<key>key</key>
 			<string>songHistorySwitch</string>
 			<key>label</key>
-			<string>Song Play #s</string>
+			<string>Song Play Count</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<string>60</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.improvifyprefs</string>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>ImprovifySongCountSettingsListController</string>
+			<key>isController</key>
+			<true/>
 			<key>label</key>
-			<string>Required Seconds Before Save</string>
-			<key>min</key>
-			<string>1</string>
-			<key>max</key>
-			<string>120</string>
-			<key>isSegmented</key>
-			<true/>
-			<key>segementCounter</key>
-			<string>120</string>
-			<key>showValue</key>
-			<true/>
-			<key>leftImage</key>
-			<string>durationicon.png</string>
-			<key>key</key>
-			<string>minimumSongDuration</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>Song Count Settings</string>
+			<key>icon</key>
+			<string>gearicon.png</string>
 		</dict>
 
 		<dict>
@@ -212,25 +134,13 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>detail</key>
-			<string>ImprovifyMiscellaneousSettingsViewController</string>
+			<string>ImprovifyMiscellaneousSettingsListController</string>
 			<key>isController</key>
 			<true/>
 			<key>label</key>
 			<string>Miscellaneous Settings</string>
 			<key>icon</key>
 			<string>miscsettingsicon.png</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>resetSpotifyPlayHistory</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>IFYButtonCell</string>
-			<key>icon</key>
-			<string>killspotifyicon</string>
-			<key>label</key>
-			<string>Reset Song Play History</string>
 		</dict>
 		<dict>
 			<key>action</key>

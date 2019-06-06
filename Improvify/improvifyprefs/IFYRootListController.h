@@ -6,8 +6,21 @@
 @interface IFYRootListController : PSListController
 @end
 
-@interface ImprovifyMiscellaneousSettingsViewController : PSListController
+@interface ImprovifyMiscellaneousSettingsListController : PSListController
 @end
+
+@interface ImprovifyPlaylistsListController : PSListController
+@end
+
+@interface ImprovifyQuickAddSettingsListController : PSListController
+@end
+
+@interface ImprovifyQuickDeleteSettingsListController : PSListController
+@end
+
+@interface ImprovifySongCountSettingsListController : PSListController
+@end
+
 
 @interface IFYCustomHeaderCell : UIView
 @property (nonatomic, strong) UIImageView *iconView;

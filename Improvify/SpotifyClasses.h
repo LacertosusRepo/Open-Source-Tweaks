@@ -2,6 +2,16 @@
 @interface GLUELabel : UILabel
 @end
 
+@interface TKNLabel : UILabel
+@end
+
+@interface SPTNowPlayingMarqueeLabel : UIControl
+@property(nonatomic) double restingDuration;
+@property(nonatomic) double marqueeingSpeed;
+@property(readonly, nonatomic) NSAttributedString *attributedText;
+-(void)setAttributedText:(id)arg1 marqueeingSpeed:(CGFloat)arg2 restingDuration:(CGFloat)arg3;
+@end
+
   //UIButtons
 @interface SPTNowPlayingButton : UIButton
 @property(nonatomic) struct CGSize iconSize;
@@ -19,6 +29,13 @@
 
 @interface SPTFreeTierPlaylistHeaderContentView : UIView
 @property(retain, nonatomic) GLUELabel *titleLabel;
+@end
+
+@interface VISREFAlbumContentView : UIView
+@property(retain, nonatomic) TKNLabel *titleLabel;
+@end
+
+@interface SPTTableViewSectionHeaderView : UIView
 @end
 
   //NSObjects
@@ -87,6 +104,10 @@
 @property(readonly, nonatomic) NSURL *trackURL;
 @end
 
+@interface SPTFreeTierPlaylistVISREFHeaderControllerImplementation : NSObject
+@property(retain, nonatomic) VISREFAlbumContentView *contentView;
+@end
+
   //UIViewControllers
 @interface SPTNowPlayingBarContainerViewController : UIViewController
 @property(retain, nonatomic) SPTPlayerTrack *currentTrack;
@@ -96,6 +117,8 @@
 @interface SPTNowPlayingFooterUnitViewController : UIViewController
 @property(retain, nonatomic) SPTNowPlayingButton *shareButton;
 @property(retain, nonatomic) SPTNowPlayingButton *addToPlayistButton;
+  //Improvify methods
+-(void)handleAddToPlaylist:(NSURL *)playlistURI;
 -(void)setAddToPlaylistButtonColor:(UIColor *)color;
 -(void)checkIsNowPlayingSongInPlaylist;
 @end
@@ -108,21 +131,16 @@
 
 @interface SPTStationViewController : UIViewController
 @property(retain, nonatomic) SPTStationViewModel *viewModel;
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
 @end
 
 @interface SPTFreeTierPlaylistHeaderViewController : UIViewController
 @property(retain, nonatomic) SPTFreeTierPlaylistHeaderConfigurator *configurator;
 @end
 
-@interface SPTFreeTierPlaylistViewController : UIViewController
-@property(retain, nonatomic) SPTPlaylistCosmosModel *playlistViewModel;
-@property(retain, nonatomic) SPTFreeTierPlaylistHeaderViewController *headerViewController;
-@property(nonatomic) UITableView *tableView;
--(NSURL *)spt_pageURI;
-@end
-
 @interface SPTFreeTierCollectionSongsViewController : UIViewController
 @property(retain, nonatomic) SPTFreeTierCollectionSongsViewModelImplementation *viewModel;
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
 @end
 
 @interface SPTPopupDialog : UIViewController
@@ -133,6 +151,31 @@
 
 @interface SPTAlbumViewController : UIViewController
 @property(retain, nonatomic) SPTAlbumViewModel *viewModel;
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
+@end
+
+@interface SPTFreeTierPlaylistVISREFHeaderViewController : UIViewController
+@property(retain, nonatomic) SPTFreeTierPlaylistVISREFHeaderControllerImplementation *headerController;
+@end
+
+@interface SPTEntityHeaderViewController : UIViewController
+@property(readonly, nonatomic) SPTFreeTierPlaylistVISREFHeaderViewController *contentViewController;
+@end
+
+@interface SPTFreeTierPlaylistViewController : UIViewController
+@property(retain, nonatomic) SPTPlaylistCosmosModel *playlistViewModel;
+@property(retain, nonatomic) SPTFreeTierPlaylistHeaderViewController *headerViewController;
+@property(retain, nonatomic) SPTEntityHeaderViewController *entityHeaderViewController;
+@property(nonatomic) UITableView *tableView;
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
+-(NSURL *)spt_pageURI;
+@end
+
+@interface SPTNowPlayingViewControllerV2 : UIViewController
+@end
+
+@interface SPTNowPlayingInformationUnitViewController : UIViewController
+@property(retain, nonatomic) SPTNowPlayingMarqueeLabel *subtitleLabel;
 @end
 
   //Spotify
