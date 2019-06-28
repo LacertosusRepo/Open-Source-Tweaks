@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Reddit Shortcut</string>
+			<key>footerText</key>
+			<string>Open a subreddit quickly by entering your desired search into the spotlight search bar like so: r/jailbreak.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.luxsitprefs</string>
+			<key>key</key>
+			<string>useRedditShortcut</string>
+			<key>label</key>
+			<string>Enable Reddit Shortcut (r/)</string>
+			<key>Pos
+				tNotification</key>
+			<string>com.lacertosusrepo.luxsitprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.luxsitprefs</string>
+			<key>key</key>
+			<string>redditApp</string>
+			<key>label</key>
+			<string>Reddit App</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>validTitles</key>
+			<array>
+				<string>Safari</string>
+				<string>Apollo</string>
+				<string>Reddit</string>
+				<string>Narwhal</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.luxsitprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Spotify Shortcut</string>
+			<key>footerText</key>
+			<string>Search Spotify quickly by entering your desired search into the spotlight search bar like so: s/ Colossus.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.luxsitprefs</string>
+			<key>key</key>
+			<string>useSpotifyShortcut</string>
+			<key>label</key>
+			<string>Enable Spotify Shortcut (s/)</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.luxsitprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Zebra Shortcut</string>
+			<key>footerText</key>
+			<string>Search Zebra Package Manager quickly by entering your desired search into the spotlight search bar like so: zbr/ LuxSit.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.luxsitprefs</string>
+			<key>key</key>
+			<string>useZebraShortcut</string>
+			<key>label</key>
+			<string>Enable Zebra Shortcut (zbr/)</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.luxsitprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>YouTube Shortcut</string>
+			<key>footerText</key>
+			<string>Search YouTube quickly by entering your desired search into the spotlight search bar like so: yt/ CorridorDigital.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.luxsitprefs</string>
+			<key>key</key>
+			<string>useYoutubeShortcut</string>
+			<key>label</key>
+			<string>Enable YouTube Shortcut (yt/)</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.luxsitprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Github</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>PayPal</string>
+			<key>subtitle</key>
+			<string>Feed my Steam sale addiction!</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>

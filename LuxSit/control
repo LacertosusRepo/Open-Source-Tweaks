@@ -1,0 +1,11 @@
+Package: com.lacertosusrepo.luxsit
+Name: LuxSit
+Depends: mobilesubstrate, ws.hbang.common (>= 1.13)
+Version: 1.0
+Architecture: iphoneos-arm
+Description: If you're seeing this, I forgot to add a description...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
+Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
+SileoDepiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
