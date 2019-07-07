@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>key</key>
+			<string>speculumDateLabelSwitch</string>
+			<key>label</key>
+			<string>Enable</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPicker</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Date Color</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Date Font Size &amp; Weight</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>25</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>label</key>
+			<string>Date Label Size</string>
+			<key>min</key>
+			<string>10</string>
+			<key>max</key>
+			<string>100</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>showValue</key>
+			<true/>
+			<key>key</key>
+			<string>speculumDateLabelSize</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>-0.400000</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>label</key>
+			<string>Font Weight</string>
+			<key>validTitles</key>
+			<array>
+				<string>Black</string>
+				<string>Heavy</string>
+				<string>Bold</string>
+				<string>SemiBold</string>
+				<string>Medium</string>
+				<string>Regular</string>
+				<string>Light</string>
+				<string>Thin</string>
+				<string>Ultra-Light</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>0.620000</string>
+				<string>0.560000</string>
+				<string>0.400000</string>
+				<string>0.300000</string>
+				<string>0.230000</string>
+				<string>0.000000</string>
+				<string>-0.400000</string>
+				<string>-0.600000</string>
+				<string>-0.800000</string>
+			</array>
+			<key>key</key>
+			<string>speculumDateLabelWeight</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Date Label Format</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>placeholder</key>
+			<string>EEEE, MMMM d</string>
+			<key>label</key>
+			<string>Format:</string>
+			<key>key</key>
+			<string>speculumDateLabelFormat</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Time/Date Formatting Help</string>
+			<key>subtitle</key>
+			<string>Need some help figuring out the formatting?</string>
+			<key>url</key>
+			<string>https://nsdateformatter.com/</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
