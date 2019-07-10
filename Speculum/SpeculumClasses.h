@@ -1,10 +1,14 @@
 @interface SBUILegibilityLabel : UIView
 @end
 
+@interface SBFLockScreenDateSubtitleView : UIView
+@end
+
 @interface SBFLockScreenDateView : UIView
 @property (assign,getter=isSubtitleHidden,nonatomic) BOOL subtitleHidden;
 @property (nonatomic,readonly) long long _keyboardOrientation;
 @property (nonatomic,retain) NSDate *date;
+-(void)setCustomSubtitleView:(SBFLockScreenDateSubtitleView *)arg1;
 -(id)_timeLabel;
 
   //Speculum
@@ -20,8 +24,14 @@
 -(void)setAlignment:(int)alignment;
 -(void)switchViewPositions:(UITapGestureRecognizer *)gesture;
 -(void)batteryStateChanged:(NSNotification *)notification;
--(void)fadeStackViewWithDuration:(float)duration withFadeInDelay:(float)delay;
+-(void)fadeOutSpeculumWithDuration:(float)duration withDelay:(float)delay;
+-(void)fadeInSpeculumWithDuration:(float)duration withDelay:(float)delay;
 -(void)preferencesChanged;
+@end
+
+@interface SBPagedScrollView : UIScrollView
+@property (assign,nonatomic) unsigned long long currentPageIndex;
+@property (nonatomic,readonly) long long _keyboardOrientation;
 @end
 
 @interface WFTemperature : NSObject
@@ -32,7 +42,6 @@
 
 @interface City : NSObject
 @property (assign,nonatomic) long long conditionCode;
--(BOOL)isCelsius;
 -(WFTemperature *)temperature;
 @end
 

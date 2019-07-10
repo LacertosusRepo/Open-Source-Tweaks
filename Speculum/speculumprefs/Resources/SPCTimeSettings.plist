@@ -63,7 +63,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>detail</key>
-			<string>PSListItemsController</string>			
+			<string>PSListItemsController</string>
 			<key>default</key>
 			<string>0.230000</string>
 			<key>defaults</key>
@@ -114,7 +114,7 @@
 			<key>defaults</key>
 			<string>com.lacertosusrepo.speculumprefs</string>
 			<key>placeholder</key>
-			<string>HH:mm</string>
+			<string>h:mm</string>
 			<key>label</key>
 			<string>Format:</string>
 			<key>key</key>

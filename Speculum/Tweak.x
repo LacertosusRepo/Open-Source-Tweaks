@@ -17,6 +17,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
      * Preference Variables
      */
   static NSInteger speculumAlignment;
+  static NSInteger speculumOffset;
   static BOOL speculumChargingInformation;
 
     //Time
@@ -32,6 +33,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   static NSInteger speculumDateLabelSize;
   static CGFloat speculumDateLabelWeight;
   static NSString *speculumDateLabelFormat;
+  static NSString *speculumDateLabelCalendar;
 
     //Weather
   static BOOL speculumWeatherLabelSwitch;
@@ -43,6 +45,9 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   static NSInteger speculumTempUnit;
   static NSInteger speculumWeatherUpdateTime;
 
+    //Language
+  static NSInteger speculumPreferredLanguage;
+
     /*
      * Variables
      */
@@ -52,11 +57,37 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   -(void)_transitionChargingViewToVisible:(BOOL)arg1 showBattery:(BOOL)arg2 animated:(BOOL)arg3 {
     %orig(NO, NO, NO);
   }
+
+  -(BOOL)_isWakeAnimationInProgress {
+    if(YES) {
+      [lockScreeenDateView updateWeather];
+    }
+    return %orig;
+  }
+%end
+
+%hook SBPagedScrollView
+  -(void)layoutSubviews {
+    %orig;
+
+    if((self._keyboardOrientation == 3 || self._keyboardOrientation == 2)) {
+      if(self.currentPageIndex == 0) {
+        [lockScreeenDateView fadeOutSpeculumWithDuration:0.3 withDelay:0];
+      } else {
+        [lockScreeenDateView fadeInSpeculumWithDuration:0.3 withDelay:0];
+        [lockScreeenDateView setAlignment:0];
+      }
+    } else {
+      [lockScreeenDateView fadeInSpeculumWithDuration:0.3 withDelay:0];
+      [lockScreeenDateView setAlignment:(int)speculumAlignment];
+    }
+  }
 %end
 
 %hook SBFLockScreenDateView
   -(id)initWithFrame:(CGRect)arg1 {
     [NSTimer scheduledTimerWithTimeInterval:(speculumWeatherUpdateTime * 60) target:self selector:@selector(updateWeather) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(updateWeather) userInfo:nil repeats:NO];
 
     if(speculumChargingInformation) {
       [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
@@ -71,34 +102,19 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     _timeLabel.hidden = YES;
     UIView *_dateView = [self valueForKey:@"_dateSubtitleView"];
     _dateView.hidden = YES;
-
     %orig;
 
     [self setupSpeculum];
   }
 
-  -(void)layoutSubviews {
-    %orig;
-
-    if(self._keyboardOrientation == 3 || self._keyboardOrientation == 2) {
-      [self setAlignment:0];
-    } else {
-      [self setAlignment:(int)speculumAlignment];
-    }
-  }
-
   -(void)_updateLabels {
     %orig;
-
     [self updateClockAndDate];
   }
 
-  -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gesture shouldReceiveTouch:(UITouch *)touch {
-   if (touch.view == self.speculumStackView) {
-       return YES;
-   }
-   return NO;
- }
+  -(void)setCustomSubtitleView:(SBFLockScreenDateSubtitleView *)arg1 {
+    %orig(nil);
+  }
 
 %property (retain) UIStackView *speculumStackView;
 %property (retain) UIStackView *weatherStackView;
@@ -161,12 +177,21 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 %new
   -(void)updateClockAndDate {
     if(self.timeLabel) {
+      NSString *localeID;
+      if([[NSLocale preferredLanguages] count] > (int)speculumPreferredLanguage) {
+        localeID = [[NSLocale preferredLanguages] objectAtIndex:(int)speculumPreferredLanguage];
+      } else {
+        localeID = [[NSLocale currentLocale] localeIdentifier];
+      }
+
       if(speculumTimeLabelSwitch) {
         if(speculumTimeLabelFormat.length < 1) {
-          speculumTimeLabelFormat = @"HH:mm";
+          speculumTimeLabelFormat = @"h:mm";
         }
         NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setDateFormat:speculumTimeLabelFormat];
+        [timeFormatter setLocale:[NSLocale localeWithLocaleIdentifier:localeID]];
+        [timeFormatter setCalendar:[NSCalendar calendarWithIdentifier:speculumDateLabelCalendar]];
         self.timeLabel.text = [timeFormatter stringFromDate:self.date];
       }
 
@@ -176,6 +201,8 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
         }
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:speculumDateLabelFormat];
+        [dateFormatter setLocale:[NSLocale localeWithLocaleIdentifier:localeID]];
+        [dateFormatter setCalendar:[NSCalendar calendarWithIdentifier:speculumDateLabelCalendar]];
         self.dateLabel.text = [dateFormatter stringFromDate:self.date];
       }
     }
@@ -184,42 +211,42 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 %new
   -(void)updateWeather {
     if(self.weatherLabel && speculumWeatherLabelSwitch) {
-      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        City *city = [[%c(WeatherPreferences) sharedPreferences] localWeatherCity];
-        if(city == nil) {
-          city = [[%c(WeatherPreferences) sharedPreferences] cityFromPreferencesDictionary:[[[%c(WeatherPreferences) userDefaultsPersistence] userDefaults] objectForKey:@"Cities"][0]];
+      City *city = [[%c(WeatherPreferences) sharedPreferences] localWeatherCity];
+      if(city == nil && [[[[%c(WeatherPreferences) userDefaultsPersistence] userDefaults] objectForKey:@"Cities"] count] > 0) {
+        city = [[%c(WeatherPreferences) sharedPreferences] cityFromPreferencesDictionary:[[[%c(WeatherPreferences) userDefaultsPersistence] userDefaults] objectForKey:@"Cities"][0]];
+      }
+
+      WFTemperature *temperature = [city temperature];
+      switch ((int)speculumTempUnit) {
+        case 0:
+        self.weatherLabel.text = [NSString stringWithFormat:@"%d\u00B0F", (int)[temperature fahrenheit]];
+        break;
+
+        case 1:
+        self.weatherLabel.text = [NSString stringWithFormat:@"%d\u00B0C", (int)[temperature celsius]];
+        break;
+
+        case 2:
+        self.weatherLabel.text = [NSString stringWithFormat:@"%d\u00B0K", (int)[temperature kelvin]];
+        break;
+      }
+
+      if(speculumWeatherUseConditionImages && [%c(WeatherImageLoader) respondsToSelector:@selector(conditionImageNamed:size:cloudAligned:stroke:strokeAlpha:lighterColors:)]) {
+        [self.weatherLabel sizeToFit];
+
+        NSString *weatherConditionName = [%c(WeatherImageLoader) conditionImageNameWithConditionIndex:city.conditionCode];
+        self.weatherConditionImage.image = [%c(WeatherImageLoader) conditionImageNamed:weatherConditionName size:CGSizeMake(self.weatherLabel.frame.size.height + 20, self.weatherLabel.frame.size.height + 20) cloudAligned:NO stroke:NO strokeAlpha:0.0 lighterColors:NO];
+      } else {
+        if([self.weatherStackView.subviews containsObject:self.weatherConditionImage]) {
+          [self.weatherStackView removeArrangedSubview:self.weatherConditionImage];
         }
-
-        WFTemperature *temperature = [city temperature];
-        switch ((int)speculumTempUnit) {
-          case 0:
-          self.weatherLabel.text = [NSString stringWithFormat:@"%d\u00B0F", (int)[temperature fahrenheit]];
-          break;
-
-          case 1:
-          self.weatherLabel.text = [NSString stringWithFormat:@"%d\u00B0C", (int)[temperature celsius]];
-          break;
-
-          case 2:
-          self.weatherLabel.text = [NSString stringWithFormat:@"%d\u00B0K", (int)[temperature kelvin]];
-          break;
-        }
-
-        if(speculumWeatherUseConditionImages) {
-          [self.weatherLabel sizeToFit];
-
-          NSString *weatherConditionName = [%c(WeatherImageLoader) conditionImageNameWithConditionIndex:city.conditionCode];
-          self.weatherConditionImage.image = [%c(WeatherImageLoader) conditionImageNamed:weatherConditionName size:CGSizeMake(self.weatherLabel.frame.size.height + 20, self.weatherLabel.frame.size.height + 20) cloudAligned:NO stroke:NO strokeAlpha:0.0 lighterColors:NO];
-        }
-      });
-    } else if(!speculumWeatherUseConditionImages) {
-      [self.weatherStackView removeArrangedSubview:self.weatherConditionImage];
+      }
     }
   }
 
 %new
   -(void)setAlignment:(int)alignment {
-    if(alignment == 0 || self._keyboardOrientation == 3 || self._keyboardOrientation == 2) {
+    if(alignment == 0) {
         //Left
       self.speculumStackView.alignment = UIStackViewAlignmentLeading;
       [self.speculumStackView.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
@@ -234,11 +261,13 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     }
 
     switch ((int)speculumWeatherConditionImageAlignment) {
+        //Left
       case 0:
       [self.weatherStackView removeArrangedSubview:self.weatherConditionImage];
       [self.weatherStackView insertArrangedSubview:self.weatherConditionImage atIndex:0];
       break;
 
+        //Right
       case 1:
       [self.weatherStackView removeArrangedSubview:self.weatherConditionImage];
       [self.weatherStackView insertArrangedSubview:self.weatherConditionImage atIndex:1];
@@ -248,6 +277,10 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     [self.timeLabel setTextAlignment:alignment];
     [self.dateLabel setTextAlignment:alignment];
     [self.weatherLabel setTextAlignment:alignment];
+
+    CGRect frame = self.speculumStackView.frame;
+    frame.origin.y += speculumOffset;
+    self.speculumStackView.frame = frame;
 
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
       [self.speculumStackView layoutIfNeeded];
@@ -274,14 +307,17 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   }
 
 %new
-  -(void)fadeStackViewWithDuration:(float)duration withFadeInDelay:(float)delay {
-    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+  -(void)fadeOutSpeculumWithDuration:(float)duration withDelay:(float)delay {
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
       self.speculumStackView.alpha = 0;
-    } completion:^(BOOL finished) {
-      [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.speculumStackView.alpha = 1;
-      } completion:nil];
-    }];
+    } completion:nil];
+  }
+
+%new
+  -(void)fadeInSpeculumWithDuration:(float)duration withDelay:(float)delay {
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
+      self.speculumStackView.alpha = 1;
+    } completion:nil];
   }
 
 %new
@@ -341,19 +377,21 @@ static void speculumUseWallpaperColors() {
 
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.speculumprefs"];
   [preferences registerInteger:&speculumAlignment default:2 forKey:@"speculumAlignment"];
+  [preferences registerInteger:&speculumOffset default:0 forKey:@"speculumOffset"];
   [preferences registerBool:&speculumChargingInformation default:YES forKey:@"speculumChargingInformation"];
 
   [preferences registerBool:&speculumTimeLabelSwitch default:YES forKey:@"speculumTimeLabelSwitch"];
   [preferences registerObject:&speculumTimeLabelColor default:@"#FFFFFF" forKey:@"speculumTimeLabelColor"];
   [preferences registerInteger:&speculumTimeLabelSize default:75 forKey:@"speculumTimeLabelSize"];
   [preferences registerFloat:&speculumTimeLabelWeight default:UIFontWeightMedium forKey:@"speculumTimeLabelWeight"];
-  [preferences registerObject:&speculumTimeLabelFormat default:@"HH:mm" forKey:@"speculumTimeLabelFormat"];
+  [preferences registerObject:&speculumTimeLabelFormat default:@"h:mm" forKey:@"speculumTimeLabelFormat"];
 
   [preferences registerBool:&speculumDateLabelSwitch default:YES forKey:@"speculumDateLabelSwitch"];
   [preferences registerObject:&speculumDateLabelColor default:@"#FFFFFF" forKey:@"speculumDateLabelColor"];
   [preferences registerInteger:&speculumDateLabelSize default:25 forKey:@"speculumDateLabelSize"];
   [preferences registerFloat:&speculumDateLabelWeight default:UIFontWeightLight forKey:@"speculumDateLabelWeight"];
   [preferences registerObject:&speculumDateLabelFormat default:@"EEEE, MMMM d" forKey:@"speculumDateLabelFormat"];
+  [preferences registerObject:&speculumDateLabelCalendar default:@"gregorian" forKey:@"speculumDateLabelCalendar"];
 
   [preferences registerBool:&speculumWeatherLabelSwitch default:YES forKey:@"speculumWeatherLabelSwitch"];
   [preferences registerObject:&speculumWeatherLabelColor default:@"#FFFFFF" forKey:@"speculumWeatherLabelColor"];
@@ -363,6 +401,8 @@ static void speculumUseWallpaperColors() {
   [preferences registerInteger:&speculumWeatherConditionImageAlignment default:0 forKey:@"speculumWeatherConditionImageAlignment"];
   [preferences registerInteger:&speculumTempUnit default:1 forKey:@"speculumTempUnit"];
   [preferences registerInteger:&speculumWeatherUpdateTime default:30 forKey:@"speculumWeatherUpdateTime"];
+
+  [preferences registerInteger:&speculumPreferredLanguage default:0 forKey:@"speculumPreferredLanguage"];
 
   [preferences registerPreferenceChangeBlock:^{
     [lockScreeenDateView preferencesChanged];

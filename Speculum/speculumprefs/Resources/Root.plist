@@ -7,6 +7,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>The slider controls the Y offset of Speculum.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -33,6 +35,28 @@
 			</array>
 			<key>id</key>
 			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>label</key>
+			<string>Offset</string>
+			<key>min</key>
+			<string>-100</string>
+			<key>max</key>
+			<string>100</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>showValue</key>
+			<true/>
+			<key>key</key>
+			<string>speculumOffset</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
 		</dict>
@@ -89,6 +113,43 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Preferred Language</string>
+			<key>footerText</key>
+			<string>This allows you to choose from your top 3 system languages to set the date and time with.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>key</key>
+			<string>speculumPreferredLanguage</string>
+			<key>label</key>
+			<string>Speculum Preferred Language</string>
+			<key>default</key>
+			<string>0</string>
+			<key>validTitles</key>
+			<array>
+				<string>1st</string>
+				<string>2nd</string>
+				<string>3rd</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 			<key>footerText</key>
 			<string>Respring required when changing weather update interval and disabling labels.</string>
 		</dict>
@@ -101,6 +162,16 @@
     	<string>HBSpinnerTableCell</string>
     	<key>label</key>
     	<string>Use Wallpaper Colors</string>
+		</dict>
+		<dict>
+    	<key>action</key>
+    	<string>resetSettings:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Reset Settings</string>
 		</dict>
 		<dict>
     	<key>action</key>

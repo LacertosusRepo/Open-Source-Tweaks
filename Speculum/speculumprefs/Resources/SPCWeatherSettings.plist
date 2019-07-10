@@ -62,6 +62,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
 			<key>default</key>
 			<string>-0.400000</string>
 			<key>defaults</key>

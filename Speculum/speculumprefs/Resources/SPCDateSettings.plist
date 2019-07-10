@@ -132,6 +132,67 @@
 			<key>url</key>
 			<string>https://nsdateformatter.com/</string>
 		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Date Label Calendar</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>gregorian</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>label</key>
+			<string>Calendar</string>
+			<key>validTitles</key>
+			<array>
+				<string>Buddhist</string>
+				<string>Chinese</string>
+				<string>Coptic</string>
+				<string>Ethiopic (Amete Alem)</string>
+				<string>Ethiopic (Amete Mihret)</string>
+				<string>Gregorian</string>
+				<string>Hebrew</string>
+				<string>Indian</string>
+				<string>ISO 8601</string>
+				<string>Islamic</string>
+				<string>Islamic Civil</string>
+				<string>Islamic Tabular</string>
+				<string>Islamic Umm al-Qura</string>
+				<string>Japanese</string>
+				<string>Persian</string>
+				<string>Republic of China</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>buddhist</string>
+				<string>chinese</string>
+				<string>coptic</string>
+				<string>ethiopic-amete-alem</string>
+				<string>ethiopic</string>
+				<string>gregorian</string>
+				<string>hebrew</string>
+				<string>indian</string>
+				<string>iso8601</string>
+				<string>islamic</string>
+				<string>islamic-civil</string>
+				<string>islamic-tbla</string>
+				<string>islamic-umalqura</string>
+				<string>japanese</string>
+				<string>persian</string>
+				<string>roc</string>
+			</array>
+			<key>key</key>
+			<string>speculumDateLabelCalendar</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string></string>
