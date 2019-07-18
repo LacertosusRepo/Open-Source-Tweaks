@@ -18,6 +18,7 @@
 | FLEX4Me | iOS 11-12.1.2 | v1.2 | arm64 arm64e | ✔ |
 | Imperium | iOS 11 - 12.1.2 | v2.0.2 | arm64 arm64e | ✔ |
 | Improvify | iOS 11 - 12.1.2 | v1.4.2 | arm64 arm64e | ✔ |
+| Libellum | iOS 11 - 12.2 | v1.0 | arm64 arm64e | ✔ |
 | LuxSit | iOS 11-12 | v1.0 | arm64 arm64e | |
 | Mea | iOS 10 - 11 | v1.0 | arm64 |  |
 | MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ |

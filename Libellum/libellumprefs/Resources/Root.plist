@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Style</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>blurStyle</string>
+			<key>label</key>
+			<string>Background</string>
+			<key>default</key>
+			<string>2</string>
+			<key>validTitles</key>
+			<array>
+				<string>Extra Light</string>
+				<string>Light</string>
+				<string>Dark</string>
+				<string>Solid Color</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>backgroundColorPicker:</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+			<key>label</key>
+			<string>Set Solid Color</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>textColorPicker:</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+			<key>label</key>
+			<string>Set Font Color</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Function</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>noteSize</string>
+			<key>label</key>
+			<string>Size</string>
+			<key>default</key>
+			<string>120</string>
+			<key>validTitles</key>
+			<array>
+				<string>Tiny</string>
+				<string>Compact</string>
+				<string>Medium</string>
+				<string>Large</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>71</integer>
+				<integer>120</integer>
+				<integer>171</integer>
+				<integer>221</integer>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>requireAuthentication</string>
+			<key>label</key>
+			<string>Require Authentication</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>action</key>
+    	<string>useWallpaperColors:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Use Wallpaper Colors</string>
+		</dict>
+		<dict>
+    	<key>action</key>
+    	<string>respring:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Respring</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Github</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>PayPal</string>
+			<key>subtitle</key>
+			<string>Feed my Steam sale addiction!</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
