@@ -1,0 +1,266 @@
+#import "LIBNoteView.h"
+  static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
+
+@implementation LIBNoteView
+  +(id)sharedInstance {
+    static LIBNoteView *sharedInstance = nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&oncePredicate, ^{
+      sharedInstance = [[self alloc] init];
+    });
+    return sharedInstance;
+  }
+
+  -(id)init {
+    if(self = [super initWithFrame:[UIScreen mainScreen].bounds]) {
+        //UIWindow stuff
+      self.windowLevel = UIWindowLevelStatusBar;
+      self.userInteractionEnabled = YES;
+      self.hidden = NO;
+
+        //UIView
+      UIView *noteView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width * 0.8, self.bounds.size.width * 0.3)];
+      noteView.alpha = 1.0;
+      noteView.backgroundColor = [UIColor clearColor];
+      noteView.center = self.center;
+      noteView.clipsToBounds = YES;
+      noteView.layer.cornerRadius = 15;
+      noteView.userInteractionEnabled = YES;
+
+      if(!CGRectIsEmpty(self.noteViewSavedPosition)) {
+        noteView.frame = self.noteViewSavedPosition;
+      }
+
+        //UIBlurEffect
+      UIBlurEffect *noteViewBlur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+      UIVisualEffectView *noteViewBlurView = [[UIVisualEffectView alloc] initWithEffect:noteViewBlur];
+      noteViewBlurView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+      noteViewBlurView.frame = noteView.bounds;
+
+        //UItextView
+      UITextView *textView = [[UITextView alloc] initWithFrame:noteView.bounds];
+      textView.backgroundColor = [UIColor clearColor];
+      textView.clipsToBounds = YES;
+      textView.contentSize = textView.bounds.size;
+      textView.contentInset = UIEdgeInsetsZero;
+      textView.delegate = self;
+      textView.editable = YES;
+      textView.font = [UIFont systemFontOfSize:12];
+      textView.keyboardAppearance = UIKeyboardAppearanceDark;
+      textView.scrollEnabled = NO;
+      textView.textAlignment = NSTextAlignmentLeft;
+      textView.textColor = [UIColor whiteColor];
+      textView.textContainer.lineFragmentPadding = 0.0;
+      textView.textContainerInset = UIEdgeInsetsMake(5.0, 5.0, 5.0, 5.0);
+      textView.userInteractionEnabled = YES;
+
+        //UIGestureRecognizers
+      UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+      UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
+
+        //Set LIBNoteView properties
+      self.view = noteView;
+      self.textView = textView;
+      self.noteViewSavedPosition = self.view.frame;
+
+      [self addSubview:noteView];
+      [self.view addSubview:noteViewBlurView];
+      [self.view addSubview:textView];
+      [self.view addGestureRecognizer:panGesture];
+      [self.view addGestureRecognizer:pinchGesture];
+
+        //Load notes from file
+      NSFileManager *fileManager = [NSFileManager defaultManager];
+      if(![fileManager fileExistsAtPath:filePath]) {
+        [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+      } else {
+        [self loadNotes];
+      }
+      [fileManager release];
+
+        //Rotation notifications
+      [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterfaceOrientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+    }
+    return self;
+  }
+
+#pragma mark - NoteView gesture/touches
+
+  -(void)handlePanGesture:(UIPanGestureRecognizer *)gesture {
+    if(gesture.state == UIGestureRecognizerStateBegan) {
+      self.noteViewSavedPosition = self.view.frame;
+    } if(gesture.state == UIGestureRecognizerStateChanged) {
+      CGPoint center = self.view.center;
+      CGPoint translation = [gesture translationInView:[self.view superview]];
+      center = CGPointMake(center.x + translation.x,
+                           center.y + translation.y);
+      self.view.center = center;
+      [gesture setTranslation:CGPointZero inView:self.view];
+    } if(gesture.state == UIGestureRecognizerStateEnded) {
+      if(!CGRectContainsPoint(self.bounds, self.view.center)) {
+        [self hideNoteView];
+      } else {
+        self.noteViewSavedPosition = self.view.frame;
+      }
+    }
+  }
+
+  -(void)handlePinchGesture:(UIPinchGestureRecognizer *)gesture {
+    if(gesture.state == UIGestureRecognizerStateEnded) {
+      if(gesture.scale < 1) {
+        [self hideNoteView];
+      } else {
+        //Spread action
+      }
+    }
+  }
+
+  -(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    for(UIView *subview in self.subviews) {
+      if(CGRectContainsPoint(subview.frame, point)) {
+        return YES;
+      }
+    }
+    return NO;
+  }
+
+#pragma mark - Rotation
+
+  -(BOOL)autorotates {
+    return YES;
+  }
+
+  -(void)handleInterfaceOrientationChanged:(NSNotification *)notification {
+    UIDevice *device = notification.object;
+    switch(device.orientation) {
+      case UIInterfaceOrientationPortrait:
+      [self rotateNotViewWithDegrees:0];
+      break;
+
+      case UIInterfaceOrientationPortraitUpsideDown:
+      [self rotateNotViewWithDegrees:180];
+      break;
+
+      case UIInterfaceOrientationLandscapeLeft:
+      [self rotateNotViewWithDegrees:-90];
+      break;
+
+      case UIInterfaceOrientationLandscapeRight:
+      [self rotateNotViewWithDegrees:90];
+      break;
+
+      case UIDeviceOrientationUnknown:
+      break;
+      case UIDeviceOrientationFaceUp:
+      break;
+      case UIDeviceOrientationFaceDown:
+      break;
+    }
+  }
+
+  -(void)rotateNotViewWithDegrees:(CGFloat)degrees {
+    degrees = degrees * M_PI / 180;
+    [UIView animateWithDuration:0.4 animations:^{
+      self.view.transform = (CGAffineTransformMakeRotation(degrees));
+      self.noteViewSavedPosition = self.view.frame;
+    } completion:nil];
+  }
+
+#pragma mark - NoteTextView autoresizing and UIToolbar
+
+  -(void)textViewDidChange:(UITextView *)textView {
+    CGSize noteTextSize = [self.textView sizeThatFits:CGSizeMake(self.textView.frame.size.width, FLT_MAX)];
+    if(noteTextSize.height > self.bounds.size.width * 0.3) {
+      if(noteTextSize.height >= self.bounds.size.height * 0.5) {
+        noteTextSize.height = self.bounds.size.height * 0.5;
+        self.textView.scrollEnabled = YES;
+      }
+      CGRect noteViewFrame = self.view.frame;
+      noteViewFrame.size.height = noteTextSize.height;
+      self.view.frame = noteViewFrame;
+      self.textView.frame = self.view.bounds;
+    }
+
+    [self saveNotes];
+  }
+
+  -(void)textViewDidBeginEditing:(UITextView *)textView {
+    UIToolbar *toolBar = [[UIToolbar alloc] init];
+    [toolBar sizeToFit];
+    UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    UIBarButtonItem *pointButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(pointButton)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButton)];
+    toolBar.barStyle = UIBarStyleBlack;
+    toolBar.items = @[pointButton, flexibleSpace, doneButton];
+    self.textView.inputAccessoryView = toolBar;
+    self.isEditing = YES;
+  }
+
+  -(void)textViewDidFinishEditing:(UITextView *)textView {
+    self.isEditing = NO;
+  }
+
+  -(void)pointButton {
+    [self.textView replaceRange:self.textView.selectedTextRange withText:@"\u2022 "];
+  }
+
+  -(void)doneButton {
+    [self.textView resignFirstResponder];
+  }
+
+#pragma mark - NoteView keyboard adjustment
+
+  -(void)keyboardWillShow:(NSNotification *)notification {
+    [UIView animateWithDuration:0.3 animations:^{
+      self.view.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.2);
+    } completion:nil];
+  }
+
+  -(void)keyboardWillHide:(NSNotification *)notification {
+    [UIView animateWithDuration:0.3 animations:^{
+      self.view.frame = self.noteViewSavedPosition;
+    } completion:nil];
+  }
+
+#pragma mark - NoteView showing/hiding
+
+  -(void)showNoteView {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    self.view.frame = self.noteViewSavedPosition;
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+      self.view.alpha = 1.0;
+      self.userInteractionEnabled = YES;
+    } completion:nil];
+  }
+
+  -(void)hideNoteView {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [self.textView resignFirstResponder];
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+      self.view.alpha = 0.0;
+      self.userInteractionEnabled = NO;
+    } completion:nil];
+  }
+
+#pragma mark - NoteView saving/loading
+
+  -(void)saveNotes {
+    NSError *error = nil;
+    NSString *notes = self.textView.text;
+    [notes writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    if(error) {
+      NSLog(@"Libellum || Error saving notes - %@", error);
+    }
+  }
+
+  -(void)loadNotes {
+    NSError *error = nil;
+    self.textView.text = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+    if(error) {
+      NSLog(@"Libellum || Error loading notes - %@", error);
+    }
+  }
+@end

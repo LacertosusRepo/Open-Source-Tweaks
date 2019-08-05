@@ -14,17 +14,23 @@
 #define LD_DEBUG NO
 extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
+    /*
+     * Preferences Variables
+     */
   static NSInteger blurStyle;
-  static NSString *customTextColor;
   static NSString *customBackgroundColor;
+  static NSString *customTextColor;
+  static CGFloat cornerRadius;
   static NSInteger noteSize;
   static BOOL requireAuthentication;
+  static BOOL hideGesture;
+  static BOOL feedback;
+  static NSInteger feedbackStyle;
 
   /*
    * Add Libellum to the Lockscreen
    * Axon - Nepeta https://github.com/Nepeta/Axon/blob/master/Tweak/Tweak.xm
    */
-
 %hook SBDashBoardNotificationAdjunctListViewController
 %property (nonatomic, retain) LibellumView *LBMNoteView;
   -(void)viewDidLoad {
@@ -32,10 +38,10 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 
     [self insertLibellum];
   }
+
 %new
   -(void)insertLibellum {
     self.LBMNoteView = [[LibellumView sharedInstance] initWithFrame:CGRectZero];
-    self.LBMNoteView.translatesAutoresizingMaskIntoConstraints = NO;
 
     UIStackView *stackView = [self valueForKey:@"_stackView"];
     [stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
@@ -46,12 +52,6 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
       [self.LBMNoteView.heightAnchor constraintEqualToConstant:noteSize],
     ]];
   }
-
-%new
-  -(void)dismissLibellum {
-    UIStackView *stackView = [self valueForKey:@"_stackView"];
-    [stackView removeArrangedSubview:self.LBMNoteView];
-  }
 %end
 
 %hook SBLockStateAggregator
@@ -61,6 +61,17 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     if(requireAuthentication) {
       [[LibellumView sharedInstance] authenticationStatusFromAggregator:self];
     }
+
+  }
+%end
+
+%hook SBPagedScrollView
+  -(id)initWithFrame:(CGRect)arg1 {
+    UITapGestureRecognizer *dismissGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumView sharedInstance] action:@selector(toggleLibellum)];
+    dismissGesture.numberOfTapsRequired = 2;
+    [self addGestureRecognizer:dismissGesture];
+
+    return %orig;
   }
 %end
 
@@ -70,10 +81,14 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 static void libellumPreferencesChanged() {
   LibellumView *LBMNoteView = [LibellumView sharedInstance];
   LBMNoteView.blurStyle = blurStyle;
-  LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"#FFFFFF");
   LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"#000000");
+  LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"#FFFFFF");
   LBMNoteView.noteSize = noteSize;
   LBMNoteView.requireAuthentication = requireAuthentication;
+  LBMNoteView.hideGesture = hideGesture;
+  LBMNoteView.feedback = feedback;
+  LBMNoteView.feedbackStyle = feedbackStyle;
+  LBMNoteView.cornerRadius = cornerRadius;
   [LBMNoteView preferencesChanged];
 }
 
@@ -98,10 +113,16 @@ static void speculumUseWallpaperColors() {
 
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
   [preferences registerInteger:&blurStyle default:UIBlurEffectStyleLight forKey:@"blurStyle"];
-  [preferences registerObject:&customTextColor default:@"#FFFFFF" forKey:@"customTextColor"];
+  [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
+
   [preferences registerObject:&customBackgroundColor default:@"#000000" forKey:@"customBackgroundColor"];
+  [preferences registerObject:&customTextColor default:@"#FFFFFF" forKey:@"customTextColor"];
   [preferences registerInteger:&noteSize default:120 forKey:@"noteSize"];
   [preferences registerBool:&requireAuthentication default:NO forKey:@"requireAuthentication"];
+
+  [preferences registerBool:&hideGesture default:YES forKey:@"hideGesture"];
+  [preferences registerBool:&feedback default:YES forKey:@"feedback"];
+  [preferences registerInteger:&feedbackStyle default:1520 forKey:@"feedbackStyle"];
 
   [preferences registerPreferenceChangeBlock:^{
     libellumPreferencesChanged();

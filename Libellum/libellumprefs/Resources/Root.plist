@@ -9,6 +9,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Style</string>
+			<key>footerText</key>
+			<string>Use the slider to change the corner radius of the noteview.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -60,12 +62,34 @@
 			<key>label</key>
 			<string>Set Font Color</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>15</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>50</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>cornerRadius</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Function</string>
+			<key>footerText</key>
+			<string>Authentication means you will be able to edit the notes once the device is unlocked.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -88,7 +112,7 @@
 			<key>validValues</key>
 			<array>
 				<integer>71</integer>
-				<integer>120</integer>
+				<integer>121</integer>
 				<integer>171</integer>
 				<integer>221</integer>
 			</array>
@@ -108,6 +132,71 @@
 			<string>requireAuthentication</string>
 			<key>label</key>
 			<string>Require Authentication</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Function</string>
+			<key>footerText</key>
+			<string>To toggle the noteview, double tap the lockscreen.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>hideGesture</string>
+			<key>label</key>
+			<string>Hide Gesture</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>feedback</string>
+			<key>label</key>
+			<string>Haptic Feedback</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>feedbackStyle</string>
+			<key>label</key>
+			<string>Feedback Style</string>
+			<key>default</key>
+			<string>1520</string>
+			<key>validTitles</key>
+			<array>
+				<string>Light</string>
+				<string>Heavy</string>
+				<string>Triple</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>1519</integer>
+				<integer>1520</integer>
+				<integer>1521</integer>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>

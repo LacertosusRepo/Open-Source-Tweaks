@@ -1,0 +1,6 @@
+{
+  group = "Libellum Notes";
+  title = "Show Notes";
+  description = "Bring your notes to view";
+  "compatible-modes" = ("springboard", "lockscreen", "application");
+}

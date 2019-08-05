@@ -24,8 +24,9 @@
     self = [super initWithFrame:frame];
 
     self.clipsToBounds = YES;
-    self.layer.cornerRadius = 15;
+    self.layer.cornerRadius = self.cornerRadius;
     self.userInteractionEnabled = YES;
+    self.translatesAutoresizingMaskIntoConstraints = NO;
 
     self.blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
     self.blurView.frame = self.bounds;
@@ -78,7 +79,7 @@
       self.noteView.textContainer.maximumNumberOfLines = 3;
       break;
 
-      case 120:
+      case 121:
       self.noteView.textContainer.maximumNumberOfLines = 6;
       break;
 
@@ -156,7 +157,7 @@
     return (lineCount <= self.noteView.textContainer.maximumNumberOfLines);
   }
 
-#pragma mark - +/Done Button and Idle Timer
+#pragma mark - +/Done Button
 
   -(BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     UIToolbar *toolBar = [[UIToolbar alloc] init];
@@ -165,7 +166,7 @@
     toolBar.items = @[
       [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(pointButton)],
       [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil],
-      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButton)]
+      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButton)],
     ];
 
     self.noteView.inputAccessoryView = toolBar;
@@ -212,9 +213,37 @@
     }
   }
 
+#pragma mark - Show/Hide
+
+  -(void)toggleLibellum {
+    if(self.hideGesture && !_editing) {
+
+      if(self.feedback) {
+        AudioServicesPlaySystemSound(self.feedbackStyle);
+      }
+
+      if(self.hidden) {
+        [UIView transitionWithView:self duration:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+          self.alpha = 1;
+          self.hidden = NO;
+        } completion:nil];
+        return;
+
+      } if(!self.hidden) {
+        [UIView transitionWithView:self duration:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+          self.alpha = 0;
+        } completion:^(BOOL finished){
+          self.hidden = YES;
+        }];
+        return;
+      }
+    }
+  }
+
 #pragma mark - Preferences Changed
 
   -(void)preferencesChanged {
+    self.layer.cornerRadius = self.cornerRadius;
     self.blurView.effect = [UIBlurEffect effectWithStyle:self.blurStyle];
     self.noteView.textColor = self.customTextColor;
 
@@ -225,5 +254,15 @@
       self.blurView.alpha = 1;
       self.noteView.backgroundColor = [UIColor clearColor];
     }
+  }
+
+#pragma mark - Misc
+
+  -(void)setSizeToMimic:(CGSize)size {
+    NSLog(@"Libellum || I caught a crash! (w - %f, h - %f)", size.width, size.height);
+  }
+
+  -(CGSize)sizeToMimic {
+    return self.frame.size;
   }
 @end

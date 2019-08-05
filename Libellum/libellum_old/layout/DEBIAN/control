@@ -1,0 +1,10 @@
+Package: com.lacertosusrepo.libellum
+Name: Libellum
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Notes from home...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
+Depiction: http://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
