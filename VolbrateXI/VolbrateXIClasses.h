@@ -1,7 +1,3 @@
-@interface FeedbackCall : NSObject
-+(void)vibrateDevice;
-@end
-
 @interface VolumeControl : NSObject
 +(id)sharedVolumeControl;
 -(float)volume;

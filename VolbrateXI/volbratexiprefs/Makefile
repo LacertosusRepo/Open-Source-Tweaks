@@ -1,10 +1,12 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = volbratexiprefs
-volbratexiprefs_FILES = volRootListController.m VolbrateButtonController.m
+volbratexiprefs_FILES = VOLRootListController.m VOLHeaderCell.m
 volbratexiprefs_INSTALL_PATH = /Library/PreferenceBundles
-volbratexiprefs_FRAMEWORKS = UIKit CoreGraphics
+volbratexiprefs_FRAMEWORKS = UIKit
 volbratexiprefs_PRIVATE_FRAMEWORKS = Preferences
+volbratexiprefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
+volbratexiprefs_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

@@ -7,17 +7,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>headerCellClass</key>
-			<string>VolbrateCustomHeaderCell</string>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Options</string>
-			<key>footerText</key>
-			<string></string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -31,7 +20,7 @@
 			<key>label</key>
 			<string>Hide Volume HUD</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.volbratexiprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.volbratexiprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -45,7 +34,7 @@
 			<key>label</key>
 			<string>Use Haptic Feedback</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.volbratexiprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.volbratexiprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -71,7 +60,7 @@
 			<key>id</key>
 			<string>ModeCell</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.volbratexiprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.volbratexiprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -108,79 +97,61 @@
 			<key>id</key>
 			<string>ModeCell</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.volbratexiprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.volbratexiprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Use the reset button if things aren't working correctly. You'll have to come back and set your settings afterwards.</string>
 		</dict>
 		<dict>
 			<key>action</key>
-			<string>sendTestVibtration</string>
+			<string>sendTestVibtration:</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>VolbrateButtonCell</string>
+			<string>HBSpinnerTableCell</string>
 			<key>label</key>
 			<string>Test Vibration</string>
 		</dict>
-		<dict>
-			<key>action</key>
-			<string>resetSettings</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>VolbrateButtonCell</string>
-			<key>label</key>
-			<string>Reset Settings</string>
-		</dict>
 
 		<dict>
-			<key>label</key>
-			<string>Points of Contact</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Created by LacertosusDeus</string>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>github</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>VolbrateButtonCell</string>
-			<key>icon</key>
-			<string>github.png</string>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
 			<key>label</key>
 			<string>Github</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>twitter</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>VolbrateButtonCell</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
 			<key>icon</key>
-			<string>twitter.png</string>
-			<key>label</key>
-			<string>Twitter</string>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>paypal</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>VolbrateButtonCell</string>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>PayPal</string>
+			<key>subtitle</key>
+			<string>Feed my Steam sale addiction!</string>
 			<key>icon</key>
 			<string>paypal.png</string>
-			<key>label</key>
-			<string>Donate</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
 		</dict>
 	</array>
 	<key>title</key>

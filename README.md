@@ -31,7 +31,7 @@
 | Swiper | iOS 12 - 12.1.2 | v1.0 | arm64 arm64e | |
 | ToneItDown | iOS 11 - 12.1.2 | v1.0.1 | arm64 arm64e | ✔ |
 | Vitrum | iOS 11 | v1.2 | arm64 | |
-| VolbrateXI | iOS 10 - 12.1.2 | v1.2.1 | arm64 arm64e | ✔ |
+| VolbrateXI | iOS 10 - 12.1.2 | v1.3 | arm64 arm64e | ✔ |
 
 ## Goal
 *Annotate most of the open source tweaks.*

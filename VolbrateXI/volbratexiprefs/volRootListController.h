@@ -1,12 +1,13 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSSpecifier.h>
+#import <CepheiPrefs/HBRootListController.h>
+#import <CepheiPrefs/HBAppearanceSettings.h>
+#import <Cephei/HBRespringController.h>
+#import <Cephei/HBPreferences.h>
 
-@interface volRootListController : PSListController
-@end
+#import "VOLHeaderCell.h"
+#import "PreferencesColorDefinitions.h"
 
-@interface VolbrateCustomHeaderCell : UIView
-@property (nonatomic,assign) UILabel *headerLabel;
-@property (nonatomic,assign) UILabel *subHeaderLabel;
-@property (nonatomic,assign) UILabel *subHeaderLabel2;
+@interface VOLRootListController : HBRootListController
 @end
