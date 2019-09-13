@@ -26,13 +26,6 @@
 		return _specifiers;
 	}
 
-	-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-		UIView *SPCHeaderView = [[SPCHeaderCell alloc] init];
-		SPCHeaderView.frame = CGRectMake(0, 0, SPCHeaderView.bounds.size.width, 150);
-		tableView.tableHeaderView = SPCHeaderView;
-		return [super tableView:tableView cellForRowAtIndexPath:indexPath];
-	}
-
 	-(void)viewDidLoad {
 		[super viewDidLoad];
 
@@ -41,6 +34,13 @@
 		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
 		self.navigationItem.rightBarButtonItem = webButton;
+
+		//Adds header to table
+		UIView *SPCHeaderView = [[SPCHeaderCell alloc] init];
+		SPCHeaderView.frame = CGRectMake(0, 0, SPCHeaderView.bounds.size.width, 150);
+
+		UITableView *tableView = [self valueForKey:@"_table"];
+		tableView.tableHeaderView = SPCHeaderView;
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
@@ -81,7 +81,7 @@
 		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Get Colors" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
 			if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"]) {
 				CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.speculumprefs-speculumUseWallpaperColors"), nil, nil, true);
-				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 					CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.speculumprefs/ReloadPrefs"), nil, nil, true);
 					cell.cellEnabled = YES;
 				});
@@ -110,32 +110,7 @@
 		UIAlertController *resetAlert = [UIAlertController alertControllerWithTitle:@"Speculum" message:@"Would you like to reset your settings? There's no going back!\n\nThis will also respring your device." preferredStyle:UIAlertControllerStyleAlert];
 		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Reset" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
 			HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.speculumprefs"];
-  		[preferences setInteger:2 forKey:@"speculumAlignment"];
-  		[preferences setInteger:0 forKey:@"speculumOffset"];
-  		[preferences setBool:YES forKey:@"speculumChargingInformation"];
-
-  		[preferences setBool:YES forKey:@"speculumTimeLabelSwitch"];
-  		[preferences setObject:@"#FFFFFF" forKey:@"speculumTimeLabelColor"];
-  		[preferences setInteger:75 forKey:@"speculumTimeLabelSize"];
-  		[preferences setFloat:UIFontWeightMedium forKey:@"speculumTimeLabelWeight"];
-  		[preferences setObject:@"HH:mm" forKey:@"speculumTimeLabelFormat"];
-
-  		[preferences setBool:YES forKey:@"speculumDateLabelSwitch"];
-  		[preferences setObject:@"#FFFFFF" forKey:@"speculumDateLabelColor"];
-  		[preferences setInteger:25 forKey:@"speculumDateLabelSize"];
-  		[preferences setFloat:UIFontWeightLight forKey:@"speculumDateLabelWeight"];
-  		[preferences setObject:@"EEEE, MMMM d" forKey:@"speculumDateLabelFormat"];
-
-  		[preferences setBool:YES forKey:@"speculumWeatherLabelSwitch"];
-  		[preferences setObject:@"#FFFFFF" forKey:@"speculumWeatherLabelColor"];
-  		[preferences setInteger:20 forKey:@"speculumWeatherLabelSize"];
-  		[preferences setFloat:UIFontWeightLight forKey:@"speculumWeatherLabelWeight"];
-  		[preferences setBool:YES forKey:@"speculumWeatherUseConditionImages"];
-  		[preferences setInteger:0 forKey:@"speculumWeatherConditionImageAlignment"];
-  		[preferences setInteger:1 forKey:@"speculumTempUnit"];
-  		[preferences setInteger:30 forKey:@"speculumWeatherUpdateTime"];
-
-			[preferences setInteger:0 forKey:@"speculumPreferredLanguage"];
+  		[preferences removeAllObjects];
 
 			[HBRespringController respring];
 

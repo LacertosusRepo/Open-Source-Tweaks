@@ -59,7 +59,18 @@
 	}
 
 	-(NSArray *)randomLabels {
-		return @[@"Open source on github!", @"Customizable clock to your style", @"When is VSauce going to make another video?"];
+		return @[@"Open source on github!", @"Customizable clock to your style", @"When is VSauce going to make another video?", @"Damn I named this tweak poorly"];
+	}
+
+	-(void)didMoveToSuperview {
+		[super didMoveToSuperview];
+
+		self.iconView.alpha = 0;
+		self.titleLabel.alpha = 0;
+		self.subtitleLabel.alpha = 0;
+		[self fadeInIconImage];
+		[self fadeInHeaderLabel];
+		[self fadeInSubLabel];
 	}
 
 	-(void)fadeInIconImage {

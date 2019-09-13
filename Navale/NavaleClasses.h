@@ -5,11 +5,6 @@ enum gradientDirections {
   horizontal
 };
 
-@interface FBSystemService : NSObject
-+(id)sharedInstance;
--(void)exitAndRelaunch:(BOOL)arg1;
-@end
-
 @interface SBDockView : UIView <CFWColorDelegate>
 @property (nonatomic, copy) UIColor *primaryColor;
 @property (nonatomic, copy) UIColor *secondaryColor;

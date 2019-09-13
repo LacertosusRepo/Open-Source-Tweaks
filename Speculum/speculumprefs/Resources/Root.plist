@@ -74,6 +74,20 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.speculumprefs</string>
+			<key>key</key>
+			<string>speculumUseColorFlowColors</string>
+			<key>label</key>
+			<string>Use ColorFlow4 Colors</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.speculumprefs/ReloadPrefs</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>
@@ -88,6 +102,8 @@
 			<true/>
 			<key>label</key>
 			<string>Time Label Settings</string>
+			<key>icon</key>
+			<string>timeicon</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -98,6 +114,8 @@
 			<true/>
 			<key>label</key>
 			<string>Date Label Settings</string>
+			<key>icon</key>
+			<string>dateicon</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -108,6 +126,8 @@
 			<true/>
 			<key>label</key>
 			<string>Weather Label Settings</string>
+			<key>icon</key>
+			<string>weathericon</string>
 		</dict>
 
 		<dict>

@@ -1,13 +1,15 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSSpecifier.h>
+#import <CepheiPrefs/HBRootListController.h>
+#import <CepheiPrefs/HBAppearanceSettings.h>
+#import <Cephei/HBRespringController.h>
+#import <Cephei/HBPreferences.h>
 
-@interface NAVRootListController : PSListController
-@end
+#import "NAVHeaderCell.h"
+#import "NAVGradientPreviewCell.h"
+#import "libcolorpicker.h"
+#import "PreferencesColorDefinitions.h"
 
-@interface NAVCustomHeaderCell : UIView
-@property (nonatomic, strong) UIImageView *iconView;
-@property (nonatomic, assign) UILabel *headerLabel;
-@property (nonatomic, assign) UILabel *subHeaderLabel;
-@property (nonatomic, readonly) NSArray *randomLabels;
+@interface NAVRootListController : HBRootListController
 @end

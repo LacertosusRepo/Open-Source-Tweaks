@@ -4,20 +4,12 @@
 <dict>
 	<key>items</key>
 	<array>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>headerCellClass</key>
-			<string>LacertosusCustomHeaderCell</string>
-		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Options</string>
 			<key>footerText</key>
-			<string>Use slider to change dock alpha. ColorFlow option requires it to be installed (obviously) and will only replace the colors when music is playing.</string>
+			<string>Use slider to change dock alpha. ColorFlow will only replace the colors when music is playing.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -31,7 +23,7 @@
 			<key>label</key>
 			<string>Apply to Floating Dock</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -45,7 +37,7 @@
 			<key>label</key>
 			<string>Use ColorFlow 4 Colors</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -71,7 +63,7 @@
 			<key>id</key>
 			<string>ModeCell</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -91,7 +83,7 @@
 			<key>leftImage</key>
 			<string>slidericon.png</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.navaleprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -100,7 +92,11 @@
 			<key>label</key>
 			<string>Color Options</string>
 			<key>footerText</key>
-			<string>Note the generated colors may not be to your liking.</string>
+			<string>Pull colors from your homescreen wallpaper and use them for your dock. Not perfect.</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>NAVGradientPreviewCell</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -123,98 +119,71 @@
 			<string>colorpickericontwo.png</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>colorsFromWallpaper</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>NAVButtonCell</string>
-			<key>label</key>
-			<string>Use Colors From Wallpaper</string>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Gradient Preview</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>NavaleGradientPreviewCell</string>
+    	<key>action</key>
+    	<string>colorsFromWallpaper:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Use Wallpaper Colors</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Respring to apply FloatingDock and ColorFlow options.</string>
+			<string>Respring to apply ColorFlow option.</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>updateDock</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>NAVButtonCell</string>
-			<key>label</key>
-			<string>Update Dock</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>respring</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>NAVButtonCell</string>
-			<key>label</key>
-			<string>Respring</string>
+    	<key>action</key>
+    	<string>respring:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Respring</string>
 		</dict>
 
 
 		<dict>
-			<key>label</key>
-			<string>Need Something?</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Created by LacertosusDeus 2018</string>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>github</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NAVButtonCell</string>
-			<key>icon</key>
-			<string>github.png</string>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
 			<key>label</key>
 			<string>Github</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>twitter</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>NAVButtonCell</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
 			<key>icon</key>
-			<string>twitter.png</string>
-			<key>label</key>
-			<string>Twitter</string>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>paypal</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NAVButtonCell</string>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>PayPal</string>
+			<key>subtitle</key>
+			<string>Feed my Steam sale addiction!</string>
 			<key>icon</key>
 			<string>paypal.png</string>
-			<key>label</key>
-			<string>Donate</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
 		</dict>
 	</array>
 	<key>title</key>
