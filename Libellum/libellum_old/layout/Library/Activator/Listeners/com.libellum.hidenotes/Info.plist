@@ -1,6 +1,0 @@
-{
-  group = "Libellum Notes";
-  title = "Hide Notes";
-  description = "Hide the notepad from view";
-  "compatible-modes" = ("springboard", "lockscreen", "application");
-}
