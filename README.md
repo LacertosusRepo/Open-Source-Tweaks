@@ -5,8 +5,6 @@
 [![GitHub forks](https://img.shields.io/github/forks/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/network)
 [![GitHub forks](https://img.shields.io/github/license/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/license)
 
-*If you're here to issue a pull request, please navigate over to [here](https://github.com/LacertosusRepo/LacertosusRepo.github.io) and make one there with the corresponding package.*
-
 *If you're going to copy-paste a project and release it, I'd ask that you email or message me just to let me know out of courtesy.*
 
 ## Information Table
