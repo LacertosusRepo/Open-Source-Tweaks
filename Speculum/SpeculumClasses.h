@@ -27,6 +27,7 @@
 -(void)updateClockAndDateLabel;
 -(void)updateWeatherLabel;
 -(void)updateWeatherForCity;
+-(NSString *)conditionNameWithCode:(int)condition;
 -(NSString *)conditionDescriptionWithCode:(int)condition;
 -(void)batteryStateChanged:(NSNotification *)notification;
 -(void)setAlignment:(int)alignment;

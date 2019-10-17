@@ -25,7 +25,7 @@
 | NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ |
 | Return2Sender2 | iOS 11 - 12.1.2 | v1.0 | arm64 arm64e | |
 | Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ |
-| Speculum | iOS 12 | v1.3.4 | arm64 arm64e |  |
+| Speculum | iOS 12 | v1.3.5 | arm64 arm64e |  |
 | Stellae | iOS 11 - 12.1.2 | v1.2.4 | arm64 arm64e | ✔ |
 | Swiper | iOS 12 - 12.1.2 | v1.0 | arm64 arm64e | |
 | ToneItDown | iOS 11 - 12.1.2 | v1.0.1 | arm64 arm64e | ✔ |
