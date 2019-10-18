@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.volumelock
 Name: VolumeLock
 Depends: mobilesubstrate
-Version: 1.0
+Version: 1.1
 Architecture: iphoneos-arm
 Description: If you're seeing this, I forgot to add a description...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
