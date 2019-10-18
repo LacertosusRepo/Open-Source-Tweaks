@@ -7,21 +7,33 @@
  */
 #define LD_DEBUG NO
 
-@interface VolumeControl : NSObject
-@end
-
   static BOOL toggleVolumeLock = NO;
 
-%hook VolumeControl
+  //Thanks Gilshahar7
+  //https://github.com/gilshahar7/VolumeSongSkipper113/blob/master/Tweak.xm#L88
+%hook SpringBoard
+  -(BOOL)_handlePhysicalButtonEvent:(UIPressesEvent *)event {
+    BOOL upPressed = NO;
+    BOOL downPressed = NO;
 
+    for(UIPress *press in event.allPresses.allObjects) {
+      if(press.type == 102 && press.force == 1) {
+        upPressed = YES;
+      }
+      if(press.type == 103 && press.force == 1) {
+        downPressed = YES;
+      }
+    }
 
-  -(void)handleVolumeButtonWithType:(long long)arg1 down:(BOOL)arg2 {
-    %orig;
+    if(upPressed && downPressed) {
+      toggleVolumeLock = !toggleVolumeLock;
+    }
 
-    volUpButton = (arg1 == 102 && arg2 == 1) ? YES : NO;
-    volDownButton = (arg1 == 103 && arg2 == 1) ? YES : NO;
+    return %orig;
   }
+%end
 
+%hook VolumeControl
   -(void)increaseVolume {
     if(toggleVolumeLock) {
       return ;
