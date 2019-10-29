@@ -12,6 +12,7 @@
 | Tweak | iOS Compatibility | Version | Architecture | Annotated |
 | ----- | ----------------- | ------- | ------------ | --------- |
 | Clauditis | iOS 11 - 12.4 | v1.0 | arm64 | ✔ |
+| DialerGradient | iOS ?? - 12.4 | v1.0 | arm64 arm64e | |
 | EinsteinVibes | iOS 10 - 11 | v1.0 | arm64 |  |
 | FLEX4Me | iOS 11 - 12.4 | v1.2 | arm64 arm64e | ✔ |
 | Free Market | iOS 12 | v1.0 | arm64 arm64e | |
