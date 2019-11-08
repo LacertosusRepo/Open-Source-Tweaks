@@ -9,30 +9,30 @@
 
 ## Information Table
 
-| Tweak | iOS Compatibility | Version | Architecture | Annotated |
-| ----- | ----------------- | ------- | ------------ | --------- |
-| Clauditis | iOS 11 - 12.4 | v1.0 | arm64 | ✔ |
-| DialerGradient | iOS ?? - 12.4 | v1.0 | arm64 arm64e | |
-| EinsteinVibes | iOS 10 - 11 | v1.0 | arm64 |  |
-| FLEX4Me | iOS 11 - 12.4 | v1.2 | arm64 arm64e | ✔ |
-| Free Market | iOS 12 | v1.0 | arm64 arm64e | |
-| Imperium | iOS 11 - 12.4 | v2.0.2 | arm64 arm64e | ✔ |
-| Improvify | iOS 11 - 12.4 | v1.4.2 | arm64 arm64e | ✔ |
-| Libellum | iOS 11 - 12.2 | v1.0 | arm64 arm64e | ✔ |
-| LuxSit | iOS 11-12 | v1.0 | arm64 arm64e | |
-| Mea | iOS 10 - 11 | v1.0 | arm64 |  |
-| MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ |
-| Navale | iOS 10 - 12.4 | v2.1 | arm64 arm64e |  |
-| NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ |
-| Return2Sender2 | iOS 11 - 12.1.2 | v1.0 | arm64 arm64e | |
-| Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ |
-| Speculum | iOS 12 | v1.3.5 | arm64 arm64e |  |
-| Stellae | iOS 11 - 12.4 | v1.2.4 | arm64 arm64e | ✔ |
-| Swiper | iOS 12 - 12.4 | v1.0 | arm64 arm64e | |
-| ToneItDown | iOS 11 - 12.4 | v1.0.1 | arm64 arm64e | ✔ |
-| Vitrum | iOS 11 | v1.2 | arm64 | |
-| VolbrateXI | iOS 10 - 12.4 | v1.3 | arm64 arm64e | ✔ |
-| VolumeLock | iOS 10 - 12.4 | v1.1 | arm64 amr64e | |
+| Tweak | iOS Compatibility | Version | Architecture | Annotated | Description |
+| :-----: | :-----------------: | :-------: | :------------: | :---------: | :-----------: |
+| Clauditis | iOS 11 - 12.4 | v1.0 | arm64 | ✔ | Double tap homescreen to lock device |
+| DialerGradient | iOS ?? - 12.4 | v1.0 | arm64 arm64e | | Add gradient to dialer screen in Phone app |
+| EinsteinVibes | iOS 10 - 11 | v1.0 | arm64 | | Vibrate calculator buttons |
+| FLEX4Me | iOS 11 - 12.4 | v1.2 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
+| Free Market | iOS 12 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
+| Imperium | iOS 11 - 12.4 | v2.0.2 | arm64 arm64e | ✔ | Music gestures in the now playing widget |
+| Improvify | iOS 11 - 12.4 | v1.4.2 | arm64 arm64e | ✔ | Improved Spotify features |
+| Libellum | iOS 11 - 12.2 | v1.0 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
+| LuxSit | iOS 11-12 | v1.0 | arm64 arm64e | | URL shortcuts in the spotlight search |
+| Mea | iOS 10 - 11 | v1.0 | arm64 | | Hide security codes on the lockscreen |
+| MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ | Fix broken English translations in MovieBox |
+| Navale | iOS 10 - 12.4 | v2.1 | arm64 arm64e | | Gradient dock background |
+| NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ | Popup notification when opening incognito tab |
+| Return2Sender2 | iOS 11 - 12.1.2 | v1.0 | arm64 arm64e | | Return button to send (buggy) |
+| Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ | Simple folder customization |
+| Speculum | iOS 12 | v1.3.5 | arm64 arm64e | | Customizable lockscreen time, date, and weather information |
+| Stellae | iOS 11 - 12.4 | v1.2.4 | arm64 arm64e | ✔ | Get random daily wallpaper from a subreddit |
+| Swiper | iOS 12 - 12.4 | v1.0 | arm64 arm64e | | Music control swipes on the dock |
+| ToneItDown | iOS 11 - 12.4 | v1.0.1 | arm64 arm64e | ✔ | Mute tones when previewing them |
+| Vitrum | iOS 11 | v1.2 | arm64 | | Control center customization |
+| VolbrateXI | iOS 10 - 12.4 | v1.3 | arm64 arm64e | ✔ | Vibrate volume button interactions |
+| VolumeLock | iOS 10 - 12.4 | v1.1 | arm64 amr64e | | Lock volume changing by pressing both volume buttons down |
 
 ## Goal
 *Annotate most of the open source tweaks.*
