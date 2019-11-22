@@ -1,0 +1,5 @@
+find ./ -name ".DS_Store" -depth -exec rm {} \;
+
+git add --all
+git commit -m "Synced with Github [Mac]"
+git push

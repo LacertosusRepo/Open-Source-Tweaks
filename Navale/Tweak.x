@@ -17,9 +17,10 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   //Vars
   CAGradientLayer *gradientLayer;
   SBFloatingDockPlatterView *floatingDockView;
-  SBDockView *dockView;
+  SBDockView *stockDockView;
   UIColor *colorOne;
   UIColor *colorTwo;
+  BOOL isiOS13;
 
   //Prefs
   static BOOL usingFloatingDock;
@@ -30,9 +31,9 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   static NSString *colorTwoString;
 
   /*
-   * Regular Dock
+   * Stock iOS Dock
    */
-%group RegularDockHooks
+%group StockDockHooks
 %hook SBDockView
 %property (nonatomic, copy) UIColor *primaryColor;
 %property (nonatomic, copy) UIColor *secondaryColor;
@@ -41,27 +42,38 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     if(useColorFlow) {
       [[%c(CFWSBMediaController) sharedInstance] addColorDelegate:self];
     }
-    return dockView = %orig;
+
+    return stockDockView = %orig;
+  }
+
+  -(void)didMoveToWindow {
+    %orig;
+
+    if(!gradientLayer) {
+      UIView *backgroundView = [self valueForKey:@"backgroundView"];
+
+      gradientLayer = [CAGradientLayer layer];
+      gradientLayer.frame = backgroundView.bounds;
+      [backgroundView.layer insertSublayer:gradientLayer atIndex:0];
+    }
   }
 
   -(void)layoutSubviews {
     %orig;
 
-      //Get background view and set alpha
-    SBWallpaperEffectView *backgroundView = [self valueForKey:@"_backgroundView"];
-    backgroundView.blurView.hidden = YES;
-    backgroundView.alpha = dockAlpha;
-
-      //Create gradient layer
-    if(!gradientLayer) {
-      gradientLayer = [CAGradientLayer layer];
+    UIView *backgroundView = [self valueForKey:@"backgroundView"];
+    if([backgroundView respondsToSelector:@selector(_materialLayer)]) {
+      ((MTMaterialView *)backgroundView).weighting = 0;
+      gradientLayer.cornerRadius = ((MTMaterialView *)backgroundView).materialLayer.cornerRadius;
+    }
+    if([backgroundView respondsToSelector:@selector(blurView)]) {
+      ((SBWallpaperEffectView *)backgroundView).blurView.hidden = YES;
     }
 
-      //Set gradient layer orientation
     if(gradientDirection == verticle) {
       gradientLayer.startPoint = CGPointMake(0.5, 0.0);
       gradientLayer.endPoint = CGPointMake(0.5, 1.0);
-    } if(gradientDirection == horizontal) {
+    } else {
       gradientLayer.startPoint = CGPointMake(0.0, 0.5);
       gradientLayer.endPoint = CGPointMake(1.0, 0.5);
     }
@@ -74,9 +86,9 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
       colorTwo = self.secondaryColor;
     }
 
+    gradientLayer.opacity = dockAlpha;
     gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
     gradientLayer.frame = backgroundView.bounds;
-    [backgroundView.layer insertSublayer:gradientLayer atIndex:6];
   }
 
 %new
@@ -100,34 +112,42 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
    */
 %group FloatingDockHooks
 %hook SBFloatingDockPlatterView
-%property (nonatomic, copy) UIColor *primaryColor;
-%property (nonatomic, copy) UIColor *secondaryColor;
-
+    //iOS 12
   -(id)initWithReferenceHeight:(double)arg1 maximumContinuousCornerRadius:(double)arg2 {
     if(useColorFlow) {
       [[%c(CFWSBMediaController) sharedInstance] addColorDelegate:self];
     }
+
+    return floatingDockView = %orig;
+  }
+
+    //iOS 13
+  -(id)initWithFrame:(CGRect)arg1 {
+    if(useColorFlow) {
+      [[%c(CFWSBMediaController) sharedInstance] addColorDelegate:self];
+    }
+
     return floatingDockView = %orig;
   }
 
   -(void)layoutSubviews {
     %orig;
 
-      //Get background view and set alpha
     _UIBackdropView *backgroundView = [self valueForKey:@"_backgroundView"];
-    backgroundView.backdropEffectView.hidden = YES;
     backgroundView.alpha = dockAlpha;
-
-      //Create gradient layer
-    if(!gradientLayer) {
-      gradientLayer = [CAGradientLayer layer];
+    if(!isiOS13) {
+      backgroundView.backdropEffectView.hidden = YES;
     }
 
-      //Set gradient layer orientation
+    if(!gradientLayer) {
+      gradientLayer = [CAGradientLayer layer];
+      [backgroundView.layer insertSublayer:gradientLayer atIndex:0];
+    }
+
     if(gradientDirection == verticle) {
       gradientLayer.startPoint = CGPointMake(0.5, 0.0);
       gradientLayer.endPoint = CGPointMake(0.5, 1.0);
-    } if(gradientDirection == horizontal) {
+    } else {
       gradientLayer.startPoint = CGPointMake(0.0, 0.5);
       gradientLayer.endPoint = CGPointMake(1.0, 0.5);
     }
@@ -143,13 +163,12 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
     gradientLayer.frame = backgroundView.bounds;
     gradientLayer.cornerRadius = [self maximumContinuousCornerRadius];
-    [backgroundView.layer insertSublayer:gradientLayer atIndex:0];
   }
 
 %new
   -(void)songAnalysisComplete:(MPModelSong *)song artwork:(UIImage *)artwork colorInfo:(CFWColorInfo *)colorInfo {
     self.primaryColor = colorInfo.primaryColor;
-    self.secondaryColor = colorInfo.backgroundColor;
+    self.secondaryColor = colorInfo.secondaryColor;
     [self layoutSubviews];
   }
 
@@ -166,7 +185,7 @@ static void updateDock() {
   if(usingFloatingDock) {
     [floatingDockView layoutSubviews];
   } else {
-    [dockView layoutSubviews];
+    [stockDockView layoutSubviews];
   }
 }
 
@@ -215,6 +234,10 @@ static void colorsFromWallpaper() {
   if(usingFloatingDock) {
     %init(FloatingDockHooks);
   } else {
-    %init(RegularDockHooks);
+    %init(StockDockHooks);
+  }
+
+  if([[[UIDevice currentDevice] systemVersion] compare:@"13.0" options:NSNumericSearch] != NSOrderedAscending) {
+    isiOS13 = YES;
   }
 }

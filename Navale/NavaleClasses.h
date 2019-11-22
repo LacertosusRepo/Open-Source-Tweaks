@@ -24,6 +24,14 @@ enum gradientDirections {
 @property (nonatomic,retain) UIView * blurView;
 @end
 
+@interface MTMaterialLayer : CALayer
+@end
+
+@interface MTMaterialView : UIView
+@property (getter=_materialLayer,nonatomic,readonly) MTMaterialLayer *materialLayer;
+@property (assign,nonatomic) double weighting;
+@end
+
 @interface _UIBackdropEffectView : UIView
 @end
 

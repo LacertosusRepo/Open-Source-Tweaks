@@ -22,7 +22,7 @@
 | LuxSit | iOS 11-12 | v1.0 | arm64 arm64e | | URL shortcuts in the spotlight search |
 | Mea | iOS 10 - 11 | v1.0 | arm64 | | Hide security codes on the lockscreen |
 | MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ | Fix broken English translations in MovieBox |
-| Navale | iOS 10 - 12.4 | v2.1 | arm64 arm64e | | Gradient dock background |
+| Navale | iOS 10 - 13.2.3 | v2.2.1 | arm64 arm64e | | Gradient dock background |
 | NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ | Popup notification when opening incognito tab |
 | Return2Sender2 | iOS 11 - 12.1.2 | v1.0 | arm64 arm64e | | Return button to send (buggy) |
 | Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ | Simple folder customization |
