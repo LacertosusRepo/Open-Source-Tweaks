@@ -11,6 +11,9 @@
 @interface PHHandsetDialerView : UIView
 @end
 
+@interface UITableView : UIScrollView
+@end
+
   NSString *colorOneString;
   NSString *colorTwoString;
 
@@ -18,6 +21,28 @@
   -(void)createConstraints {
     %orig;
 
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+
+    UIColor *colorOne = LCPParseColorString(colorOneString, @"48b1bf");
+    UIColor *colorTwo = LCPParseColorString(colorTwoString, @"06beb6");
+
+    gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+    gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+    gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
+    gradientLayer.frame = self.bounds;
+    [self.layer insertSublayer:gradientLayer atIndex:0];
+  }
+%end
+
+%hook UITableView
+  -(void)initWithFrame:(CGRect)arg1 {
+    %orig;
+
+    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(addGradient) userInfo:nil repeats:NO];
+  }
+
+%new
+  -(void)addGradient {
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
 
     UIColor *colorOne = LCPParseColorString(colorOneString, @"48b1bf");
