@@ -26,7 +26,7 @@
 			<key>label</key>
 			<string>Suppress "Rate Me" Alert</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -40,7 +40,7 @@
 			<key>label</key>
 			<string>Disable Song Videos</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -54,10 +54,10 @@
 			<key>label</key>
 			<string>Disable Genius Facts/Lyrics</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Miscellaneous Settings</string>
+	<string></string>
 </dict>
 </plist>

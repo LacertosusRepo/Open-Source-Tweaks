@@ -6,10 +6,6 @@
 	<array>
 		<dict>
 			<key>cell</key>
-			<string>PSGroupCell</string> <!-- dumb fix for bug causing switches to be too high -->
-		</dict>
-		<dict>
-			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Press Duration</string>
@@ -17,33 +13,27 @@
 			<string>How long you need to hold a song to delete it from your playlist. Default is 2 seconds.</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSSliderCell</string>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
 			<key>default</key>
-			<string>2</string>
+			<real>2</real>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.improvifyprefs</string>
-			<key>label</key>
-			<string>Seconds till delete</string>
-			<key>min</key>
-			<string>1</string>
-			<key>max</key>
-			<string>10</string>
-			<key>isSegmented</key>
-			<true/>
-			<key>segementCounter</key>
-			<string>10</string>
-			<key>showValue</key>
-			<true/>
-			<key>leftImage</key>
-			<string>durationicon.png</string>
 			<key>key</key>
 			<string>pressDuration</string>
+			<key>label</key>
+			<string>Press Duration: %is</string>
+			<key>singularLabel</key>
+			<string>Press Duration: 1s</string>
+			<key>max</key>
+			<real>10</real>
+			<key>min</key>
+			<real>1</real>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Quick-Delete Settings</string>
+	<string></string>
 </dict>
 </plist>

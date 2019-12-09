@@ -8,6 +8,7 @@
 #import "LibellumView.h"
 
   static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
+  static NSString *filePathBK = @"/User/Library/Preferences/LibellumNotes.bk";
 
 @implementation LibellumView
   +(id)sharedInstance {
@@ -21,53 +22,81 @@
   }
 
   -(id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+    if(self = [super initWithFrame:frame]) {
+      self.hidden = NO;
+      self.alpha = 1.0;
+      self.clipsToBounds = YES;
+      self.layer.cornerRadius = self.cornerRadius;
+      self.layer.borderColor = self.borderColor.CGColor;
+      self.layer.borderWidth = self.borderWidth;
+      self.userInteractionEnabled = YES;
+      self.translatesAutoresizingMaskIntoConstraints = NO;
 
-    self.clipsToBounds = YES;
-    self.layer.cornerRadius = self.cornerRadius;
-    self.userInteractionEnabled = YES;
-    self.translatesAutoresizingMaskIntoConstraints = NO;
+      _dismissGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(toggleLibellum:)];
+      _dismissGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+      [self addGestureRecognizer:_dismissGesture];
 
-    self.blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
-    self.blurView.frame = self.bounds;
-    self.blurView.translatesAutoresizingMaskIntoConstraints = NO;
+      self.blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
+      self.blurView.frame = self.bounds;
+      self.blurView.translatesAutoresizingMaskIntoConstraints = NO;
 
-    self.noteView = [[UITextView alloc] initWithFrame:self.bounds];
-    self.noteView.backgroundColor = [UIColor clearColor];
-    self.noteView.clipsToBounds = YES;
-    self.noteView.contentInset = UIEdgeInsetsZero;
-    self.noteView.delegate = self;
-    self.noteView.editable = YES;
-    self.noteView.font = [UIFont systemFontOfSize:14];
-    self.noteView.keyboardAppearance = UIKeyboardAppearanceDark;
-    self.noteView.scrollEnabled = YES;
-    self.noteView.textAlignment = NSTextAlignmentLeft;
-    self.noteView.textColor = self.customTextColor;
-    self.noteView.textContainerInset = UIEdgeInsetsMake(10, 5, 10, 5);
-    self.noteView.translatesAutoresizingMaskIntoConstraints = NO;
+      self.vibrancyView = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:self.blurStyle]]];
+      self.vibrancyView.frame = self.bounds;
+      self.vibrancyView.translatesAutoresizingMaskIntoConstraints = NO;
+      [self.blurView.contentView addSubview:self.vibrancyView];
 
-    if(self.blurStyle == 3) {
-      self.blurView.alpha = 0;
-      self.noteView.backgroundColor = self.customBackgroundColor;
+      self.noteView = [[UITextView alloc] initWithFrame:self.bounds];
+      self.noteView.backgroundColor = [UIColor clearColor];
+      self.noteView.clipsToBounds = YES;
+      self.noteView.contentInset = UIEdgeInsetsZero;
+      self.noteView.delegate = self;
+      self.noteView.editable = YES;
+      self.noteView.font = [UIFont systemFontOfSize:14];
+      self.noteView.keyboardAppearance = UIKeyboardAppearanceDark;
+      self.noteView.scrollEnabled = YES;
+      self.noteView.textAlignment = NSTextAlignmentLeft;
+      self.noteView.textColor = self.customTextColor;
+      self.noteView.textContainerInset = UIEdgeInsetsMake(10, 5, 10, 5);
+      self.noteView.translatesAutoresizingMaskIntoConstraints = NO;
+
+      self.lockIcon = [[UIImageView alloc] initWithImage:[UIImage systemImageNamed:@"lock.fill"]];
+      self.lockIcon.tintColor = [UIColor whiteColor];
+      self.lockIcon.hidden = !self.requireAuthentication;
+      self.lockIcon.translatesAutoresizingMaskIntoConstraints = NO;
+
+      if(self.blurStyle == 3) {
+        self.blurView.alpha = 0;
+        self.noteView.backgroundColor = self.customBackgroundColor;
+      }
+
+      [self addSubview:self.blurView];
+      [self addSubview:self.noteView];
+      [self addSubview:self.lockIcon];
+
+      [NSLayoutConstraint activateConstraints:@[
+        [self.blurView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [self.blurView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [self.blurView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [self.blurView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+
+        [self.noteView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [self.noteView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [self.noteView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
+        [self.noteView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+
+        [self.lockIcon.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+        [self.lockIcon.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+
+        [self.heightAnchor constraintEqualToConstant:self.noteSize],
+      ]];
+
+      [self setNumberOfLines];
+      [self loadNotes];
+
+      if(self.noteBackup) {
+        [self backupNotes];
+      }
     }
-
-    [self addSubview:self.blurView];
-    [self addSubview:self.noteView];
-
-    [NSLayoutConstraint activateConstraints:@[
-      [self.blurView.topAnchor constraintEqualToAnchor:self.topAnchor],
-      [self.blurView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-      [self.blurView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-      [self.blurView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
-
-      [self.noteView.topAnchor constraintEqualToAnchor:self.topAnchor],
-      [self.noteView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-      [self.noteView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-      [self.noteView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
-    ]];
-
-    [self setNumberOfLines];
-    [self loadNotes];
 
     return self;
   }
@@ -89,6 +118,10 @@
 
       case 221:
       self.noteView.textContainer.maximumNumberOfLines = 12;
+      break;
+
+      default:
+      NSLog(@"Libellum || noteSize unknown value - %lu", self.noteSize);
       break;
     }
   }
@@ -114,9 +147,11 @@
       if(_authenticated) {
         self.noteView.userInteractionEnabled = YES;
         self.noteView.textColor = self.customTextColor;
+        self.lockIcon.alpha = 0;
       } else {
         self.noteView.userInteractionEnabled = NO;
         self.noteView.textColor = [UIColor clearColor];
+        self.lockIcon.alpha = 1;
       }
     } completion:nil];
   }
@@ -174,14 +209,6 @@
     return YES;
   }
 
-  -(void)textViewDidBeginEditing:(UITextView *)textView {
-    _editing = YES;
-  }
-
-  -(void)textViewDidEndEditing:(UITextView *)textView {
-    _editing = NO;
-  }
-
   -(void)pointButton {
     [self.noteView replaceRange:self.noteView.selectedTextRange withText:@"\u2022 "];
   }
@@ -190,10 +217,20 @@
     [self.noteView resignFirstResponder];
   }
 
-#pragma mark - Loading/Saving Notes
+  -(void)textViewDidBeginEditing:(UITextView *)textView {
+    _editing = YES;
+  }
+
+  -(void)textViewDidEndEditing:(UITextView *)textView {
+    _editing = NO;
+  }
+
+#pragma mark - Loading/Saving/Backup Notes/Idle Timer Reset
 
   -(void)textViewDidChange:(UITextView *)textView {
     [self saveNotes];
+
+    [[NSClassFromString(@"SBIdleTimerGlobalCoordinator") sharedInstance] resetIdleTimer];
   }
 
   -(void)saveNotes {
@@ -213,9 +250,18 @@
     }
   }
 
+  -(void)backupNotes {
+    NSError *error = nil;
+    NSString *notes = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+    [notes writeToFile:filePathBK atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    if(error) {
+      NSLog(@"Libellum || Error backing up notes - %@", error);
+    }
+  }
+
 #pragma mark - Show/Hide
 
-  -(void)toggleLibellum {
+  -(void)toggleLibellum:(UIGestureRecognizer *)gesture {
     if(self.hideGesture && !_editing) {
 
       if(self.feedback) {
@@ -223,28 +269,36 @@
       }
 
       if(self.hidden) {
-        [UIView transitionWithView:self duration:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        self.hidden = NO;
+        [self.superview.superview layoutSubviews];
+        self.transform = CGAffineTransformMakeScale(0.5, 0.5);
+        [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+          self.transform = CGAffineTransformMakeScale(1, 1);
           self.alpha = 1;
-          self.hidden = NO;
         } completion:nil];
         return;
 
       } if(!self.hidden) {
-        [UIView transitionWithView:self duration:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+          self.transform = CGAffineTransformMakeScale(0.5, 0.5);
           self.alpha = 0;
-        } completion:^(BOOL finished){
+        } completion:^(BOOL finished) {
           self.hidden = YES;
+          [self.superview.superview layoutSubviews];
         }];
         return;
       }
     }
   }
 
-#pragma mark - Preferences Changed
+#pragma mark - Preferences Changed/Adaptive Mode
 
   -(void)preferencesChanged {
     self.layer.cornerRadius = self.cornerRadius;
+    self.layer.borderColor = self.borderColor.CGColor;
+    self.layer.borderWidth = self.borderWidth;
     self.blurView.effect = [UIBlurEffect effectWithStyle:self.blurStyle];
+    self.vibrancyView.effect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
     self.noteView.textColor = self.customTextColor;
 
     if(self.blurStyle == 3) {
@@ -256,13 +310,32 @@
     }
   }
 
-#pragma mark - Misc
+  -(void)tintColorDidChange {
+    switch ((int)[[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle]) {
+        //Light Mode
+      case 1: {
+        if(self.blurStyle == 7) {
+          [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.noteView.textColor = [UIColor blackColor];
+          } completion:nil];
+        }
 
-  -(void)setSizeToMimic:(CGSize)size {
-    NSLog(@"Libellum || I caught a crash! (w - %f, h - %f)", size.width, size.height);
+        self.lockIcon.tintColor = [UIColor blackColor];
+        break;
+      }
+
+        //Dark Mode
+      case 2: {
+        if(self.blurStyle == 7) {
+          [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.noteView.textColor = [UIColor whiteColor];
+          } completion:nil];
+        }
+
+        self.lockIcon.tintColor = [UIColor whiteColor];
+      break;
+      }
+    }
   }
 
-  -(CGSize)sizeToMimic {
-    return self.frame.size;
-  }
 @end

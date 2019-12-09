@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.navale
 Name: Navale
 Depends: mobilesubstrate, org.thebigboss.libcolorpicker, ws.hbang.common (>= 1.11)
-Version: 2.2.1
+Version: 2.2.2
 Architecture: iphoneos-arm
 Description: If you're seeing this, I forgot to add a description...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

@@ -6,10 +6,6 @@
 	<array>
 		<dict>
 			<key>cell</key>
-			<string>PSGroupCell</string> <!-- dumb fix for bug causing switches to be too high -->
-		</dict>
-		<dict>
-			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Minimum Song Duration</string>
@@ -17,30 +13,24 @@
 			<string>How long a song needs to be played before being added to your history. Default is 60 seconds.</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSSliderCell</string>
+			<key>cellClass</key>
+			<string>HBStepperTableCell</string>
 			<key>default</key>
-			<string>60</string>
+			<real>60</real>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.improvifyprefs</string>
-			<key>label</key>
-			<string>Required Seconds Before Save</string>
-			<key>min</key>
-			<string>1</string>
-			<key>max</key>
-			<string>120</string>
-			<key>isSegmented</key>
-			<true/>
-			<key>segementCounter</key>
-			<string>120</string>
-			<key>showValue</key>
-			<true/>
-			<key>leftImage</key>
-			<string>durationicon.png</string>
 			<key>key</key>
 			<string>minimumSongDuration</string>
+			<key>label</key>
+			<string>Minimum Song Duration: %is</string>
+			<key>singularLabel</key>
+			<string>Minimum Song Duration: 1s</string>
+			<key>max</key>
+			<real>120</real>
+			<key>min</key>
+			<real>5</real>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -61,6 +51,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Song Count Settings</string>
+	<string></string>
 </dict>
 </plist>

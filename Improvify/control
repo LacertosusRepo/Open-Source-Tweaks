@@ -1,11 +1,11 @@
 Package: com.lacertosusrepo.improvify
 Name: Improvify
-Depends: mobilesubstrate, me.nepeta.libcolorpicker
-Version: 1.4.2
+Depends: mobilesubstrate, org.thebigboss.libcolorpicker, ws.hbang.common (>= 1.13)
+Version: 1.4.5-2
 Architecture: iphoneos-arm
 Description: Add features Spotify should have already had...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
 Author: LacertosusDeus <LacertosusThemes@gmail.com>
 Section: Tweaks
-Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.improvify/
-SileoDepiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.improvify/
+Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
+SileoDepiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/

@@ -1,13 +1,12 @@
-@interface SBDashBoardNotificationAdjunctListViewController : UIViewController
+#import "LibellumView.h"
+
+@interface CSNotificationAdjunctListViewController : UIViewController
+@property (nonatomic, retain) UIStackView *stackView;
+@property (nonatomic, assign) CGSize sizeToMimic;
 @property (nonatomic, retain) LibellumView *LBMNoteView;
--(void)insertLibellum;
+-(void)_removeItem:(id)arg1 animated:(BOOL)arg2;
+-(void)_insertItem:(id)arg1 animated:(BOOL)arg2;
 @end
 
-@interface SBDashBoardViewController : UIViewController
-@end
-
-@interface WGMajorListViewController : UIViewController
-@end
-
-@interface SBPagedScrollView : UIScrollView
+@interface CSScrollView : UIScrollView
 @end

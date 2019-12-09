@@ -9,6 +9,7 @@
 #import "LBMHeaderCell.h"
 #import "libcolorpicker.h"
 #import "PreferencesColorDefinitions.h"
+#import "../LibellumView.h"
 
 @interface LBMRootListController : HBRootListController
 @end

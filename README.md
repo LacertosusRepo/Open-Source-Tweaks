@@ -11,18 +11,18 @@
 
 | Tweak | iOS Compatibility | Version | Architecture | Annotated | Description |
 | :-----: | :-----------------: | :-------: | :------------: | :---------: | :-----------: |
-| Clauditis | iOS 11 - 12.4 | v1.0 | arm64 | ✔ | Double tap homescreen to lock device |
+| Clauditis | iOS 11 - 13.2.3 | v1.2 | arm64 arm64e | ✔ | Double tap homescreen to lock device |
 | DialerGradient | iOS ?? - 12.4 | v1.0 | arm64 arm64e | | Add gradient to dialer screen in Phone app |
 | EinsteinVibes | iOS 10 - 11 | v1.0 | arm64 | | Vibrate calculator buttons |
 | FLEX4Me | iOS 11 - 12.4 | v1.2 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
 | Free Market | iOS 12 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
 | Imperium | iOS 11 - 12.4 | v2.0.2 | arm64 arm64e | ✔ | Music gestures in the now playing widget |
-| Improvify | iOS 11 - 12.4 | v1.4.2 | arm64 arm64e | ✔ | Improved Spotify features |
-| Libellum | iOS 11 - 12.2 | v1.0 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
+| Improvify | iOS 11 - 12.4 | v1.4.5-2 | arm64 arm64e | ✔ | Improved Spotify features |
+| Libellum | iOS 13 - 13.2.3 | v1.0~b6 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
 | LuxSit | iOS 11-12 | v1.0 | arm64 arm64e | | URL shortcuts in the spotlight search |
 | Mea | iOS 10 - 11 | v1.0 | arm64 | | Hide security codes on the lockscreen |
 | MovieBoxPro Text Fixes | iOS 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ | Fix broken English translations in MovieBox |
-| Navale | iOS 10 - 13.2.3 | v2.2.1 | arm64 arm64e | | Gradient dock background |
+| Navale | iOS 10 - 13.2.3 | v2.2.2 | arm64 arm64e | | Gradient dock background |
 | NoNut | iOS 10 - 11 | v1.1 | arm64 | ✔ | Popup notification when opening incognito tab |
 | Return2Sender2 | iOS 11 - 12.1.2 | v1.0 | arm64 arm64e | | Return button to send (buggy) |
 | Safi | iOS 10 - 11 | v1.3 | arm64 | ✔ | Simple folder customization |

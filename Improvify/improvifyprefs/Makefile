@@ -1,11 +1,13 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = improvifyprefs
-improvifyprefs_FILES = IFYRootListController.m IFYButtonController.m
+improvifyprefs_FILES = IFYRootListController.m IFYHeaderCell.m
 improvifyprefs_INSTALL_PATH = /Library/PreferenceBundles
 improvifyprefs_LIBRARIES = colorpicker
 improvifyprefs_FRAMEWORKS = UIKit
 improvifyprefs_PRIVATE_FRAMEWORKS = Preferences
+improvifyprefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
+improvifyprefs_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

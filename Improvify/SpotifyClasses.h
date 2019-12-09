@@ -21,6 +21,10 @@
 -(void)setIconColor:(UIColor *)arg1;
 @end
 
+@interface SPTNowPlayingFreeTierFeedbackButton : SPTNowPlayingButton
+@property(nonatomic, strong, readwrite) UIColor *selectedColor;
+@end
+
   //UIViews
 @interface GLUEEntityRowContentView : UIView
 @property(readonly, nonatomic) GLUELabel *subtitleLabel;
@@ -36,6 +40,14 @@
 @end
 
 @interface SPTTableViewSectionHeaderView : UIView
+@end
+
+@interface SPTProgressView : UIView
++(void)showGaiaContextMenuProgressViewWithTitle:(id)arg1;
+@end
+
+@interface SPTFreeTierPlaylistFullbleedHeaderView : UIView
+@property(retain, nonatomic) GLUELabel *titleLabel;
 @end
 
   //NSObjects
@@ -100,12 +112,25 @@
 @property(retain, nonatomic) SPTAlbumData *albumData;
 @end
 
+@interface SPTFreeTierAlbumViewModel : NSObject
+@property (retain, nonatomic) NSArray *albumTracks;
+@end
+
 @interface SPTAlbumTrackData : NSObject
 @property(readonly, nonatomic) NSURL *trackURL;
 @end
 
 @interface SPTFreeTierPlaylistVISREFHeaderControllerImplementation : NSObject
 @property(retain, nonatomic) VISREFAlbumContentView *contentView;
+@end
+
+@interface SPTFreeTierAlbumContextMenuButtonViewModel : NSObject
+@property (retain, nonatomic) SPTFreeTierAlbumViewModel *albumViewModel;
+@end
+
+@interface SPTFreeTierPlaylistViewModelImplementation : NSObject
+@property (retain, nonatomic) NSArray *loadedTracks;
+@property (nonatomic, assign, readwrite) NSUInteger totalNumberOfTracks;
 @end
 
   //UIViewControllers
@@ -117,10 +142,11 @@
 @interface SPTNowPlayingFooterUnitViewController : UIViewController
 @property(retain, nonatomic) SPTNowPlayingButton *shareButton;
 @property(retain, nonatomic) SPTNowPlayingButton *addToPlayistButton;
+
   //Improvify methods
--(void)handleAddToPlaylist:(NSURL *)playlistURI;
+-(void)handleAddToPlaylist:(NSString *)contextString;
 -(void)setAddToPlaylistButtonColor:(UIColor *)color;
--(void)checkIsNowPlayingSongInPlaylist;
+-(void)updatePlaylistButtonColor;
 @end
 
 @interface PlaylistViewController : UIViewController
@@ -149,11 +175,6 @@
 -(void)dismissSelf;
 @end
 
-@interface SPTAlbumViewController : UIViewController
-@property(retain, nonatomic) SPTAlbumViewModel *viewModel;
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
-@end
-
 @interface SPTFreeTierPlaylistVISREFHeaderViewController : UIViewController
 @property(retain, nonatomic) SPTFreeTierPlaylistVISREFHeaderControllerImplementation *headerController;
 @end
@@ -163,10 +184,11 @@
 @end
 
 @interface SPTFreeTierPlaylistViewController : UIViewController
-@property(retain, nonatomic) SPTPlaylistCosmosModel *playlistViewModel;
+@property(retain, nonatomic) SPTFreeTierPlaylistViewModelImplementation *playlistViewModel;
 @property(retain, nonatomic) SPTFreeTierPlaylistHeaderViewController *headerViewController;
 @property(retain, nonatomic) SPTEntityHeaderViewController *entityHeaderViewController;
 @property(nonatomic) UITableView *tableView;
+-(NSInteger)numberOfSectionsInTableView:(id)arg1;
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
 -(NSURL *)spt_pageURI;
 @end
@@ -178,14 +200,32 @@
 @property(retain, nonatomic) SPTNowPlayingMarqueeLabel *subtitleLabel;
 @end
 
-  //Spotify
-@interface SPTNowPlayingFreeTierFeedbackButton : SPTNowPlayingButton
-@property(nonatomic, strong, readwrite) UIColor *selectedColor;
+@interface SPTFreeTierPlaylistFullbleedViewController : UIViewController
 @end
 
-  //Misc
+@interface SPTFreeTierAlbumViewController : UIViewController
+@property(retain, nonatomic) SPTFreeTierAlbumContextMenuButtonViewModel *contextMenu;
+@end
+
+//Misc
 @interface GLUETrackRowTableViewCell : UITableViewCell
 @property(retain, nonatomic) GLUEEntityRowContentView *entityContentView;
 @property(retain, nonatomic) GLUELabel *titleLabel;
 @property(retain, nonatomic) GLUELabel *subtitleLabel;
+@end
+
+@interface UIView (SPTFullbleedView)
+@property(retain, nonatomic) GLUELabel *titleLabel;
+@end
+
+//CollectionView
+@interface HUG2TrackRowComponentView : UIView
+@property (retain, nonatomic) GLUETrackRowTableViewCell *trackCell;
+@end
+
+@interface HUBCollectionView : UICollectionView
+@end
+
+@interface HUBComponentCollectionViewCell : UICollectionViewCell
+@property (retain, nonatomic) HUG2TrackRowComponentView *componentView;
 @end

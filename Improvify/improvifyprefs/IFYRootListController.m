@@ -1,97 +1,306 @@
 #include "IFYRootListController.h"
-#import "IFYCustomHeaderClassCell.h"
-#import "PreferencesColorDefinitions.h"
-#import "libcolorpicker.h"
 
 @implementation IFYRootListController
 
+	-(id)init {
+		self = [super init];
+		if(self) {
+			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
+			appearanceSettings.tintColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Sec_Color;
+			appearanceSettings.navigationBarBackgroundColor = Pri_Color;
+			appearanceSettings.statusBarTintColor = Sec_Color;
+			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+			appearanceSettings.translucentNavigationBar = NO;
+			self.hb_appearanceSettings = appearanceSettings;
+		}
+
+		return self;
+	}
+
 	-(NSArray *)specifiers {
 		if (!_specifiers) {
-			_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
+			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 		}
+
 		return _specifiers;
 	}
 
-	-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-		if (section == 0) {
-			return (UIView *)[[IFYCustomHeaderCell alloc] init];
-		}
-    return nil;
-	}
-
-	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-		if (section == 0) {
-			return 170.0f;
-		}
-		return (CGFloat)-1;
-	}
-
 	-(void)viewDidLoad {
+		[super viewDidLoad];
+
 		//Adds GitHub button in top right of preference pane
 		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
 		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
 		self.navigationItem.rightBarButtonItem = webButton;
 
-		[webButton release];
-		[super viewDidLoad];
+		//Adds header to table
+		UIView *IFYHeaderView = [[IFYHeaderCell alloc] init];
+		IFYHeaderView.frame = CGRectMake(0, 0, IFYHeaderView.bounds.size.width, 150);
+
+		UITableView *tableView = [self valueForKey:@"_table"];
+		tableView.tableHeaderView = IFYHeaderView;
+	}
+
+	-(void)viewDidAppear:(BOOL)animated {
+		[super viewDidAppear:animated];
+
+		//Adds label to center of preferences
+		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+		title.text = @"Improvify";
+		title.textAlignment = NSTextAlignmentCenter;
+		title.textColor = Sec_Color;
+		self.navigationItem.titleView = title;
+		self.navigationItem.titleView.alpha = 0;
 	}
 
 	-(IBAction)webButtonAction {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
 	}
 
-	-(void)viewWillAppear:(BOOL)animated {
-		[super viewWillAppear:animated];
-			//Changed colors of Navigation Bar, Navigation Text
-		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
-		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-		self.navigationController.navigationController.navigationBar.translucent = NO;
-			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
-		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
-		[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-	}
-
-	-(void)viewWillDisappear:(BOOL)animated {
-		[super viewWillDisappear:animated];
-				//Returns normal colors to Navigation Bar
-		self.navigationController.navigationController.navigationBar.tintColor = nil;
-		self.navigationController.navigationController.navigationBar.barTintColor = nil;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
-		self.navigationController.navigationController.navigationBar.translucent = YES;
-	}
-
-	//https://github.com/angelXwind/KarenPrefs/blob/master/KarenPrefsListController.m
-	-(id)readPreferenceValue:(PSSpecifier*)specifier {
-		NSDictionary * prefs = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		if (![prefs objectForKey:[specifier.properties objectForKey:@"key"]]) {
-			return [specifier.properties objectForKey:@"default"];
+	//https://github.com/Nepeta/Axon/blob/master/Prefs/Preferences.m
+	-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+		CGFloat offsetY = scrollView.contentOffset.y;
+		if(offsetY > 100) {
+			[UIView animateWithDuration:0.2 animations:^{
+				self.navigationItem.titleView.alpha = 1;
+			}];
+		} else {
+			[UIView animateWithDuration:0.2 animations:^{
+				self.navigationItem.titleView.alpha = 0;
+			}];
 		}
-		return [prefs objectForKey:[specifier.properties objectForKey:@"key"]];
 	}
 
-	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
-		NSMutableDictionary * prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		[prefs setObject:value forKey:[specifier.properties objectForKey:@"key"]];
-		[prefs writeToFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]] atomically:YES];
-		if([specifier.properties objectForKey:@"PostNotification"]) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
-		}
-		[super setPreferenceValue:value specifier:specifier];
-	}
+	-(void)killSpotify:(PSSpecifier *)specifier {
+		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
+		cell.cellEnabled = NO;
 
-	-(void)killSpotify {
 		UIAlertController *killSpotifyAlert = [UIAlertController alertControllerWithTitle:@"Improvify" message:@"Are you sure you want to restart Spotify?" preferredStyle:UIAlertControllerStyleAlert];
 		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Kill" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action) {
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.improvifyprefs-killSpotify"), nil, nil, true);
+			cell.cellEnabled = YES;
 		}];
-		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+			cell.cellEnabled = YES;
+		}];
+
 		[killSpotifyAlert addAction:confirmAction];
 		[killSpotifyAlert addAction:cancelAction];
 		[self presentViewController:killSpotifyAlert animated:YES completion:nil];
 	}
+
+@end
+
+@implementation ImprovifyPlaylistsListController
+
+	-(NSArray *)specifiers {
+		if (!_specifiers) {
+			_specifiers = [self loadSpecifiersFromPlistName:@"ImprovifyPlaylists" target:self];
+		}
+		return _specifiers;
+	}
+
+	-(void)viewDidAppear:(BOOL)animated {
+		[super viewDidAppear:animated];
+
+		//Adds label to center of preferences
+		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+		title.text = @"Set Spotify Playlists";
+		title.textAlignment = NSTextAlignmentCenter;
+		title.textColor = Sec_Color;
+		self.navigationItem.titleView = title;
+	}
+
+	-(void)viewDidLoad {
+		[super viewDidLoad];
+
+		//Adds GitHub button in top right of preference pane
+		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
+		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
+		self.navigationItem.rightBarButtonItem = webButton;
+	}
+
+	-(IBAction)webButtonAction {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+	}
+
+	-(void)_returnKeyPressed:(id)arg1 {
+		[self.view endEditing:YES];
+	}
+
+@end
+
+@implementation ImprovifyQuickAddSettingsListController
+
+	-(id)init {
+		self = [super init];
+		if(self) {
+			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
+			appearanceSettings.tintColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Sec_Color;
+			appearanceSettings.navigationBarBackgroundColor = Pri_Color;
+			appearanceSettings.statusBarTintColor = Sec_Color;
+			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+			appearanceSettings.translucentNavigationBar = NO;
+			self.hb_appearanceSettings = appearanceSettings;
+		}
+
+		return self;
+	}
+
+	-(NSArray *)specifiers {
+		if (!_specifiers) {
+			_specifiers = [self loadSpecifiersFromPlistName:@"ImprovifyQuickAddSettings" target:self];
+		}
+		return _specifiers;
+	}
+
+	-(void)viewDidLoad {
+		[super viewDidLoad];
+
+		//Adds GitHub button in top right of preference pane
+		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
+		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
+		self.navigationItem.rightBarButtonItem = webButton;
+	}
+
+	-(void)viewDidAppear:(BOOL)animated {
+		[super viewDidAppear:animated];
+
+		//Adds label to center of preferences
+		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+		title.text = @"Quick-Add Settings";
+		title.textAlignment = NSTextAlignmentCenter;
+		title.textColor = Sec_Color;
+		self.navigationItem.titleView = title;
+	}
+
+	-(IBAction)webButtonAction {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+	}
+
+	-(void)colorPicker {
+		HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.improvifyprefs"];
+		NSString *addToPlaylistCustomColor = [preferences objectForKey:@"addToPlaylistCustomColor"];
+
+		UIColor *startColor = LCPParseColorString(addToPlaylistCustomColor, @"#1DB954");
+		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
+		[alert displayWithCompletion:^void (UIColor *pickedColor) {
+			NSString *hexColor = [UIColor hexFromColor:pickedColor];
+			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
+			[preferences setObject:hexColor forKey:@"addToPlaylistCustomColor"];
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.improvifyprefs/ReloadPrefs"), nil, nil, true);
+		}];
+	}
+
+@end
+
+@implementation ImprovifyQuickDeleteSettingsListController
+
+	-(id)init {
+		self = [super init];
+		if(self) {
+			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
+			appearanceSettings.tintColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Sec_Color;
+			appearanceSettings.navigationBarBackgroundColor = Pri_Color;
+			appearanceSettings.statusBarTintColor = Sec_Color;
+			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+			appearanceSettings.translucentNavigationBar = NO;
+			self.hb_appearanceSettings = appearanceSettings;
+		}
+
+		return self;
+	}
+
+	-(NSArray *)specifiers {
+		if (!_specifiers) {
+			_specifiers = [self loadSpecifiersFromPlistName:@"ImprovifyQuickDeleteSettings" target:self];
+		}
+		return _specifiers;
+	}
+
+	-(void)viewDidLoad {
+		[super viewDidLoad];
+
+		//Adds GitHub button in top right of preference pane
+		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
+		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
+		self.navigationItem.rightBarButtonItem = webButton;
+	}
+
+	-(void)viewDidAppear:(BOOL)animated {
+		[super viewDidAppear:animated];
+
+		//Adds label to center of preferences
+		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+		title.text = @"Quick-Delete Settings";
+		title.textAlignment = NSTextAlignmentCenter;
+		title.textColor = Sec_Color;
+		self.navigationItem.titleView = title;
+	}
+
+	-(IBAction)webButtonAction {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+	}
+
+@end
+
+@implementation ImprovifySongCountSettingsListController
+
+	-(id)init {
+		self = [super init];
+		if(self) {
+			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
+			appearanceSettings.tintColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Sec_Color;
+			appearanceSettings.navigationBarBackgroundColor = Pri_Color;
+			appearanceSettings.statusBarTintColor = Sec_Color;
+			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+			appearanceSettings.translucentNavigationBar = NO;
+			self.hb_appearanceSettings = appearanceSettings;
+		}
+
+		return self;
+	}
+
+	-(NSArray *)specifiers {
+		if (!_specifiers) {
+			_specifiers = [self loadSpecifiersFromPlistName:@"ImprovifySongCountSettings" target:self];
+		}
+		return _specifiers;
+	}
+
+	-(void)viewDidAppear:(BOOL)animated {
+		[super viewDidAppear:animated];
+
+		//Adds label to center of preferences
+		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+		title.text = @"Song Count Settings";
+		title.textAlignment = NSTextAlignmentCenter;
+		title.textColor = Sec_Color;
+		self.navigationItem.titleView = title;
+	}
+
+	-(void)viewDidLoad {
+		[super viewDidLoad];
+
+		//Adds GitHub button in top right of preference pane
+		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
+		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
+		self.navigationItem.rightBarButtonItem = webButton;
+	}
+
+	-(IBAction)webButtonAction {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+	}
+
 
 	-(void)resetSpotifyPlayHistory {
 		UIAlertController *resetSpotifyHistoryAlert = [UIAlertController alertControllerWithTitle:@"Improvify" message:@"Are you sure you want to reset your play history? You cannot recover it after deletion.\n\n Spotify must be running for this to work." preferredStyle:UIAlertControllerStyleAlert];
@@ -106,387 +315,56 @@
 		[self presentViewController:resetSpotifyHistoryAlert animated:YES completion:nil];
 	}
 
-	-(void)twitter {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
-	}
-
-	-(void)paypal {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://lacertosusrepo.github.io/depictions/resources/donate.html"] options:@{} completionHandler:nil];
-	}
-
-	-(void)github {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
-	}
-
-@end
-
-@implementation ImprovifyPlaylistsListController
-
-	-(NSArray *)specifiers {
-		if (!_specifiers) {
-			_specifiers = [[self loadSpecifiersFromPlistName:@"ImprovifyPlaylists" target:self] retain];
-		}
-		return _specifiers;
-	}
-
-	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-		return (CGFloat)-1;
-	}
-
-	-(void)viewDidLoad {
-		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
-		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
-		self.navigationItem.rightBarButtonItem = webButton;
-
-		[webButton release];
-		[super viewDidLoad];
-	}
-
-	-(IBAction)webButtonAction {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
-	}
-
-	-(void)viewWillAppear:(BOOL)animated {
-		[super viewWillAppear:animated];
-			//Changed colors of Navigation Bar, Navigation Text
-		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
-		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-		self.navigationController.navigationController.navigationBar.translucent = NO;
-			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
-		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
-		[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-	}
-
-	-(void)viewWillDisappear:(BOOL)animated {
-		[super viewWillDisappear:animated];
-				//Returns normal colors to Navigation Bar
-		self.navigationController.navigationController.navigationBar.tintColor = nil;
-		self.navigationController.navigationController.navigationBar.barTintColor = nil;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
-		self.navigationController.navigationController.navigationBar.translucent = YES;
-	}
-
-	//https://github.com/angelXwind/KarenPrefs/blob/master/KarenPrefsListController.m
-	-(id)readPreferenceValue:(PSSpecifier*)specifier {
-		NSDictionary * prefs = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		if (![prefs objectForKey:[specifier.properties objectForKey:@"key"]]) {
-			return [specifier.properties objectForKey:@"default"];
-		}
-		return [prefs objectForKey:[specifier.properties objectForKey:@"key"]];
-	}
-
-	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
-		NSMutableDictionary * prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		[prefs setObject:value forKey:[specifier.properties objectForKey:@"key"]];
-		[prefs writeToFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]] atomically:YES];
-		if([specifier.properties objectForKey:@"PostNotification"]) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
-		}
-		[super setPreferenceValue:value specifier:specifier];
-	}
-
-	-(void)_returnKeyPressed:(id)arg1 {
-		[self.view endEditing:YES];
-	}
-
-@end
-
-@implementation ImprovifyQuickAddSettingsListController
-
-	-(NSArray *)specifiers {
-		if (!_specifiers) {
-			_specifiers = [[self loadSpecifiersFromPlistName:@"ImprovifyQuickAddSettings" target:self] retain];
-		}
-		return _specifiers;
-	}
-
-	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-		return (CGFloat)-1;
-	}
-
-	-(void)viewDidLoad {
-		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
-		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
-		self.navigationItem.rightBarButtonItem = webButton;
-
-		[webButton release];
-		[super viewDidLoad];
-	}
-
-	-(IBAction)webButtonAction {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
-	}
-
-	-(void)viewWillAppear:(BOOL)animated {
-		[super viewWillAppear:animated];
-			//Changed colors of Navigation Bar, Navigation Text
-		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
-		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-		self.navigationController.navigationController.navigationBar.translucent = NO;
-			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
-		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
-		[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-	}
-
-	-(void)viewWillDisappear:(BOOL)animated {
-		[super viewWillDisappear:animated];
-				//Returns normal colors to Navigation Bar
-		self.navigationController.navigationController.navigationBar.tintColor = nil;
-		self.navigationController.navigationController.navigationBar.barTintColor = nil;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
-		self.navigationController.navigationController.navigationBar.translucent = YES;
-	}
-
-	//https://github.com/angelXwind/KarenPrefs/blob/master/KarenPrefsListController.m
-	-(id)readPreferenceValue:(PSSpecifier*)specifier {
-		NSDictionary * prefs = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		if (![prefs objectForKey:[specifier.properties objectForKey:@"key"]]) {
-			return [specifier.properties objectForKey:@"default"];
-		}
-		return [prefs objectForKey:[specifier.properties objectForKey:@"key"]];
-	}
-
-	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
-		NSMutableDictionary * prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		[prefs setObject:value forKey:[specifier.properties objectForKey:@"key"]];
-		[prefs writeToFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]] atomically:YES];
-		if([specifier.properties objectForKey:@"PostNotification"]) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
-		}
-		[super setPreferenceValue:value specifier:specifier];
-	}
-
-	-(void)_returnKeyPressed:(id)arg1 {
-		[self.view endEditing:YES];
-	}
-
-@end
-
-@implementation ImprovifyQuickDeleteSettingsListController
-
-	-(NSArray *)specifiers {
-		if (!_specifiers) {
-			_specifiers = [[self loadSpecifiersFromPlistName:@"ImprovifyQuickDeleteSettings" target:self] retain];
-		}
-		return _specifiers;
-	}
-
-	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-		return (CGFloat)-1;
-	}
-
-	-(void)viewDidLoad {
-		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
-		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
-		self.navigationItem.rightBarButtonItem = webButton;
-
-		[webButton release];
-		[super viewDidLoad];
-	}
-
-	-(IBAction)webButtonAction {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
-	}
-
-	-(void)viewWillAppear:(BOOL)animated {
-		[super viewWillAppear:animated];
-			//Changed colors of Navigation Bar, Navigation Text
-		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
-		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-		self.navigationController.navigationController.navigationBar.translucent = NO;
-			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
-		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
-		[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-	}
-
-	-(void)viewWillDisappear:(BOOL)animated {
-		[super viewWillDisappear:animated];
-				//Returns normal colors to Navigation Bar
-		self.navigationController.navigationController.navigationBar.tintColor = nil;
-		self.navigationController.navigationController.navigationBar.barTintColor = nil;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
-		self.navigationController.navigationController.navigationBar.translucent = YES;
-	}
-
-	//https://github.com/angelXwind/KarenPrefs/blob/master/KarenPrefsListController.m
-	-(id)readPreferenceValue:(PSSpecifier*)specifier {
-		NSDictionary * prefs = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		if (![prefs objectForKey:[specifier.properties objectForKey:@"key"]]) {
-			return [specifier.properties objectForKey:@"default"];
-		}
-		return [prefs objectForKey:[specifier.properties objectForKey:@"key"]];
-	}
-
-	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
-		NSMutableDictionary * prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		[prefs setObject:value forKey:[specifier.properties objectForKey:@"key"]];
-		[prefs writeToFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]] atomically:YES];
-		if([specifier.properties objectForKey:@"PostNotification"]) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
-		}
-		[super setPreferenceValue:value specifier:specifier];
-	}
-
-	-(void)_returnKeyPressed:(id)arg1 {
-		[self.view endEditing:YES];
-	}
-
-@end
-
-@implementation ImprovifySongCountSettingsListController
-
-	-(NSArray *)specifiers {
-		if (!_specifiers) {
-			_specifiers = [[self loadSpecifiersFromPlistName:@"ImprovifySongCountSettings" target:self] retain];
-		}
-		return _specifiers;
-	}
-
-	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-		return (CGFloat)-1;
-	}
-
-	-(void)viewDidLoad {
-		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
-		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
-		self.navigationItem.rightBarButtonItem = webButton;
-
-		[webButton release];
-		[super viewDidLoad];
-	}
-
-	-(IBAction)webButtonAction {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
-	}
-
-	-(void)viewWillAppear:(BOOL)animated {
-		[super viewWillAppear:animated];
-			//Changed colors of Navigation Bar, Navigation Text
-		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
-		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-		self.navigationController.navigationController.navigationBar.translucent = NO;
-			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
-		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
-		[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-	}
-
-	-(void)viewWillDisappear:(BOOL)animated {
-		[super viewWillDisappear:animated];
-				//Returns normal colors to Navigation Bar
-		self.navigationController.navigationController.navigationBar.tintColor = nil;
-		self.navigationController.navigationController.navigationBar.barTintColor = nil;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
-		self.navigationController.navigationController.navigationBar.translucent = YES;
-	}
-
-	//https://github.com/angelXwind/KarenPrefs/blob/master/KarenPrefsListController.m
-	-(id)readPreferenceValue:(PSSpecifier*)specifier {
-		NSDictionary * prefs = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		if (![prefs objectForKey:[specifier.properties objectForKey:@"key"]]) {
-			return [specifier.properties objectForKey:@"default"];
-		}
-		return [prefs objectForKey:[specifier.properties objectForKey:@"key"]];
-	}
-
-	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
-		NSMutableDictionary * prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		[prefs setObject:value forKey:[specifier.properties objectForKey:@"key"]];
-		[prefs writeToFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]] atomically:YES];
-		if([specifier.properties objectForKey:@"PostNotification"]) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
-		}
-		[super setPreferenceValue:value specifier:specifier];
-	}
-
-	-(void)_returnKeyPressed:(id)arg1 {
-		[self.view endEditing:YES];
-	}
-
 @end
 
 @implementation ImprovifyMiscellaneousSettingsListController
 
+	-(id)init {
+		self = [super init];
+		if(self) {
+			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
+			appearanceSettings.tintColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Sec_Color;
+			appearanceSettings.navigationBarBackgroundColor = Pri_Color;
+			appearanceSettings.statusBarTintColor = Sec_Color;
+			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+			appearanceSettings.translucentNavigationBar = NO;
+			self.hb_appearanceSettings = appearanceSettings;
+		}
+
+		return self;
+	}
+
 	-(NSArray *)specifiers {
 		if (!_specifiers) {
-			_specifiers = [[self loadSpecifiersFromPlistName:@"ImprovifyMiscellaneousSettings" target:self] retain];
+			_specifiers = [self loadSpecifiersFromPlistName:@"ImprovifyMiscellaneousSettings" target:self];
 		}
 		return _specifiers;
 	}
 
-	-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-		return (CGFloat)-1;
+	-(void)viewDidAppear:(BOOL)animated {
+		[super viewDidAppear:animated];
+
+		//Adds label to center of preferences
+		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+		title.text = @"Miscellaneous Settings";
+		title.textAlignment = NSTextAlignmentCenter;
+		title.textColor = Sec_Color;
+		self.navigationItem.titleView = title;
 	}
 
 	-(void)viewDidLoad {
+		[super viewDidLoad];
+
 		//Adds GitHub button in top right of preference pane
 		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/barbutton.png"];
 		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
 		self.navigationItem.rightBarButtonItem = webButton;
-
-		[webButton release];
-		[super viewDidLoad];
 	}
 
 	-(IBAction)webButtonAction {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
-	}
-
-	-(void)viewWillAppear:(BOOL)animated {
-		[super viewWillAppear:animated];
-			//Changed colors of Navigation Bar, Navigation Text
-		self.navigationController.navigationController.navigationBar.tintColor = Sec_Color;
-		self.navigationController.navigationController.navigationBar.barTintColor = Main_Color;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
-		self.navigationController.navigationController.navigationBar.translucent = NO;
-			//Changes colors of Slider Filler, Switches when enabled, Segment Switches, iOS 10+ friendly
-		[UISlider appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-		[UISwitch appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].onTintColor = Switch_Color;
-		[UISegmentedControl appearanceWhenContainedInInstancesOfClasses:@[[self.class class]]].tintColor = Switch_Color;
-	}
-
-	-(void)viewWillDisappear:(BOOL)animated {
-		[super viewWillDisappear:animated];
-				//Returns normal colors to Navigation Bar
-		self.navigationController.navigationController.navigationBar.tintColor = nil;
-		self.navigationController.navigationController.navigationBar.barTintColor = nil;
-		self.navigationController.navigationController.navigationBar.titleTextAttributes = nil;
-		self.navigationController.navigationController.navigationBar.translucent = YES;
-	}
-
-	//https://github.com/angelXwind/KarenPrefs/blob/master/KarenPrefsListController.m
-	-(id)readPreferenceValue:(PSSpecifier*)specifier {
-		NSDictionary * prefs = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		if (![prefs objectForKey:[specifier.properties objectForKey:@"key"]]) {
-			return [specifier.properties objectForKey:@"default"];
-		}
-		return [prefs objectForKey:[specifier.properties objectForKey:@"key"]];
-	}
-
-	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
-		NSMutableDictionary * prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		[prefs setObject:value forKey:[specifier.properties objectForKey:@"key"]];
-		[prefs writeToFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]] atomically:YES];
-		if([specifier.properties objectForKey:@"PostNotification"]) {
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
-		}
-		[super setPreferenceValue:value specifier:specifier];
 	}
 
 @end

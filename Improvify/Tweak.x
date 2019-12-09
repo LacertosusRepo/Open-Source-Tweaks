@@ -5,6 +5,7 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 5/21/2019.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
+#import <Cephei/HBPreferences.h>
 #import "SpotifyClasses.h"
 #import "ColorFlowAPI.h"
 #import "libcolorpicker.h"
@@ -19,31 +20,32 @@
   static BOOL useAddToPlaylistButton;
   static BOOL addToPlaylistCustomColor;
   static NSString *addToPlayistSelectedColor;
-  static float addToPlayistButtonOffset;
+  static NSInteger addToPlayistButtonOffset;
   static BOOL useQuickDeleteGesture;
-  static float pressDuration;
+  static NSInteger pressDuration;
   static BOOL songHistorySwitch;
-  static float minimumSongDuration;
+  static NSInteger minimumSongDuration;
 
-  static NSURL *playlistFavorite;
+  static NSString *playlistFavorite;
   static NSString *playlistAlternateOneTitle;
-  static NSURL *playlistAlternateOne;
+  static NSString *playlistAlternateOne;
   static NSString *playlistAlternateTwoTitle;
-  static NSURL *playlistAlternateTwo;
+  static NSString *playlistAlternateTwo;
   static NSString *playlistAlternateThreeTitle;
-  static NSURL *playlistAlternateThree;
+  static NSString *playlistAlternateThree;
 
   static BOOL suppressRateAlert;
   static BOOL disableSongVideos;
   static BOOL disableGenius;
+
+  static BOOL improvifyInitialPopup;
 
   /*
    * Initial popup
    */
 %hook SpotifyAppDelegate
   -(BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
-    NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
-    if(![[improvifydata objectForKey:@"improvifyInitialPopup"] boolValue] && improvifydata != nil) {
+    if(!improvifyInitialPopup || LD_DEBUG) {
       SPTPopupButton *cancelAction = [%c(SPTPopupButton) buttonWithTitle:@"Cool!"];
       SPTPopupButton *githubAction = [%c(SPTPopupButton) buttonWithTitle:@"Github" actionHandler:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
@@ -56,13 +58,13 @@
       }];
       NSArray *buttons = [[NSArray alloc] initWithObjects:cancelAction, githubAction, twitterAction, paypalAction, nil];
 
-      SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Improvify" message:@"Thanks for installing my tweak! Make sure to copy your favorite playlist's URI and paste it into the settings.\n\nIf you would like to know more about this tweak, you can find the code on my GitHub below.\n\nIf you have a suggestion or an issue feel free to message me on Twitter.\n\nIf you would like to fund my computer building addiction you can donate to me via PayPal.\n\n(Tested on Spotify v8.5.7, if this alert shows up more than once let me know)" buttons:buttons];
+      SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Improvify" message:@"Thanks for installing Improvify! For the button to work you must have a playlist's URI set in the preferences of this tweak.\n\nIf you would like to take a peek into how this tweak works, the code is availible on my Github page linked below.\n\nIf you have a suggestion or an issue with the tweak feel free to message me on Twitter!\n\nIf you would like to feed my computer building addiction you can donate to me via PayPal.\n\n(Tested on Spotify v8.5.7)" buttons:buttons];
 
       [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:copyURIPopup];
       [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
 
-      [improvifydata setObject:[NSNumber numberWithBool:1] forKey:@"improvifyInitialPopup"];
-      [improvifydata writeToFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist" atomically:YES];
+      HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.improvifyprefs"];
+      [preferences setBool:YES forKey:@"improvifyInitialPopup"];
     }
 
     return %orig;
@@ -73,7 +75,7 @@
    * Get instances needed later
    */
 %hook SPTPlaylistCosmosModel
-  -(id)initWithCosmosDataLoader:(id)arg1 timeGetter:(id)arg2 {
+  -(id)initWithDictionaryDataLoader:(id)arg1 dataLoader:(id)arg2 timeGetter:(id)arg3 {
     return playlistModel = %orig;
   }
 %end
@@ -85,14 +87,20 @@
 %end
 
   /*
-   * Functions to add/remove song in a playlist
+   * Functions to add/remove song in a playlist, then update the button color
    */
 static void addSongToPlaylist(NSArray *songs, NSURL *playlist) {
-  [playlistModel addTrackURLs:songs toPlaylistURL:playlist completion:nil];
+  [playlistModel addTrackURLs:songs toPlaylistURL:playlist completion:^{
+    [footerViewController updatePlaylistButtonColor];
+
+    [%c(SPTProgressView) showGaiaContextMenuProgressViewWithTitle:@"Added to favorite playlist."];
+  }];
 }
 
 static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
-  [playlistModel removeTrackURLs:songs fromPlaylistURL:playlist completion:nil];
+  [playlistModel removeTrackURLs:songs fromPlaylistURL:playlist completion:^{
+    [footerViewController updatePlaylistButtonColor];
+  }];
 }
 
   /*
@@ -107,7 +115,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
 
       if([self.currentTrack.URI.absoluteString length] > 1) {
         double currentTime = [[NSDate date] timeIntervalSince1970];
-        if(((currentTime - songElapsedTime) > minimumSongDuration) && minimumSongDuration >= 1) {
+        if(((currentTime - songElapsedTime) > minimumSongDuration) && minimumSongDuration >= 4) {
           NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
           NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
           songHistory[self.currentTrack.URI.absoluteString] = @([songHistory[self.currentTrack.URI.absoluteString] intValue] +1);
@@ -122,7 +130,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     %orig;
 
     if(useAddToPlaylistButton) {
-      [footerViewController checkIsNowPlayingSongInPlaylist];
+      [footerViewController updatePlaylistButtonColor];
     }
   }
 %end
@@ -153,27 +161,25 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
       UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePlaylistSelect)];
       doubleTapGesture.numberOfTapsRequired = 2;
       [tapGesture requireGestureRecognizerToFail:doubleTapGesture];
-      //[self.addToPlayistButton addTarget:self action:@selector(handleAddToPlaylist) forControlEvents:UIControlEventTouchUpInside];
 
       [self.addToPlayistButton addGestureRecognizer:tapGesture];
       [self.addToPlayistButton addGestureRecognizer:doubleTapGesture];
       [self.view addSubview:self.addToPlayistButton];
-    }
-  }
 
-  -(void)cfw_colorizeNotification:(NSNotification *)arg1 {
-    %orig;
-
-    if(useAddToPlaylistButton && !addToPlaylistCustomColor) {
-      NSDictionary *userInfo = [arg1 userInfo];
-      CFWColorInfo *colorInfo = userInfo[@"CFWColorInfo"];
-      [self setAddToPlaylistButtonColor:colorInfo.primaryColor];
+      [self updatePlaylistButtonColor];
     }
   }
 
 %new
-  -(void)handleAddToPlaylist:(NSURL *)finalPlaylistURI {
-    if(playlistFavorite.absoluteString.length < 23 || ![playlistFavorite.absoluteString containsString:@"playlist"]) { //There is a guarenteed 23 characters in a playlist URI link, including "spotify:user::playlist:"
+  -(void)handleAddToPlaylist:(NSString *)contextString {
+    if(![contextString isKindOfClass:[NSString class]]) {
+      contextString = playlistFavorite;
+    }
+
+    NSURL *contextURL = [NSURL URLWithString:contextString];
+    NSURL *playlistURL = [NSURL URLWithString:playlistFavorite];
+
+    if(playlistURL.absoluteString.length < 23 || ![playlistURL.absoluteString containsString:@"playlist"]) { //There is a guarenteed 23 characters in a playlist URI link, including "spotify:user::playlist:"
       SPTPopupDialog *playlistURIErrorPopup = [%c(SPTPopupDialog) popupWithTitle:@"Invalid Playlist URI" message:@"No playlist URI is saved or is invalid. \n\nYou can get a playlist's URI by double tapping the name, then enter it into Improvify's preferences." dismissButtonTitle:@"Ok"];
       [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:playlistURIErrorPopup];
       [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
@@ -184,30 +190,22 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     SPTPlayerTrack *playerTrack = [statefulPlayer currentTrack];
     NSArray *currentTrack = [[NSArray alloc] initWithObjects:playerTrack.URI, nil];
 
-    if(![finalPlaylistURI respondsToSelector:@selector(absoluteString)]) {
-      finalPlaylistURI = playlistFavorite;
-    }
-
-    NSRange searchFromRange = [playlistFavorite.absoluteString rangeOfString:@":user:"];
-    NSRange searchToRange = [playlistFavorite.absoluteString rangeOfString:@":playlist:"];
-    NSString *spotifyUsername = [playlistFavorite.absoluteString substringWithRange:NSMakeRange(searchFromRange.location + searchFromRange.length, searchToRange.location - searchFromRange.location - searchFromRange.length)];
+    NSRange searchFromRange = [playlistURL.absoluteString rangeOfString:@":user:"];
+    NSRange searchToRange = [playlistURL.absoluteString rangeOfString:@":playlist:"];
+    NSString *spotifyUsername = [playlistURL.absoluteString substringWithRange:NSMakeRange(searchFromRange.location + searchFromRange.length, searchToRange.location - searchFromRange.location - searchFromRange.length)];
     if([playerTrack.contextSource.absoluteString containsString:[NSString stringWithFormat:@":%@:playlist:", spotifyUsername]] && ![playerTrack.contextSource.absoluteString containsString:@":station:"]) {
-      finalPlaylistURI = playerTrack.contextSource;
+      contextURL = playerTrack.contextSource;
     }
 
-    [playlistModel playlistContainsTrackURLs:currentTrack playlistURL:finalPlaylistURI completion:^(NSSet *set) {
-      if(![set containsObject:playerTrack.URI]) {
-        addSongToPlaylist(currentTrack, finalPlaylistURI);
-        if(addToPlaylistCustomColor) {
-          [self setAddToPlaylistButtonColor:LCPParseColorString(addToPlayistSelectedColor, @"#1DB954")];
-        } else {
-          [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.12 green:0.73 blue:0.32 alpha:1.0]];
-        }
+    [playlistModel playlistContainsTrackURLs:currentTrack playlistURL:contextURL completion:^(NSSet *set) {
+      if(![set containsObject:[currentTrack firstObject]]) {
+        addSongToPlaylist(currentTrack, contextURL);
+        NSLog(@"Called");
 
       } else {
+        NSLog(@"Uh Oh");
         SPTPopupButton *removeFromPlaylistAction = [%c(SPTPopupButton) buttonWithTitle:@"Remove From Playlist" actionHandler:^{
-          removeSongFromPlaylist(currentTrack, finalPlaylistURI);
-          [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.78 green:0.80 blue:0.80 alpha:1.0]];
+          removeSongFromPlaylist(currentTrack, contextURL);
         }];
         SPTPopupButton *cancelAction = [%c(SPTPopupButton) buttonWithTitle:@"Cancel"];
         NSArray *buttons = [[NSArray alloc] initWithObjects:removeFromPlaylistAction, cancelAction, nil];
@@ -224,7 +222,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   -(void)handlePlaylistSelect {
     UIAlertController *playlistSelectSheet = [UIAlertController alertControllerWithTitle:@"Select Playlist" message:@"Which playlist do you want to save this song to?" preferredStyle:UIAlertControllerStyleActionSheet];
 
-    if(playlistAlternateOne.absoluteString.length > 23 && [playlistAlternateOne.absoluteString containsString:@"playlist"]) {
+    if(playlistAlternateOne.length > 23 && [playlistAlternateOne containsString:@"playlist"]) {
       UIAlertAction *playlistAlternateOneAction = [UIAlertAction actionWithTitle:playlistAlternateOneTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
         [self handleAddToPlaylist:playlistAlternateOne];
       }];
@@ -232,7 +230,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
       [playlistSelectSheet addAction:playlistAlternateOneAction];
     }
 
-    if(playlistAlternateTwo.absoluteString.length > 23 && [playlistAlternateTwo.absoluteString containsString:@"playlist"]) {
+    if(playlistAlternateTwo.length > 23 && [playlistAlternateTwo containsString:@"playlist"]) {
       UIAlertAction *playlistAlternateTwoAction = [UIAlertAction actionWithTitle:playlistAlternateTwoTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
         [self handleAddToPlaylist:playlistAlternateTwo];
       }];
@@ -240,7 +238,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
       [playlistSelectSheet addAction:playlistAlternateTwoAction];
     }
 
-    if(playlistAlternateThree.absoluteString.length > 23 && [playlistAlternateThree.absoluteString containsString:@"playlist"]) {
+    if(playlistAlternateThree.length > 23 && [playlistAlternateThree containsString:@"playlist"]) {
       UIAlertAction *playlistAlternateThreeAction = [UIAlertAction actionWithTitle:playlistAlternateThreeTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
         [self handleAddToPlaylist:playlistAlternateThree];
       }];
@@ -255,24 +253,26 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   }
 
 %new
-  -(void)checkIsNowPlayingSongInPlaylist {
-    if(playlistFavorite.absoluteString.length < 23 || ![playlistFavorite.absoluteString containsString:@"playlist"]) { //There is a guarenteed 23 characters in a playlist URI link, including "spotify:user::playlist:"
+  -(void)updatePlaylistButtonColor {
+    NSURL *playlistURL = [NSURL URLWithString:playlistFavorite];
+
+    if(playlistURL.absoluteString.length < 23 || ![playlistURL.absoluteString containsString:@"playlist"]) { //There is a guarenteed 23 characters in a playlist URI link, including "spotify:user::playlist:"
       return;
     }
 
     SPTPlayerTrack *playerTrack = [statefulPlayer currentTrack];
     NSArray *currentTrack = [[NSArray alloc] initWithObjects:playerTrack.URI, nil];
-    NSURL *finalPlaylistURI = playlistFavorite;
+    NSURL *contextURL = playlistURL;
 
-    NSRange searchFromRange = [playlistFavorite.absoluteString rangeOfString:@":user:"];
-    NSRange searchToRange = [playlistFavorite.absoluteString rangeOfString:@":playlist:"];
-    NSString *spotifyUsername = [playlistFavorite.absoluteString substringWithRange:NSMakeRange(searchFromRange.location + searchFromRange.length, searchToRange.location - searchFromRange.location - searchFromRange.length)];
+    NSRange searchFromRange = [playlistURL.absoluteString rangeOfString:@":user:"];
+    NSRange searchToRange = [playlistURL.absoluteString rangeOfString:@":playlist:"];
+    NSString *spotifyUsername = [playlistURL.absoluteString substringWithRange:NSMakeRange(searchFromRange.location + searchFromRange.length, searchToRange.location - searchFromRange.location - searchFromRange.length)];
     if([playerTrack.contextSource.absoluteString containsString:[NSString stringWithFormat:@":%@:playlist:", spotifyUsername]] && ![playerTrack.contextSource.absoluteString containsString:@":station:"]) {
-      finalPlaylistURI = playerTrack.contextSource;
+      contextURL = playerTrack.contextSource;
     }
 
-    [playlistModel playlistContainsTrackURLs:currentTrack playlistURL:finalPlaylistURI completion:^(NSSet *set) {
-      if([set containsObject:playerTrack.URI]) {
+    [playlistModel playlistContainsTrackURLs:currentTrack playlistURL:contextURL completion:^(NSSet *set) {
+      if([set containsObject:[currentTrack firstObject]]) {
         if(addToPlaylistCustomColor) {
           [self setAddToPlaylistButtonColor:LCPParseColorString(addToPlayistSelectedColor, @"#1DB954")];
         } else {
@@ -307,17 +307,17 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
       longPressGesture.allowableMovement = 0;
       [cell addGestureRecognizer:longPressGesture];
 
-      UILongPressGestureRecognizer *defaultPressGesture = MSHookIvar<UILongPressGestureRecognizer *>(cell, "_longPressGesture");
+      UILongPressGestureRecognizer *defaultPressGesture = [cell valueForKey:@"_longPressGesture"];//MSHookIvar<UILongPressGestureRecognizer *>(cell, "_longPressGesture");
       [defaultPressGesture requireGestureRecognizerToFail:longPressGesture];
     }
 
     if(songHistorySwitch) {
       NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
       NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
-      if([self.playlistViewModel.tracks count] > arg2.row) {
-        SPTPlaylistPlatformPlaylistTrackFieldsImplementation *trackInfo = self.playlistViewModel.tracks[arg2.row];
+      if(self.playlistViewModel.totalNumberOfTracks > arg2.row) {
+        SPTPlaylistPlatformPlaylistTrackFieldsImplementation *trackInfo = self.playlistViewModel.loadedTracks[arg2.row];
         NSString *songURL = trackInfo.URL.absoluteString;
-        if([songHistory[songURL] intValue] > 0 && ![self tableView:arg1 viewForHeaderInSection:arg2.section]) {
+        if([songHistory[songURL] intValue] > 0 && arg2.section == 2) {
           if([cell respondsToSelector:@selector(subtitleLabel)]) {
             cell.subtitleLabel.text = [[NSString stringWithFormat:@"%@ Plays \u2022 ", [songHistory valueForKey:songURL]] stringByAppendingString:cell.subtitleLabel.text];
           }
@@ -335,9 +335,16 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     tapGesture.numberOfTapsRequired = 2;
 
     if([self.headerViewController respondsToSelector:@selector(configurator)]) {
+      //Default spotify label
       [self.headerViewController.configurator.contentView.titleLabel addGestureRecognizer:tapGesture];
       self.headerViewController.configurator.contentView.titleLabel.userInteractionEnabled = YES;
-    } else {
+
+    } if([self.headerViewController respondsToSelector:@selector(fullbleedViewModel)]){
+      //Podcast spotify label
+      [self.headerViewController.view.titleLabel addGestureRecognizer:tapGesture];
+      self.headerViewController.view.titleLabel.userInteractionEnabled = YES;
+
+    } if([self.headerViewController respondsToSelector:@selector(visrefIntegrationManager)]) {
       //If that doesnt work, it probably means Groovify is installed, so we'll add it to that label instead
       [self.entityHeaderViewController.contentViewController.headerController.contentView.titleLabel addGestureRecognizer:tapGesture];
       self.entityHeaderViewController.contentViewController.headerController.contentView.titleLabel.userInteractionEnabled = YES;
@@ -346,14 +353,22 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
 
 %new
   -(void)handleRemovePlaylistItem:(UILongPressGestureRecognizer *)sender {
+    NSLog(@"1");
     if(sender.state == UIGestureRecognizerStateEnded && pressDuration >= 1.0) {
+      NSLog(@"2");
       NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:[sender locationInView:self.tableView]];
-      SPTPlaylistPlatformPlaylistTrackFieldsImplementation *trackInfo = self.playlistViewModel.tracks[indexPath.row];
+      NSLog(@"3");
+      SPTPlaylistPlatformPlaylistTrackFieldsImplementation *trackInfo = self.playlistViewModel.loadedTracks[indexPath.row];
+      NSLog(@"4");
       NSArray *selectedTrack = [[NSArray alloc] initWithObjects:trackInfo.URL, nil];
+      NSLog(@"5");
 
       if([selectedTrack count] > 0 && [self spt_pageURI].absoluteString.length > 0) {
+        NSLog(@"6");
         removeSongFromPlaylist(selectedTrack, [self spt_pageURI]);
+        NSLog(@"7");
       }
+      NSLog(@"8");
     }
   }
 
@@ -417,26 +432,23 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   }
 %end
 
-%hook SPTAlbumViewController
-  -(id)tableView:(id)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
-    GLUETrackRowTableViewCell *cell = %orig;
+%hook HUBCollectionView
+  -(void)collectionView:(id)arg1 willDisplayCell:(HUBComponentCollectionViewCell *)arg2 forItemAtIndexPath:(NSIndexPath *)arg3 {
+    %orig;
 
     if(songHistorySwitch) {
       NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"];
       NSMutableDictionary *songHistory = [[NSMutableDictionary alloc] initWithDictionary:[improvifydata objectForKey:@"songHistory"]];
-      if([self.viewModel.albumData.playableTracks count] > arg2.row) {
-        SPTAlbumTrackData *trackInfo = self.viewModel.albumData.playableTracks[arg2.row];
+      if([self.superview respondsToSelector:@selector(contextMenu)]) {
+        SPTAlbumTrackData *trackInfo = ((SPTFreeTierAlbumViewController *)self.superview).contextMenu.albumViewModel.albumTracks[arg3.row];
         NSString *songURL = trackInfo.trackURL.absoluteString;
-        NSLog(@"view - %@", [self tableView:arg1 viewForHeaderInSection:arg2.section]);
-        if([songHistory[songURL] intValue] > 0 && ![[self tableView:arg1 viewForHeaderInSection:arg2.section] isKindOfClass:[%c(SPTTableViewSectionHeaderView) class]]) {
-          if([cell respondsToSelector:@selector(titleLabel)]) {
-            cell.titleLabel.text = [[NSString stringWithFormat:@"%@ Plays \u2022 ", [songHistory valueForKey:songURL]] stringByAppendingString:cell.titleLabel.text];
+        if([songHistory[songURL] intValue] > 0) {
+          if([arg2.componentView.trackCell respondsToSelector:@selector(subtitleLabel)]) {
+            arg2.componentView.trackCell.subtitleLabel.text = [[NSString stringWithFormat:@"%@ Plays \u2022 ", [songHistory valueForKey:songURL]] stringByAppendingString:arg2.componentView.trackCell.subtitleLabel.text];
           }
         }
       }
     }
-
-    return cell;
   }
 %end
 
@@ -562,63 +574,32 @@ static void killSpotify() {
   exit(0);
 }
 
-static void loadPrefs() {
-  NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/com.lacertosusrepo.improvifyprefs.plist"];
-  if(!preferences) {
-    preferences = [[NSMutableDictionary alloc] init];
-    useAddToPlaylistButton = YES;
-    addToPlaylistCustomColor = NO;
-    addToPlayistSelectedColor = @"#1DB954";
-    addToPlayistButtonOffset = -6;
-    useQuickDeleteGesture = YES;
-    pressDuration = 2.0;
-    songHistorySwitch = YES;
-    minimumSongDuration = 60;
-
-    playlistFavorite = nil;
-    playlistAlternateOneTitle = nil;
-    playlistAlternateOne = nil;
-    playlistAlternateTwoTitle = nil;
-    playlistAlternateTwo = nil;
-    playlistAlternateThreeTitle = nil;
-    playlistAlternateThree = nil;
-
-    suppressRateAlert = YES;
-    disableSongVideos = YES;
-    disableGenius = NO;
-  } else {
-    useAddToPlaylistButton = [[preferences objectForKey:@"useAddToPlaylistButton"] boolValue];
-    addToPlaylistCustomColor = [[preferences objectForKey:@"addToPlaylistCustomColor"] boolValue];
-    addToPlayistSelectedColor = [preferences objectForKey:@"addToPlayistSelectedColor"];
-    addToPlayistButtonOffset = [[preferences objectForKey:@"addToPlayistButtonOffset"] floatValue];
-    useQuickDeleteGesture = [[preferences objectForKey:@"useQuickDeleteGesture"] boolValue];
-    pressDuration = [[preferences objectForKey:@"pressDuration"] floatValue];
-    songHistorySwitch = [[preferences objectForKey:@"songHistorySwitch"] boolValue];
-    minimumSongDuration = [[preferences objectForKey:@"minimumSongDuration"] floatValue];
-
-    playlistFavorite = [NSURL URLWithString:[preferences objectForKey:@"playlistFavorite"]];
-    playlistAlternateOneTitle = [preferences objectForKey:@"playlistAlternateOneTitle"];
-    playlistAlternateOne = [NSURL URLWithString:[preferences objectForKey:@"playlistAlternateOne"]];
-    playlistAlternateTwoTitle = [preferences objectForKey:@"playlistAlternateTwoTitle"];
-    playlistAlternateTwo = [NSURL URLWithString:[preferences objectForKey:@"playlistAlternateTwo"]];
-    playlistAlternateThreeTitle = [preferences objectForKey:@"playlistAlternateThreeTitle"];
-    playlistAlternateThree = [NSURL URLWithString:[preferences objectForKey:@"playlistAlternateThree"]];
-
-    suppressRateAlert = [[preferences objectForKey:@"suppressRateAlert"] boolValue];
-    disableSongVideos = [[preferences objectForKey:@"disableSongVideos"] boolValue];
-    disableGenius = [[preferences objectForKey:@"disableGenius"] boolValue];
-  }
-}
-
-static NSString *nsNotificationString = @"com.lacertosusrepo.improvifyprefs/preferences.changed";
-static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	loadPrefs();
-}
-
 %ctor {
-  loadPrefs();
-  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)nsNotificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)killSpotify, CFSTR("com.lacertosusrepo.improvifyprefs-killSpotify"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+
+  HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.improvifyprefs"];
+  [preferences registerBool:&useAddToPlaylistButton default:YES forKey:@"useAddToPlaylistButton"];
+  [preferences registerBool:&addToPlaylistCustomColor default:NO forKey:@"addToPlaylistCustomColor"];
+  [preferences registerObject:&addToPlayistSelectedColor default:@"#1DB954" forKey:@"addToPlayistSelectedColor"];
+  [preferences registerInteger:&addToPlayistButtonOffset default:-6 forKey:@"addToPlayistButtonOffset"];
+  [preferences registerBool:&useQuickDeleteGesture default:YES forKey:@"useQuickDeleteGesture"];
+  [preferences registerInteger:&pressDuration default:2.0 forKey:@"pressDuration"];
+  [preferences registerBool:&songHistorySwitch default:YES forKey:@"songHistorySwitch"];
+  [preferences registerInteger:&minimumSongDuration default:60 forKey:@"minimumSongDuration"];
+
+  [preferences registerObject:&playlistFavorite default:@"" forKey:@"playlistFavorite"];
+  [preferences registerObject:&playlistAlternateOneTitle default:@"" forKey:@"playlistAlternateOneTitle"];
+  [preferences registerObject:&playlistAlternateOne default:@"" forKey:@"playlistAlternateOne"];
+  [preferences registerObject:&playlistAlternateTwoTitle default:@"" forKey:@"playlistAlternateTwoTitle"];
+  [preferences registerObject:&playlistAlternateTwo default:@"" forKey:@"playlistAlternateTwo"];
+  [preferences registerObject:&playlistAlternateThreeTitle default:@"" forKey:@"playlistAlternateThreeTitle"];
+  [preferences registerObject:&playlistAlternateThree default:@"" forKey:@"playlistAlternateThree"];
+
+  [preferences registerBool:&suppressRateAlert default:YES forKey:@"suppressRateAlert"];
+  [preferences registerBool:&disableSongVideos default:YES forKey:@"disableSongVideos"];
+  [preferences registerBool:&disableGenius default:NO forKey:@"disableGenius"];
+
+  [preferences registerBool:&improvifyInitialPopup default:NO forKey:@"improvifyInitialPopup"];
 
   if(![[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"]) {
     NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] init];

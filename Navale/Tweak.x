@@ -112,6 +112,8 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
    */
 %group FloatingDockHooks
 %hook SBFloatingDockPlatterView
+%property (nonatomic, copy) UIColor *primaryColor;
+%property (nonatomic, copy) UIColor *secondaryColor;
     //iOS 12
   -(id)initWithReferenceHeight:(double)arg1 maximumContinuousCornerRadius:(double)arg2 {
     if(useColorFlow) {

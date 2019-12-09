@@ -15,45 +15,74 @@
 extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
     /*
+     * Variables
+     */
+  static CSScrollView *scrollView;
+
+    /*
      * Preferences Variables
      */
+  static NSInteger noteSize;
+  static CGFloat cornerRadius;
   static NSInteger blurStyle;
   static NSString *customBackgroundColor;
   static NSString *customTextColor;
-  static CGFloat cornerRadius;
-  static NSInteger noteSize;
+  static NSString *borderColor;
+  static CGFloat borderWidth;
   static BOOL requireAuthentication;
+  static BOOL noteBackup;
   static BOOL hideGesture;
   static BOOL feedback;
   static NSInteger feedbackStyle;
 
   /*
    * Add Libellum to the Lockscreen
-   * Axon - Nepeta https://github.com/Nepeta/Axon/blob/master/Tweak/Tweak.xm
+   * Axon - Nepeta & BawApple https://github.com/Baw-Appie/Axon/blob/master/Tweak/Tweak.xm#L558
    */
-%hook SBDashBoardNotificationAdjunctListViewController
+%hook CSNotificationAdjunctListViewController
 %property (nonatomic, retain) LibellumView *LBMNoteView;
   -(void)viewDidLoad {
     %orig;
 
-    [self insertLibellum];
+    if(!self.LBMNoteView) {
+      self.LBMNoteView = [[LibellumView sharedInstance] initWithFrame:CGRectZero];
+      [self.LBMNoteView setSizeToMimic:self.sizeToMimic];
+      [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
+
+      [[scrollView panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.dismissGesture];
+    }
   }
 
-%new
-  -(void)insertLibellum {
-    self.LBMNoteView = [[LibellumView sharedInstance] initWithFrame:CGRectZero];
+  -(BOOL)isPresentingContent {
+    if([self.LBMNoteView isDescendantOfView:self.stackView]) {
+      return YES;
+    }
 
-    UIStackView *stackView = [self valueForKey:@"_stackView"];
-    [stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
-
-    [NSLayoutConstraint activateConstraints:@[
-      [self.LBMNoteView.leadingAnchor constraintEqualToAnchor:stackView.leadingAnchor constant:10],
-      [self.LBMNoteView.trailingAnchor constraintEqualToAnchor:stackView.trailingAnchor constant:-10],
-      [self.LBMNoteView.heightAnchor constraintEqualToConstant:noteSize],
-    ]];
+    return %orig;
   }
 %end
 
+  /*
+   * Add hide/show gesture to lockscreen
+   */
+%hook CSScrollView
+  -(id)initWithFrame:(CGRect)ag1 {
+    UITapGestureRecognizer *toggleGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTaps:)];
+    toggleGesture.numberOfTapsRequired = 3;
+    [self addGestureRecognizer:toggleGesture];
+
+    return scrollView = %orig;
+  }
+
+%new
+  -(void)handleTaps:(UITapGestureRecognizer *)gesture {
+    [[LibellumView sharedInstance] toggleLibellum:gesture];
+  }
+%end
+
+  /*
+   * Get lock state and pass instance to libellum
+   */
 %hook SBLockStateAggregator
   -(void)_updateLockState {
     %orig;
@@ -61,17 +90,6 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     if(requireAuthentication) {
       [[LibellumView sharedInstance] authenticationStatusFromAggregator:self];
     }
-
-  }
-%end
-
-%hook SBPagedScrollView
-  -(id)initWithFrame:(CGRect)arg1 {
-    UITapGestureRecognizer *dismissGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumView sharedInstance] action:@selector(toggleLibellum)];
-    dismissGesture.numberOfTapsRequired = 2;
-    [self addGestureRecognizer:dismissGesture];
-
-    return %orig;
   }
 %end
 
@@ -80,15 +98,18 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
    */
 static void libellumPreferencesChanged() {
   LibellumView *LBMNoteView = [LibellumView sharedInstance];
+  LBMNoteView.noteSize = noteSize;
+  LBMNoteView.cornerRadius = cornerRadius;
   LBMNoteView.blurStyle = blurStyle;
   LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"#000000");
   LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"#FFFFFF");
-  LBMNoteView.noteSize = noteSize;
+  LBMNoteView.borderColor = LCPParseColorString(borderColor, @"FFFFFF");
+  LBMNoteView.borderWidth = borderWidth;
   LBMNoteView.requireAuthentication = requireAuthentication;
+  LBMNoteView.noteBackup = noteBackup;
   LBMNoteView.hideGesture = hideGesture;
   LBMNoteView.feedback = feedback;
   LBMNoteView.feedbackStyle = feedbackStyle;
-  LBMNoteView.cornerRadius = cornerRadius;
   [LBMNoteView preferencesChanged];
 }
 
@@ -105,20 +126,27 @@ static void speculumUseWallpaperColors() {
   }];
   [lockWallpaper getPaletteImageColorWithMode:MUTED_PALETTE | LIGHT_MUTED_PALETTE | DARK_MUTED_PALETTE withCallBack:^(PaletteColorModel *recommendColor, NSDictionary *allModeColorDic, NSError *error) {
     [preferences setObject:recommendColor.imageColorString forKey:@"customBackgroundColor"];
+    [preferences setObject:recommendColor.imageColorString forKey:@"borderColor"];
   }];
 }
 
 %ctor {
+
   CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)speculumUseWallpaperColors, CFSTR("com.lacertosusrepo.libellumprefs-useWallpaperColors"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
-  [preferences registerInteger:&blurStyle default:UIBlurEffectStyleLight forKey:@"blurStyle"];
+  [preferences registerInteger:&noteSize default:121 forKey:@"noteSize"];
   [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
 
+  [preferences registerInteger:&blurStyle default:17 forKey:@"blurStyle"];
   [preferences registerObject:&customBackgroundColor default:@"#000000" forKey:@"customBackgroundColor"];
   [preferences registerObject:&customTextColor default:@"#FFFFFF" forKey:@"customTextColor"];
-  [preferences registerInteger:&noteSize default:120 forKey:@"noteSize"];
+
+  [preferences registerObject:&borderColor default:@"FFFFFF" forKey:@"borderColor"];
+  [preferences registerFloat:&borderWidth default:0 forKey:@"borderWidth"];
+
   [preferences registerBool:&requireAuthentication default:NO forKey:@"requireAuthentication"];
+  [preferences registerBool:&noteBackup default:NO forKey:@"noteBackup"];
 
   [preferences registerBool:&hideGesture default:YES forKey:@"hideGesture"];
   [preferences registerBool:&feedback default:YES forKey:@"feedback"];

@@ -28,7 +28,7 @@
 			<key>key</key>
 			<string>playlistFavorite</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -51,7 +51,7 @@
 			<key>key</key>
 			<string>playlistAlternateOneTitle</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -65,7 +65,7 @@
 			<key>key</key>
 			<string>playlistAlternateOne</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -88,7 +88,7 @@
 			<key>key</key>
 			<string>playlistAlternateTwoTitle</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -102,7 +102,7 @@
 			<key>key</key>
 			<string>playlistAlternateTwo</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -125,7 +125,7 @@
 			<key>key</key>
 			<string>playlistAlternateThreeTitle</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -139,7 +139,7 @@
 			<key>key</key>
 			<string>playlistAlternateThree</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -152,6 +152,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>Set Playlists</string>
+	<string></string>
 </dict>
 </plist>

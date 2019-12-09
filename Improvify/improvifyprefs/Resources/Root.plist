@@ -4,12 +4,6 @@
 <dict>
 	<key>items</key>
 	<array>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>headerCellClass</key>
-			<string>IFYCustomHeaderCell</string>
-		</dict>
 
 		<dict>
 			<key>cell</key>
@@ -31,7 +25,7 @@
 			<key>label</key>
 			<string>Quick-Add to Playlist Button</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -76,7 +70,7 @@
 			<key>label</key>
 			<string>Quick-delete Gesture</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -109,7 +103,7 @@
 			<key>label</key>
 			<string>Song Play Count</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.improvifyprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.improvifyprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -144,11 +138,11 @@
 		</dict>
 		<dict>
 			<key>action</key>
-			<string>killSpotify</string>
+			<string>killSpotify:</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>IFYButtonCell</string>
+			<string>HBSpinnerTableCell</string>
 			<key>icon</key>
 			<string>killspotifyicon</string>
 			<key>label</key>
@@ -164,40 +158,36 @@
 			<string>Made with all natural ingredients by LacertosusDeus</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>github</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>IFYButtonCell</string>
-			<key>icon</key>
-			<string>github.png</string>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
 			<key>label</key>
 			<string>Github</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>twitter</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>IFYButtonCell</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
 			<key>icon</key>
-			<string>twitter.png</string>
-			<key>label</key>
-			<string>Twitter</string>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>paypal</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>IFYButtonCell</string>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>PayPal</string>
+			<key>subtitle</key>
+			<string>Feed my Steam sale addiction!</string>
 			<key>icon</key>
 			<string>paypal.png</string>
-			<key>label</key>
-			<string>Donate</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
 		</dict>
 	</array>
 	<key>title</key>

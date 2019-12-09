@@ -1,30 +1,28 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>
-#import <Preferences/PSEditableTableCell.h>
 #import <Preferences/PSSpecifier.h>
+#import <CepheiPrefs/HBRootListController.h>
+#import <CepheiPrefs/HBAppearanceSettings.h>
+#import <Cephei/HBPreferences.h>
 
-@interface IFYRootListController : PSListController
+#import "IFYHeaderCell.h"
+#import "libcolorpicker.h"
+#import "PreferencesColorDefinitions.h"
+
+@interface IFYRootListController : HBRootListController
 @end
 
-@interface ImprovifyMiscellaneousSettingsListController : PSListController
+@interface ImprovifyMiscellaneousSettingsListController : HBRootListController
 @end
 
-@interface ImprovifyPlaylistsListController : PSListController
+@interface ImprovifyPlaylistsListController : HBRootListController
 @end
 
-@interface ImprovifyQuickAddSettingsListController : PSListController
+@interface ImprovifyQuickAddSettingsListController : HBRootListController
 @end
 
-@interface ImprovifyQuickDeleteSettingsListController : PSListController
+@interface ImprovifyQuickDeleteSettingsListController : HBRootListController
 @end
 
-@interface ImprovifySongCountSettingsListController : PSListController
-@end
-
-
-@interface IFYCustomHeaderCell : UIView
-@property (nonatomic, strong) UIImageView *iconView;
-@property (nonatomic, assign) UILabel *headerLabel;
-@property (nonatomic, assign) UILabel *subHeaderLabel;
-@property (nonatomic, readonly) NSArray *randomLabels;
+@interface ImprovifySongCountSettingsListController : HBRootListController
 @end

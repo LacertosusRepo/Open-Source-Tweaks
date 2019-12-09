@@ -1,32 +1,30 @@
-#import "LBMHeaderCell.h"
+#import "IFYHeaderCell.h"
 
-@implementation LBMHeaderCell
+@implementation IFYHeaderCell
 
 	-(id)init {
 		self = [super initWithFrame:CGRectZero];
 
 		if(self) {
 			//Add icon over labels (150x150)
-			UIImageView *tweakIcon = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/iconlarge.png"]];
+			UIImageView *tweakIcon = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/improvifyprefs.bundle/iconlarge.png"]];
 			self.iconView = tweakIcon;
 			self.iconView.alpha = 0;
 			self.iconView.center = CGPointMake(self.bounds.size.width/2, 0);
 
 			UILabel *tweakTitle = [[UILabel alloc] initWithFrame:CGRectZero];
 			self.titleLabel = tweakTitle;
-			self.titleLabel.alpha = 0;
       [self.titleLabel setNumberOfLines:1];
-      [self.titleLabel setFont:[UIFont systemFontOfSize:40 weight:UIFontWeightSemibold]];
-      [self.titleLabel setText:@"Libellum"];
+      [self.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:40]];
+      [self.titleLabel setText:@"Improvify"];
       [self.titleLabel setBackgroundColor:[UIColor clearColor]];
       [self.titleLabel setTextColor:Pri_Color];
       [self.titleLabel setTextAlignment:NSTextAlignmentCenter];
 
 			UILabel *tweakSubtitle = [[UILabel alloc] initWithFrame:CGRectZero];
       self.subtitleLabel = tweakSubtitle;
-			self.subtitleLabel.alpha = 0;
       [self.subtitleLabel setNumberOfLines:1];
-      [self.subtitleLabel setFont:[UIFont systemFontOfSize:13 weight:UIFontWeightRegular]];
+      [self.subtitleLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:13]];
       [self.subtitleLabel setText:self.randomLabels[arc4random_uniform(self.randomLabels.count)]];
       [self.subtitleLabel setBackgroundColor:[UIColor clearColor]];
       [self.subtitleLabel setTextColor:Sec_Color];
@@ -62,11 +60,10 @@
 	}
 
 	-(NSArray *)randomLabels {
-		return @[@"Quick notes on your Lockscreen", @"Open source on github!", @"Wow a cow made of butter", @"PizzaHut, your reckoning will come"];
+		return @[@"Improving Spotify", @"No spooky piracy here OwO", @"Open source on Github!", @"Snapple facts are inaccurate", @"🔥🔥 IGOR 🔥🔥"];
 	}
 
 	-(void)didMoveToSuperview {
-		[super didMoveToSuperview];
 		[self fadeInIconImage];
 		[self fadeInHeaderLabel];
 		[self fadeInSubLabel];
