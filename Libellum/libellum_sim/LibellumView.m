@@ -60,8 +60,8 @@
       self.noteView.translatesAutoresizingMaskIntoConstraints = NO;
 
       self.lockIcon = [[UIImageView alloc] init];
-      if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
-        self.lockIcon = [[UIImageView alloc] initWithImage:[UIImage systemImageNamed:@"lock.fill"]];
+      if(@available(iOS 13, *)) {
+        self.lockIcon.image = [UIImage systemImageNamed:@"lock.fill"];
         self.lockIcon.tintColor = [UIColor whiteColor];
         self.lockIcon.hidden = !self.requireAuthentication;
         self.lockIcon.translatesAutoresizingMaskIntoConstraints = NO;

@@ -79,7 +79,7 @@
 			<key>label</key>
 			<string>Background</string>
 			<key>default</key>
-			<string>17</string>
+			<string>2</string>
 			<key>validTitles</key>
 			<array>
 				<string>Light Blur</string>
@@ -89,10 +89,10 @@
 			</array>
 			<key>validValues</key>
 			<array>
-				<integer>12</integer>
-				<integer>17</integer>
+				<integer>1</integer>
+				<integer>2</integer>
 				<integer>3</integer>
-				<integer>7</integer>
+				<integer>4</integer>
 			</array>
 			<key>id</key>
 			<string>ModeCell</string>

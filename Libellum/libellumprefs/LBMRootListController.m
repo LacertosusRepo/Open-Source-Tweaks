@@ -12,6 +12,7 @@
 			appearanceSettings.statusBarTintColor = Sec_Color;
 			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
 			appearanceSettings.translucentNavigationBar = NO;
+			appearanceSettings.largeTitleStyle = HBAppearanceSettingsLargeTitleStyleNever;
 			self.hb_appearanceSettings = appearanceSettings;
 		}
 
@@ -139,7 +140,7 @@
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:@"MMMM d, yyyy"];
 
-		UIAlertController *notesBackupAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:[NSString stringWithFormat:@"Manage your notes backup here.\n\nLast backed up at:\n\n%@ on %@", [timeFormatter stringFromDate:lastModified], [dateFormatter stringFromDate:lastModified]] preferredStyle:UIAlertControllerStyleAlert];
+		UIAlertController *notesBackupAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:[NSString stringWithFormat:@"Manage your notes backup here.\n\nLast backed up at:\n%@ on %@", [timeFormatter stringFromDate:lastModified], [dateFormatter stringFromDate:lastModified]] preferredStyle:UIAlertControllerStyleAlert];
 		UIAlertAction *backupNotes = [UIAlertAction actionWithTitle:@"Backup Notes Now" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 			[[LibellumView sharedInstance] backupNotes];
 			cell.cellEnabled = YES;

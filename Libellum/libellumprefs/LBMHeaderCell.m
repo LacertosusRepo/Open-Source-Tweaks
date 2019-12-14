@@ -62,7 +62,7 @@
 	}
 
 	-(NSArray *)randomLabels {
-		return @[@"Quick notes on your Lockscreen", @"Open source on github!", @"Wow a cow made of butter", @"PizzaHut, your reckoning will come"];
+		return @[@"Quick notes on your lockscreen", @"Quick notes in your notifications center", @"Open source on github!", @"Thanks for installing!"];
 	}
 
 	-(void)didMoveToSuperview {

@@ -5,8 +5,6 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 7/16/2019.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
-#import <Cephei/HBPreferences.h>
-#import "libcolorpicker.h"
 #import "iOSPalette/Palette.h"
 #import "iOSPalette/UIImage+Palette.h"
 #import "LibellumView.h"
@@ -23,18 +21,18 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     /*
      * Preferences Variables
      */
-  static NSInteger noteSize;
-  static CGFloat cornerRadius;
-  static NSInteger blurStyle;
-  static NSString *customBackgroundColor;
-  static NSString *customTextColor;
-  static NSString *borderColor;
-  static CGFloat borderWidth;
-  static BOOL requireAuthentication;
-  static BOOL noteBackup;
-  static BOOL hideGesture;
-  static BOOL feedback;
-  static NSInteger feedbackStyle;
+  static NSInteger noteSize = 121;
+  static CGFloat cornerRadius = 10;
+  static NSInteger blurStyle = 2;
+  //static NSString *customBackgroundColor;
+  //static NSString *customTextColor;
+  //static NSString *borderColor;
+  static CGFloat borderWidth = 2;
+  static BOOL requireAuthentication = YES;
+  static BOOL noteBackup = NO;
+  static BOOL hideGesture = YES;
+  static BOOL feedback = NO;
+  static NSInteger feedbackStyle = 1520;
 
 #pragma mark - iOS 13
 
@@ -199,9 +197,9 @@ static void libellumPreferencesChanged() {
   LBMNoteView.noteSize = noteSize;
   LBMNoteView.cornerRadius = cornerRadius;
   LBMNoteView.blurStyle = decideBlurStyle(blurStyle);
-  LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"#000000");
-  LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"#FFFFFF");
-  LBMNoteView.borderColor = LCPParseColorString(borderColor, @"FFFFFF");
+  LBMNoteView.customBackgroundColor = [UIColor blackColor];
+  LBMNoteView.customTextColor = [UIColor whiteColor];
+  LBMNoteView.borderColor = [UIColor whiteColor];
   LBMNoteView.borderWidth = borderWidth;
   LBMNoteView.requireAuthentication = requireAuthentication;
   LBMNoteView.noteBackup = noteBackup;
@@ -211,7 +209,7 @@ static void libellumPreferencesChanged() {
   [LBMNoteView preferencesChanged];
 }
 
-static void libellumUseWallpaperColors() {
+/*static void libellumUseWallpaperColors() {
   NSData *lockData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"];
   CFArrayRef lockArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)lockData, NULL, 1, NULL);
   NSArray *lockArray = (__bridge NSArray*)lockArrayRef;
@@ -226,10 +224,12 @@ static void libellumUseWallpaperColors() {
     [preferences setObject:recommendColor.imageColorString forKey:@"customBackgroundColor"];
     [preferences setObject:recommendColor.imageColorString forKey:@"borderColor"];
   }];
-}
+}*/
 
 %ctor {
-  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)libellumUseWallpaperColors, CFSTR("com.lacertosusrepo.libellumprefs-useWallpaperColors"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+  libellumPreferencesChanged();
+
+  /*CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)libellumUseWallpaperColors, CFSTR("com.lacertosusrepo.libellumprefs-useWallpaperColors"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
   [preferences registerInteger:&noteSize default:121 forKey:@"noteSize"];
@@ -251,5 +251,5 @@ static void libellumUseWallpaperColors() {
 
   [preferences registerPreferenceChangeBlock:^{
     libellumPreferencesChanged();
-  }];
+  }];*/
 }
