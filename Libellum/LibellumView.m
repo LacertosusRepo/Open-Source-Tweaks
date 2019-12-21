@@ -62,7 +62,7 @@
       self.lockIcon = [[UIImageView alloc] init];
       if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
         self.lockIcon = [[UIImageView alloc] initWithImage:[UIImage systemImageNamed:@"lock.fill"]];
-        self.lockIcon.tintColor = [UIColor whiteColor];
+        self.lockIcon.tintColor = self.lockColor;
         self.lockIcon.hidden = !self.requireAuthentication;
         self.lockIcon.translatesAutoresizingMaskIntoConstraints = NO;
       }
@@ -302,7 +302,11 @@
     self.layer.borderWidth = self.borderWidth;
     self.blurView.effect = [UIBlurEffect effectWithStyle:self.blurStyle];
     self.vibrancyView.effect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
-    self.noteView.textColor = self.customTextColor;
+    self.lockIcon.tintColor = self.lockColor;
+
+    if(self.blurStyle != 4) {
+      self.noteView.textColor = self.customTextColor;
+    }
 
     if(self.blurStyle == 3) {
       self.blurView.alpha = 0;

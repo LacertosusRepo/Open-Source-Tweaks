@@ -24,10 +24,12 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
      * Preferences Variables
      */
   static NSInteger noteSize;
+  static NSInteger notePosition;
   static CGFloat cornerRadius;
   static NSInteger blurStyle;
   static NSString *customBackgroundColor;
   static NSString *customTextColor;
+  static NSString *lockColor;
   static NSString *borderColor;
   static CGFloat borderWidth;
   static BOOL requireAuthentication;
@@ -53,6 +55,14 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
       [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
 
       [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.dismissGesture];
+    }
+  }
+
+  -(void)adjunctListModel:(id)arg1 didAddItem:(id)arg2 {
+    %orig;
+
+    if(notePosition == 2) {
+      [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:[self.stackView.arrangedSubviews count]];
     }
   }
 
@@ -100,6 +110,14 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
       [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
 
       [[scrollViewSB panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.dismissGesture];
+    }
+  }
+
+  -(void)adjunctListModel:(id)arg1 didAddItem:(id)arg2 {
+    %orig;
+
+    if(notePosition == 2) {
+      [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:[self.stackView.arrangedSubviews count]];
     }
   }
 
@@ -201,6 +219,7 @@ static void libellumPreferencesChanged() {
   LBMNoteView.blurStyle = decideBlurStyle(blurStyle);
   LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"#000000");
   LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"#FFFFFF");
+  LBMNoteView.lockColor = LCPParseColorString(lockColor, @"FFFFFF");
   LBMNoteView.borderColor = LCPParseColorString(borderColor, @"FFFFFF");
   LBMNoteView.borderWidth = borderWidth;
   LBMNoteView.requireAuthentication = requireAuthentication;
@@ -233,11 +252,13 @@ static void libellumUseWallpaperColors() {
 
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
   [preferences registerInteger:&noteSize default:121 forKey:@"noteSize"];
+  [preferences registerInteger:&notePosition default:1 forKey:@"notePosition"];
   [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
 
   [preferences registerInteger:&blurStyle default:darkStyle forKey:@"blurStyle"];
   [preferences registerObject:&customBackgroundColor default:@"#000000" forKey:@"customBackgroundColor"];
   [preferences registerObject:&customTextColor default:@"#FFFFFF" forKey:@"customTextColor"];
+  [preferences registerObject:&lockColor default:@"FFFFFF" forKey:@"lockColor"];
 
   [preferences registerObject:&borderColor default:@"FFFFFF" forKey:@"borderColor"];
   [preferences registerFloat:&borderWidth default:0 forKey:@"borderWidth"];

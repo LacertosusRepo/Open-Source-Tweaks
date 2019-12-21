@@ -12,7 +12,6 @@
 			appearanceSettings.statusBarTintColor = Sec_Color;
 			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
 			appearanceSettings.translucentNavigationBar = NO;
-			appearanceSettings.largeTitleStyle = HBAppearanceSettingsLargeTitleStyleNever;
 			self.hb_appearanceSettings = appearanceSettings;
 		}
 
@@ -22,13 +21,52 @@
 	-(NSArray *)specifiers {
 		if (!_specifiers) {
 			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
+
+			NSArray *chosenLabels = @[@"Set Solid Color", @"Feedback Style"];
+			self.savedSpecifiers = (!self.savedSpecifiers) ? [[NSMutableDictionary alloc] init] : self.savedSpecifiers;
+			for(PSSpecifier *specifier in [self specifiers]) {
+				if([chosenLabels containsObject:[specifier propertyForKey:@"label"]]) {
+					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"label"]];
+				}
+			}
 		}
 
 		return _specifiers;
 	}
 
+	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
+		[super setPreferenceValue:value specifier:specifier];
+
+		NSString *key = [specifier propertyForKey:@"key"];
+		PSSpecifier *blurStyleSpecifier = [self specifiers][5];
+		if([key isEqualToString:@"blurStyle"]) {
+			if([value intValue] != 3) {
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Set Solid Color"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"Set Solid Color"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"Set Solid Color"]] afterSpecifier:blurStyleSpecifier animated:YES];
+			}
+		}
+
+		if([key isEqualToString:@"feedback"]) {
+			if(![value boolValue]) {
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Feedback Style"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"Feedback Style"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"Feedback Style"]] afterSpecifierID:@"Haptic Feedback" animated:YES];
+			}
+		}
+	}
+
 	-(void)viewDidLoad {
 		[super viewDidLoad];
+
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		if([[preferences objectForKey:@"blurStyle"] intValue] != 3) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Set Solid Color"]] animated:YES];
+		}
+
+		if(![[preferences objectForKey:@"feedback"] boolValue]) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Feedback Style"]] animated:YES];
+		}
 
 		//Adds GitHub button in top right of preference pane
 		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/barbutton.png"];
@@ -109,6 +147,24 @@
 		}];
 	}
 
+	-(void)lockColorPicker:(PSSpecifier *)specifier {
+		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
+    cell.cellEnabled = NO;
+
+		HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		NSString *lockColor = [preferences objectForKey:@"lockColor"];
+
+		UIColor *startColor = LCPParseColorString(lockColor, @"#FFFFFF");
+		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
+		[alert displayWithCompletion:^void (UIColor *pickedColor) {
+			NSString *hexColor = [UIColor hexFromColor:pickedColor];
+			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
+			[preferences setObject:hexColor forKey:@"lockColor"];
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
+			cell.cellEnabled = YES;
+		}];
+	}
+
 	-(void)borderColorPicker:(PSSpecifier *)specifier {
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
@@ -161,7 +217,7 @@
 					[completionError addAction:cancelAction];
 					[self presentViewController:completionError animated:YES completion:nil];
 				} else {
-					dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+					dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 						[[LibellumView sharedInstance] loadNotes];
 						cell.cellEnabled = YES;
 					});

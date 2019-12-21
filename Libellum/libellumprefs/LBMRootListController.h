@@ -11,5 +11,10 @@
 #import "PreferencesColorDefinitions.h"
 #import "../LibellumView.h"
 
+@interface PSListController (iOS12Plus)
+-(BOOL)containsSpecifier:(id)arg1;
+@end
+
 @interface LBMRootListController : HBRootListController
+@property (nonatomic, retain) NSMutableDictionary *savedSpecifiers;
 @end
