@@ -22,11 +22,11 @@
 		if (!_specifiers) {
 			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 
-			NSArray *chosenLabels = @[@"Set Solid Color", @"Feedback Style"];
+			NSArray *chosenTags = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor", @"FeedbackStyle"];
 			self.savedSpecifiers = (!self.savedSpecifiers) ? [[NSMutableDictionary alloc] init] : self.savedSpecifiers;
 			for(PSSpecifier *specifier in [self specifiers]) {
-				if([chosenLabels containsObject:[specifier propertyForKey:@"label"]]) {
-					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"label"]];
+				if([chosenTags containsObject:[specifier propertyForKey:@"tag"]]) {
+					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"tag"]];
 				}
 			}
 		}
@@ -36,22 +36,27 @@
 
 	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
 		[super setPreferenceValue:value specifier:specifier];
-
+		
 		NSString *key = [specifier propertyForKey:@"key"];
-		PSSpecifier *blurStyleSpecifier = [self specifiers][5];
 		if([key isEqualToString:@"blurStyle"]) {
+			if([value intValue] != 4) {
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] afterSpecifier:[self specifierForTag:@"BlurStyle"] animated:YES];
+			}
+
 			if([value intValue] != 3) {
-				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Set Solid Color"]] animated:YES];
-			} else if(![self containsSpecifier:self.savedSpecifiers[@"Set Solid Color"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"Set Solid Color"]] afterSpecifier:blurStyleSpecifier animated:YES];
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"SetSolidColor"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] afterSpecifier:[self specifierForTag:@"BlurStyle"] animated:YES];
 			}
 		}
 
 		if([key isEqualToString:@"feedback"]) {
 			if(![value boolValue]) {
-				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Feedback Style"]] animated:YES];
-			} else if(![self containsSpecifier:self.savedSpecifiers[@"Feedback Style"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"Feedback Style"]] afterSpecifierID:@"Haptic Feedback" animated:YES];
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"FeedbackStyle"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] afterSpecifierID:@"Haptic Feedback" animated:YES];
 			}
 		}
 	}
@@ -60,12 +65,16 @@
 		[super viewDidLoad];
 
 		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		if([[preferences objectForKey:@"blurStyle"] intValue] != 4) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
+		}
+
 		if([[preferences objectForKey:@"blurStyle"] intValue] != 3) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Set Solid Color"]] animated:YES];
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
 		}
 
 		if(![[preferences objectForKey:@"feedback"] boolValue]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"Feedback Style"]] animated:YES];
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
 		}
 
 		//Adds GitHub button in top right of preference pane
@@ -310,6 +319,16 @@
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 			[HBRespringController respring];
 		});
+	}
+
+	-(PSSpecifier *)specifierForTag:(NSString *)tag {
+		for(PSSpecifier *specifier in [self specifiers]) {
+			if([[specifier propertyForKey:@"tag"] isEqualToString:tag]) {
+				return specifier;
+			}
+		}
+
+		return nil;
 	}
 
 @end

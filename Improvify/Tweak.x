@@ -10,6 +10,8 @@
 #import "ColorFlowAPI.h"
 #import "libcolorpicker.h"
 #define LD_DEBUG NO
+#define kSpotifyGrey [UIColor colorWithRed:0.78 green:0.80 blue:0.80 alpha:1.0]
+#define kSpotifyGreen [UIColor colorWithRed:0.12 green:0.73 blue:0.32 alpha:1.0]
 
     //Global variables
   SPTPlaylistCosmosModel *playlistModel;
@@ -38,38 +40,7 @@
   static BOOL disableSongVideos;
   static BOOL disableGenius;
 
-  static BOOL improvifyInitialPopup;
-
-  /*
-   * Initial popup
-   */
-%hook SpotifyAppDelegate
-  -(BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
-    if(!improvifyInitialPopup || LD_DEBUG) {
-      SPTPopupButton *cancelAction = [%c(SPTPopupButton) buttonWithTitle:@"Cool!"];
-      SPTPopupButton *githubAction = [%c(SPTPopupButton) buttonWithTitle:@"Github" actionHandler:^{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
-      }];
-      SPTPopupButton *twitterAction = [%c(SPTPopupButton) buttonWithTitle:@"Twitter" actionHandler:^{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
-      }];
-      SPTPopupButton *paypalAction = [%c(SPTPopupButton) buttonWithTitle:@"Donate" actionHandler:^{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://paypal.me/Lacertosus?locale.x=en_US"] options:@{} completionHandler:nil];
-      }];
-      NSArray *buttons = [[NSArray alloc] initWithObjects:cancelAction, githubAction, twitterAction, paypalAction, nil];
-
-      SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Improvify" message:@"Thanks for installing Improvify! For the button to work you must have a playlist's URI set in the preferences of this tweak.\n\nIf you would like to take a peek into how this tweak works, the code is availible on my Github page linked below.\n\nIf you have a suggestion or an issue with the tweak feel free to message me on Twitter!\n\nIf you would like to feed my computer building addiction you can donate to me via PayPal.\n\n(Tested on Spotify v8.5.7)" buttons:buttons];
-
-      [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:copyURIPopup];
-      [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
-
-      HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.improvifyprefs"];
-      [preferences setBool:YES forKey:@"improvifyInitialPopup"];
-    }
-
-    return %orig;
-  }
-%end
+  static NSString *improvifyPreviousVersion;
 
   /*
    * Get instances needed later
@@ -84,6 +55,12 @@
   -(id)initWithPlayer:(id)arg1 {
     return statefulPlayer = %orig;
   }
+
+  -(void)playerQueue:(id)arg1 didMoveToRelativeTrack:(id)arg2 {
+    %orig;
+
+    [footerViewController updatePlaylistButtonColor];
+  }
 %end
 
   /*
@@ -93,7 +70,7 @@ static void addSongToPlaylist(NSArray *songs, NSURL *playlist) {
   [playlistModel addTrackURLs:songs toPlaylistURL:playlist completion:^{
     [footerViewController updatePlaylistButtonColor];
 
-    [%c(SPTProgressView) showGaiaContextMenuProgressViewWithTitle:@"Added to favorite playlist."];
+    [%c(SPTProgressView) showGaiaContextMenuProgressViewWithTitle:@"Added to Saved Playlist."];
   }];
 }
 
@@ -128,10 +105,6 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     }
 
     %orig;
-
-    if(useAddToPlaylistButton) {
-      [footerViewController updatePlaylistButtonColor];
-    }
   }
 %end
 
@@ -154,16 +127,16 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
       self.addToPlayistButton.icon = 49;
       self.addToPlayistButton.iconSize = CGSizeMake(20, 20);
       self.addToPlayistButton.opaque = YES;
-      [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.78 green:0.80 blue:0.80 alpha:1.0]];
+      [self setAddToPlaylistButtonColor:kSpotifyGrey];
 
       UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAddToPlaylist:)];
       tapGesture.numberOfTapsRequired = 1;
-      UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePlaylistSelect)];
-      doubleTapGesture.numberOfTapsRequired = 2;
-      [tapGesture requireGestureRecognizerToFail:doubleTapGesture];
+      UILongPressGestureRecognizer *pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlePlaylistSelect:)];
+      pressGesture.minimumPressDuration = 0.9;
+      [tapGesture requireGestureRecognizerToFail:pressGesture];
 
       [self.addToPlayistButton addGestureRecognizer:tapGesture];
-      [self.addToPlayistButton addGestureRecognizer:doubleTapGesture];
+      [self.addToPlayistButton addGestureRecognizer:pressGesture];
       [self.view addSubview:self.addToPlayistButton];
 
       [self updatePlaylistButtonColor];
@@ -200,10 +173,8 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     [playlistModel playlistContainsTrackURLs:currentTrack playlistURL:contextURL completion:^(NSSet *set) {
       if(![set containsObject:[currentTrack firstObject]]) {
         addSongToPlaylist(currentTrack, contextURL);
-        NSLog(@"Called");
 
       } else {
-        NSLog(@"Uh Oh");
         SPTPopupButton *removeFromPlaylistAction = [%c(SPTPopupButton) buttonWithTitle:@"Remove From Playlist" actionHandler:^{
           removeSongFromPlaylist(currentTrack, contextURL);
         }];
@@ -219,7 +190,7 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   }
 
 %new
-  -(void)handlePlaylistSelect {
+  -(void)handlePlaylistSelect:(UIGestureRecognizer *)gesture {
     UIAlertController *playlistSelectSheet = [UIAlertController alertControllerWithTitle:@"Select Playlist" message:@"Which playlist do you want to save this song to?" preferredStyle:UIAlertControllerStyleActionSheet];
 
     if(playlistAlternateOne.length > 23 && [playlistAlternateOne containsString:@"playlist"]) {
@@ -276,11 +247,11 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
         if(addToPlaylistCustomColor) {
           [self setAddToPlaylistButtonColor:LCPParseColorString(addToPlayistSelectedColor, @"#1DB954")];
         } else {
-          [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.12 green:0.73 blue:0.32 alpha:1.0]];
+          [self setAddToPlaylistButtonColor:kSpotifyGreen];
         }
 
       } else {
-        [self setAddToPlaylistButtonColor:[UIColor colorWithRed:0.78 green:0.80 blue:0.80 alpha:1.0]];
+        [self setAddToPlaylistButtonColor:kSpotifyGrey];
       }
     }];
   }
@@ -334,58 +305,79 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTitleLabelTap:)];
     tapGesture.numberOfTapsRequired = 2;
 
-    if([self.headerViewController respondsToSelector:@selector(configurator)]) {
-      //Default spotify label
-      [self.headerViewController.configurator.contentView.titleLabel addGestureRecognizer:tapGesture];
-      self.headerViewController.configurator.contentView.titleLabel.userInteractionEnabled = YES;
-
-    } if([self.headerViewController respondsToSelector:@selector(fullbleedViewModel)]){
-      //Podcast spotify label
-      [self.headerViewController.view.titleLabel addGestureRecognizer:tapGesture];
-      self.headerViewController.view.titleLabel.userInteractionEnabled = YES;
-
-    } if([self.headerViewController respondsToSelector:@selector(visrefIntegrationManager)]) {
-      //If that doesnt work, it probably means Groovify is installed, so we'll add it to that label instead
-      [self.entityHeaderViewController.contentViewController.headerController.contentView.titleLabel addGestureRecognizer:tapGesture];
-      self.entityHeaderViewController.contentViewController.headerController.contentView.titleLabel.userInteractionEnabled = YES;
+    UILabel *playlistLabel = [self getPlaylistLabel];
+    if(playlistLabel) {
+      [playlistLabel addGestureRecognizer:tapGesture];
+      playlistLabel.userInteractionEnabled = YES;
     }
   }
 
 %new
+  -(UILabel *)getPlaylistLabel {
+    if([self.headerViewController respondsToSelector:@selector(configurator)]) {
+      //Default spotify label
+      return self.headerViewController.configurator.contentView.titleLabel;
+
+    } if([self.headerViewController respondsToSelector:@selector(fullbleedViewModel)]){
+      //Podcast spotify label
+      return self.headerViewController.view.titleLabel;
+
+    } if([self.headerViewController respondsToSelector:@selector(visrefIntegrationManager)]) {
+      //If that doesnt work, it probably means Groovify is installed, so we'll add it to that label instead
+      return self.entityHeaderViewController.contentViewController.headerController.contentView.titleLabel;
+    }
+
+    return nil;
+  }
+
+%new
   -(void)handleRemovePlaylistItem:(UILongPressGestureRecognizer *)sender {
-    NSLog(@"1");
     if(sender.state == UIGestureRecognizerStateEnded && pressDuration >= 1.0) {
-      NSLog(@"2");
       NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:[sender locationInView:self.tableView]];
-      NSLog(@"3");
       SPTPlaylistPlatformPlaylistTrackFieldsImplementation *trackInfo = self.playlistViewModel.loadedTracks[indexPath.row];
-      NSLog(@"4");
       NSArray *selectedTrack = [[NSArray alloc] initWithObjects:trackInfo.URL, nil];
-      NSLog(@"5");
 
       if([selectedTrack count] > 0 && [self spt_pageURI].absoluteString.length > 0) {
-        NSLog(@"6");
         removeSongFromPlaylist(selectedTrack, [self spt_pageURI]);
-        NSLog(@"7");
       }
-      NSLog(@"8");
     }
   }
 
 %new
   -(void)handleTitleLabelTap:(UITapGestureRecognizer *)sender {
     NSString *pageURI = [self spt_pageURI].absoluteString;
+    UILabel *playlistLabel = ([sender.view isKindOfClass:[UILabel class]]) ? (UILabel *)sender.view : nil;
+    HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.improvifyprefs"];
+
+    SPTPopupButton *setURIFavoriteAction = [%c(SPTPopupButton) buttonWithTitle:@"Set as Favorite Playlist" actionHandler:^{
+      [preferences setObject:pageURI forKey:@"playlistFavorite"];
+    }];
+
+    SPTPopupButton *setURIAlternativeOneAction = [%c(SPTPopupButton) buttonWithTitle:@"Set as Alternate Playlist One" actionHandler:^{
+      [preferences setObject:pageURI forKey:@"playlistAlternateOne"];
+      [preferences setObject:playlistLabel.text forKey:@"playlistAlternateOneTitle"];
+    }];
+
+    SPTPopupButton *setURIAlternativeTwoAction = [%c(SPTPopupButton) buttonWithTitle:@"Set as Alternate Playlist Two" actionHandler:^{
+      [preferences setObject:pageURI forKey:@"playlistAlternateTwo"];
+      [preferences setObject:playlistLabel.text forKey:@"playlistAlternateTwoTitle"];
+    }];
+
+    SPTPopupButton *setURIAlternativeThreeAction = [%c(SPTPopupButton) buttonWithTitle:@"Set as Alternate Playlist Three" actionHandler:^{
+      [preferences setObject:pageURI forKey:@"playlistAlternateThree"];
+      [preferences setObject:playlistLabel.text forKey:@"playlistAlternateThreeTitle"];
+    }];
 
     SPTPopupButton *copyURIAction = [%c(SPTPopupButton) buttonWithTitle:@"Copy" actionHandler:^{
       UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
       pasteboard.string = pageURI;
     }];
     SPTPopupButton *cancelAction = [%c(SPTPopupButton) buttonWithTitle:@"Cancel"];
-    NSArray *buttons = [[NSArray alloc] initWithObjects:copyURIAction, cancelAction, nil];
+    NSArray *buttons = [[NSArray alloc] initWithObjects:setURIFavoriteAction, setURIAlternativeOneAction, setURIAlternativeTwoAction, setURIAlternativeThreeAction, copyURIAction, cancelAction, nil];
 
-    SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Copy Playlist URI" message:pageURI buttons:buttons];
+    SPTPopupDialog *URIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Playlist URI Manager" message:pageURI buttons:buttons];
 
-    [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:copyURIPopup];
+    [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:URIPopup];
     [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
   }
 %end
@@ -486,21 +478,21 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
    * Get rid of that pesky rate me popup, thanks for spamming it spotify
    */
 %hook SPTRateMeController
--(void)showAlert {
-  if(suppressRateAlert) {
-    //Suppressing fire!
-  } else {
-    %orig;
+  -(void)showAlert {
+    if(suppressRateAlert) {
+      //Suppressing hush!
+    } else {
+      %orig;
+    }
   }
-}
 
--(void)showLegacyAlert {
-  if(suppressRateAlert) {
-    //Suppressing fire!
-  } else {
-    %orig;
+  -(void)showLegacyAlert {
+    if(suppressRateAlert) {
+      //Suppressing hush!
+    } else {
+      %orig;
+    }
   }
-}
 %end
 
   /*
@@ -520,38 +512,38 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
    * Get rid of the Genius facts/lyric view
    */
 %hook SPTGeniusService
--(BOOL)isTrackGeniusEnabled:(id)arg1 {
-  if(disableGenius) {
-    return NO;
-  }
+  -(BOOL)isTrackGeniusEnabled:(id)arg1 {
+    if(disableGenius) {
+      return NO;
+    }
 
-  return %orig;
-}
+    return %orig;
+  }
 %end
 
   /*
    * Force new now playing view so button will show up (SPTNowPlayingViewControllerV2)
    */
 %hook SPTNowPlayingTestManagerImplementation
--(BOOL)isNewNowPlayingViewEnabled {
-  return YES;
-}
+  -(BOOL)isNewNowPlayingViewEnabled {
+    return YES;
+  }
 
--(void)setNewNowPlayingViewEnabledIPad:(BOOL)arg1 {
-  %orig(YES);
-}
+  -(void)setNewNowPlayingViewEnabledIPad:(BOOL)arg1 {
+    %orig(YES);
+  }
 
--(BOOL)isNewNowPlayingViewEnabledIPad {
-  return YES;
-}
+  -(BOOL)isNewNowPlayingViewEnabledIPad {
+    return YES;
+  }
 
--(BOOL)isNewNowPlayingViewEnabledOnFree {
-  return YES;
-}
+  -(BOOL)isNewNowPlayingViewEnabledOnFree {
+    return YES;
+  }
 
--(BOOL)isNewNowPlayingViewEnabledOnPremium {
-  return YES;
-}
+  -(BOOL)isNewNowPlayingViewEnabledOnPremium {
+    return YES;
+  }
 %end
 
   /*
@@ -561,6 +553,39 @@ static void removeSongFromPlaylist(NSArray *songs, NSURL *playlist) {
   -(id)selectedColor {
     if(addToPlaylistCustomColor) {
       return LCPParseColorString(addToPlayistSelectedColor, @"#1DB954");
+    }
+
+    return %orig;
+  }
+%end
+
+  /*
+   * Initial popup
+   */
+%hook SpotifyAppDelegate
+  -(BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2 {
+    HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.improvifyprefs"];
+    NSString *previousVersion = [preferences objectForKey:@"improvifyPreviousVersion"];
+
+    if(![previousVersion isEqualToString:@"1.4.6"] || LD_DEBUG) {
+      SPTPopupButton *cancelAction = [%c(SPTPopupButton) buttonWithTitle:@"Cool!"];
+      SPTPopupButton *githubAction = [%c(SPTPopupButton) buttonWithTitle:@"Github" actionHandler:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+      }];
+      SPTPopupButton *twitterAction = [%c(SPTPopupButton) buttonWithTitle:@"Twitter" actionHandler:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/LacertosusDeus"] options:@{} completionHandler:nil];
+      }];
+      SPTPopupButton *paypalAction = [%c(SPTPopupButton) buttonWithTitle:@"Donate" actionHandler:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://paypal.me/Lacertosus?locale.x=en_US"] options:@{} completionHandler:nil];
+      }];
+      NSArray *buttons = [[NSArray alloc] initWithObjects:cancelAction, githubAction, twitterAction, paypalAction, nil];
+
+      SPTPopupDialog *copyURIPopup = [%c(SPTPopupDialog) popupWithTitle:@"Improvify" message:@"Thanks for installing Improvify! For the button to work you must have a playlist's URI set in the preferences of this tweak.\n\nIf you would like to take a peek into how this tweak works, the code is availible on my Github page linked below.\n\nIf you have a suggestion or an issue with the tweak feel free to message me on Twitter!\n\nIf you would like to feed my computer building addiction you can donate to me via PayPal.\n\n(Tested on Spotify v8.5.41)" buttons:buttons];
+
+      [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:copyURIPopup];
+      [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
+
+      [preferences setObject:@"1.4.6" forKey:@"improvifyPreviousVersion"];
     }
 
     return %orig;
@@ -599,7 +624,7 @@ static void killSpotify() {
   [preferences registerBool:&disableSongVideos default:YES forKey:@"disableSongVideos"];
   [preferences registerBool:&disableGenius default:NO forKey:@"disableGenius"];
 
-  [preferences registerBool:&improvifyInitialPopup default:NO forKey:@"improvifyInitialPopup"];
+  [preferences registerObject:&improvifyPreviousVersion default:@"" forKey:@"improvifyPreviousVersion"];
 
   if(![[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/com.lacertosusrepo.improvifydata.plist"]) {
     NSMutableDictionary *improvifydata = [[NSMutableDictionary alloc] init];

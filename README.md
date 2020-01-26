@@ -23,12 +23,12 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | FLEX4Me | 11 - 12 | v1.2 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
 | Free Market | 12 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
 | Imperium | 11 - 12 | v2.0.2 | arm64 arm64e | ✔ | Music gestures in the now playing widget |
-| Improvify | 11 - 12 | v1.4.5-2 | arm64 arm64e | ✔ | Improved Spotify features |
-| Libellum | 12 - 13 | v1.0~b7 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
+| Improvify | 11 - 12 | v1.4.6 | arm64 arm64e | ✔ | Improved Spotify features |
+| Libellum | 12 - 13 | v1.0 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
 | LuxSit | 11 - 12 | v1.0 | arm64 arm64e | | URL shortcuts in the spotlight search |
 | Mea | 10 - 11 | v1.0 | arm64 | | Hide security codes on the lockscreen |
 | MovieBoxPro Text Fixes | 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ | Fix broken English translations in MovieBox |
-| Navale | 10 - 13 | v2.2.2 | arm64 arm64e | | Gradient dock background |
+| Navale | 10 - 13 | v2.2.3 | arm64 arm64e | | Gradient dock background |
 | NoNut | 10 - 11 | v1.1 | arm64 | ✔ | Popup notification when opening incognito tab |
 | Return2Sender2 | 11 - 12 | v1.0 | arm64 arm64e | | Return button to send (buggy) |
 | Safi | 10 - 11 | v1.3 | arm64 | ✔ | Simple folder customization |

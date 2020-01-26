@@ -27,6 +27,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   static NSInteger notePosition;
   static CGFloat cornerRadius;
   static NSInteger blurStyle;
+  static BOOL ignoreAdaptiveColors;
   static NSString *customBackgroundColor;
   static NSString *customTextColor;
   static NSString *lockColor;
@@ -217,6 +218,7 @@ static void libellumPreferencesChanged() {
   LBMNoteView.noteSize = noteSize;
   LBMNoteView.cornerRadius = cornerRadius;
   LBMNoteView.blurStyle = decideBlurStyle(blurStyle);
+  LBMNoteView.ignoreAdaptiveColors = ignoreAdaptiveColors;
   LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"#000000");
   LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"#FFFFFF");
   LBMNoteView.lockColor = LCPParseColorString(lockColor, @"FFFFFF");
@@ -256,6 +258,7 @@ static void libellumUseWallpaperColors() {
   [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
 
   [preferences registerInteger:&blurStyle default:darkStyle forKey:@"blurStyle"];
+  [preferences registerBool:&ignoreAdaptiveColors default:NO forKey:@"ignoreAdaptiveColors"];
   [preferences registerObject:&customBackgroundColor default:@"#000000" forKey:@"customBackgroundColor"];
   [preferences registerObject:&customTextColor default:@"#FFFFFF" forKey:@"customTextColor"];
   [preferences registerObject:&lockColor default:@"FFFFFF" forKey:@"lockColor"];

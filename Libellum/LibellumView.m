@@ -55,7 +55,6 @@
       self.noteView.keyboardAppearance = UIKeyboardAppearanceDark;
       self.noteView.scrollEnabled = YES;
       self.noteView.textAlignment = NSTextAlignmentLeft;
-      self.noteView.textColor = self.customTextColor;
       self.noteView.textContainerInset = UIEdgeInsetsMake(10, 5, 10, 5);
       self.noteView.translatesAutoresizingMaskIntoConstraints = NO;
 
@@ -149,8 +148,14 @@
     [UIView transitionWithView:self.noteView duration:0.2 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
       if(_authenticated) {
         self.noteView.userInteractionEnabled = YES;
-        self.noteView.textColor = self.customTextColor;
         self.lockIcon.alpha = 0;
+
+        if(self.blurStyle == 7 && !self.ignoreAdaptiveColors) {
+          self.noteView.textColor = ([self isDarkMode]) ? [UIColor whiteColor] : [UIColor blackColor];
+        } else {
+          self.noteView.textColor = self.customTextColor;
+        }
+
       } else {
         self.noteView.userInteractionEnabled = NO;
         self.noteView.textColor = [UIColor clearColor];
@@ -302,11 +307,6 @@
     self.layer.borderWidth = self.borderWidth;
     self.blurView.effect = [UIBlurEffect effectWithStyle:self.blurStyle];
     self.vibrancyView.effect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
-    self.lockIcon.tintColor = self.lockColor;
-
-    if(self.blurStyle != 4) {
-      self.noteView.textColor = self.customTextColor;
-    }
 
     if(self.blurStyle == 3) {
       self.blurView.alpha = 0;
@@ -315,15 +315,23 @@
       self.blurView.alpha = 1;
       self.noteView.backgroundColor = [UIColor clearColor];
     }
+
+    if(self.blurStyle == 7 && !self.ignoreAdaptiveColors) {
+      [self tintColorDidChange];
+    } else {
+      self.noteView.textColor = self.customTextColor;
+      self.lockIcon.tintColor = self.lockColor;
+    }
   }
 
   -(void)tintColorDidChange {
     switch ((int)[[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle]) {
         //Light Mode
       case 1: {
-        if(self.blurStyle == 7) {
+        if(self.blurStyle == 7 && !self.ignoreAdaptiveColors) {
           [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.noteView.textColor = [UIColor blackColor];
+            self.layer.borderColor = [UIColor blackColor].CGColor;
           } completion:nil];
         }
 
@@ -333,9 +341,10 @@
 
         //Dark Mode
       case 2: {
-        if(self.blurStyle == 7) {
+        if(self.blurStyle == 7 && !self.ignoreAdaptiveColors) {
           [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             self.noteView.textColor = [UIColor whiteColor];
+            self.layer.borderColor = [UIColor whiteColor].CGColor;
           } completion:nil];
         }
 
@@ -343,6 +352,10 @@
       break;
       }
     }
+  }
+
+  -(BOOL)isDarkMode {
+    return ([[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle] == 2) ? YES : NO;
   }
 
 @end

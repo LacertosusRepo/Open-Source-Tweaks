@@ -124,6 +124,8 @@
 			<string>ModeCell</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>tag</key>
+			<string>BlurStyle</string>
 		</dict>
 
 <!--		<dict>
@@ -146,6 +148,22 @@
 		</dict> 	-->
 
 		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>ignoreAdaptiveColors</string>
+			<key>label</key>
+			<string>Ignore Adaptive Preset Colors</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>tag</key>
+			<string>IgnoreAdaptivePresetColors</string>
+		</dict>
+		<dict>
 			<key>action</key>
 			<string>backgroundColorPicker:</string>
 			<key>cell</key>
@@ -154,6 +172,8 @@
     	<string>HBSpinnerTableCell</string>
 			<key>label</key>
 			<string>Set Solid Color</string>
+			<key>tag</key>
+			<string>SetSolidColor</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -323,6 +343,8 @@
 			<string>ModeCell</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>tag</key>
+			<string>FeedbackStyle</string>
 		</dict>
 
 		<dict>

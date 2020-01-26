@@ -77,10 +77,10 @@
 		NSString *colorOneString = [preferences objectForKey:@"colorOneString"];
 
 		UIColor *startColor = LCPParseColorString(colorOneString, @"#FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
+		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
 		[alert displayWithCompletion:^void (UIColor *pickedColor) {
 			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
+			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
 			[preferences setObject:hexColor forKey:@"colorOneString"];
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs/ReloadPrefs"), nil, nil, true);
 		}];
@@ -91,10 +91,10 @@
 		NSString *colorTwoString = [preferences objectForKey:@"colorTwoString"];
 
 		UIColor *startColor = LCPParseColorString(colorTwoString, @"#FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
+		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
 		[alert displayWithCompletion:^void (UIColor *pickedColor) {
 			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
+			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
 			[preferences setObject:hexColor forKey:@"colorTwoString"];
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs/ReloadPrefs"), nil, nil, true);
 		}];
@@ -128,6 +128,10 @@
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 			[HBRespringController respring];
 		});
+	}
+
+	-(NSUInteger)largeTitleStyle {
+		return HBAppearanceSettingsLargeTitleStyleNever;
 	}
 
 @end

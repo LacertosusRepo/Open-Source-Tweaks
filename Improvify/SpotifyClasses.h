@@ -43,7 +43,10 @@
 @end
 
 @interface SPTProgressView : UIView
+@property (nonatomic) long long customIcon;
+@property (nonatomic) long long mode;
 +(void)showGaiaContextMenuProgressViewWithTitle:(id)arg1;
++(id)progressView;
 @end
 
 @interface SPTFreeTierPlaylistFullbleedHeaderView : UIView
@@ -191,6 +194,9 @@
 -(NSInteger)numberOfSectionsInTableView:(id)arg1;
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
 -(NSURL *)spt_pageURI;
+
+  //Improvify
+-(UILabel *)getPlaylistLabel;
 @end
 
 @interface SPTNowPlayingViewControllerV2 : UIViewController

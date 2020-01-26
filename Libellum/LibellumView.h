@@ -37,6 +37,7 @@
 @property (nonatomic, assign) NSUInteger noteSize;
 @property (nonatomic, assign) CGFloat cornerRadius;
 @property (nonatomic, assign) NSInteger blurStyle;
+@property (nonatomic, assign) BOOL ignoreAdaptiveColors;
 @property (nonatomic, retain) UIColor *customBackgroundColor;
 @property (nonatomic, retain) UIColor *customTextColor;
 @property (nonatomic, retain) UIColor *lockColor;

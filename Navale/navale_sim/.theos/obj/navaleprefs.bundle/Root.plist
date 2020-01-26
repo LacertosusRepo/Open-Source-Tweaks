@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Use slider to change dock alpha. ColorFlow will only replace the colors when music is playing.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>usingFloatingDock</string>
+			<key>label</key>
+			<string>Apply to Floating Dock</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>useColorFlow</string>
+			<key>label</key>
+			<string>Use ColorFlow 4 Colors</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>gradientDirection</string>
+			<key>label</key>
+			<string>Gradient Options</string>
+			<key>default</key>
+			<string>0</string>
+			<key>validTitles</key>
+			<array>
+				<string>Verticle Gradient</string>
+				<string>Horizontal Gradient</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>0</string>
+				<string>1</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>1.0</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1.0</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>dockAlpha</string>
+			<key>leftImage</key>
+			<string>slidericon.png</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Color Options</string>
+			<key>footerText</key>
+			<string>Pull colors from your homescreen wallpaper and use them for your dock. Not perfect.</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>NAVGradientPreviewCell</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerOne</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Color One</string>
+			<key>icon</key>
+			<string>colorpickericonone.png</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerTwo</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Color Two</string>
+			<key>icon</key>
+			<string>colorpickericontwo.png</string>
+		</dict>
+		<dict>
+    	<key>action</key>
+    	<string>colorsFromWallpaper:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Use Wallpaper Colors</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Respring to apply ColorFlow option.</string>
+		</dict>
+		<dict>
+    	<key>action</key>
+    	<string>respring:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Respring</string>
+		</dict>
+
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Github</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>PayPal</string>
+			<key>subtitle</key>
+			<string>Feed my Steam sale addiction!</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
