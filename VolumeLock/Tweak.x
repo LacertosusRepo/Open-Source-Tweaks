@@ -26,7 +26,20 @@
     }
 
     if(upPressed && downPressed) {
-      toggleVolumeLock = !toggleVolumeLock;
+      UINotificationFeedbackGenerator *feedback = [[UINotificationFeedbackGenerator alloc] init];
+      [feedback prepare];
+
+      switch ((int)toggleVolumeLock) {
+        case 0:
+        toggleVolumeLock = YES;
+        [feedback notificationOccurred:UINotificationFeedbackTypeSuccess];
+        break;
+
+        case 1:
+        toggleVolumeLock = NO;
+        [feedback notificationOccurred:UINotificationFeedbackTypeError];
+        break;
+      }
     }
 
     return %orig;
@@ -50,3 +63,9 @@
     %orig;
   }
 %end
+
+%ctor {
+  if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
+    %init(VolumeControl = NSClassFromString(@"SBVolumeControl"));
+  }
+}

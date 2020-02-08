@@ -1,10 +1,10 @@
-#export ARCHS = arm64 arm64e
-#export SDKVERSION = 11.2
-#THEOS_DEVICE_IP = 10.0.0.6
+export ARCHS = arm64 arm64e
+export SDKVERSION = 11.2
+THEOS_DEVICE_IP = 10.0.0.133
 
 # Simject
-export ARCHS = x86_64
-TARGET = simulator:clang::7.0
+# export ARCHS = x86_64
+# TARGET = simulator:clang::7.0
 
 INSTALL_TARGET_PROCESSES = SpringBoard
 

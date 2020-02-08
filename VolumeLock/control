@@ -1,11 +1,11 @@
 Package: com.lacertosusrepo.volumelock
 Name: VolumeLock
 Depends: mobilesubstrate
-Version: 1.1
+Version: 1.2
 Architecture: iphoneos-arm
-Description: If you're seeing this, I forgot to add a description...
+Description: Lock your volume with a simple gesture...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
 Author: LacertosusDeus <LacertosusThemes@gmail.com>
 Section: Tweaks
-Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
-SileoDepiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
+Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.volumelock/
+SileoDepiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.volumelock/
