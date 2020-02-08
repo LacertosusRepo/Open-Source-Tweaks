@@ -38,7 +38,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | ToneItDown | 11 - 12 | v1.0.1 | arm64 arm64e | ✔ | Mute tones when previewing them |
 | Vitrum | 11 | v1.2 | arm64 | | Control center customization |
 | VolbrateXI | 10 - 12 | v1.3 | arm64 arm64e | ✔ | Vibrate volume button interactions |
-| VolumeLock | 10 - 12 | v1.1 | arm64 amr64e | | Lock volume changing by pressing both volume buttons down |
+| VolumeLock | 10 - 13 | v1.2 | arm64 arm64e | | Lock volume changing by pressing both volume buttons down |
 
 ## Goal
 
