@@ -23,14 +23,14 @@
 
   -(id)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
-      self.hidden = NO;
       self.alpha = 1.0;
       self.clipsToBounds = YES;
+      self.hidden = NO;
       self.layer.cornerRadius = self.cornerRadius;
       self.layer.borderColor = self.borderColor.CGColor;
       self.layer.borderWidth = self.borderWidth;
-      self.userInteractionEnabled = YES;
       self.translatesAutoresizingMaskIntoConstraints = NO;
+      self.userInteractionEnabled = YES;
 
       _dismissGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(toggleLibellum:)];
       _dismissGesture.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -56,13 +56,14 @@
       self.noteView.scrollEnabled = YES;
       self.noteView.textAlignment = NSTextAlignmentLeft;
       self.noteView.textContainerInset = UIEdgeInsetsMake(10, 5, 10, 5);
+      self.noteView.tintColor = self.customTintColor;
       self.noteView.translatesAutoresizingMaskIntoConstraints = NO;
 
       self.lockIcon = [[UIImageView alloc] init];
       if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
         self.lockIcon = [[UIImageView alloc] initWithImage:[UIImage systemImageNamed:@"lock.fill"]];
-        self.lockIcon.tintColor = self.lockColor;
         self.lockIcon.hidden = !self.requireAuthentication;
+        self.lockIcon.tintColor = self.lockColor;
         self.lockIcon.translatesAutoresizingMaskIntoConstraints = NO;
       }
 
@@ -206,6 +207,7 @@
     UIToolbar *toolBar = [[UIToolbar alloc] init];
     [toolBar sizeToFit];
     toolBar.barStyle = UIBarStyleBlack;
+    toolBar.tintColor = self.customTintColor;
     toolBar.items = @[
       [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(pointButton)],
       [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil],
@@ -305,6 +307,7 @@
     self.layer.cornerRadius = self.cornerRadius;
     self.layer.borderColor = self.borderColor.CGColor;
     self.layer.borderWidth = self.borderWidth;
+    self.noteView.tintColor = self.customTintColor;
     self.blurView.effect = [UIBlurEffect effectWithStyle:self.blurStyle];
     self.vibrancyView.effect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
 

@@ -41,6 +41,7 @@
 @property (nonatomic, retain) UIColor *customBackgroundColor;
 @property (nonatomic, retain) UIColor *customTextColor;
 @property (nonatomic, retain) UIColor *lockColor;
+@property (nonatomic, retain) UIColor *customTintColor;
 @property (nonatomic, retain) UIColor *borderColor;
 @property (nonatomic, assign) CGFloat borderWidth;
 @property (nonatomic, assign) BOOL requireAuthentication;

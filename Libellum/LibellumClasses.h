@@ -4,7 +4,7 @@ enum blurModeEnums {
   lightStyle = 1,
   darkStyle,
   colorizedStyle,
-  adaptive,
+  adaptiveStyle,
 };
 
 @interface CSNotificationAdjunctListViewController : UIViewController

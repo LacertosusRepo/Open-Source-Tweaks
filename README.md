@@ -24,7 +24,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Free Market | 12 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
 | Imperium | 11 - 12 | v2.0.2 | arm64 arm64e | ✔ | Music gestures in the now playing widget |
 | Improvify | 11 - 12 | v1.4.6 | arm64 arm64e | ✔ | Improved Spotify features |
-| Libellum | 12 - 13 | v1.0 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
+| Libellum | 12 - 13 | v1.1 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
 | LuxSit | 11 - 12 | v1.0 | arm64 arm64e | | URL shortcuts in the spotlight search |
 | Mea | 10 - 11 | v1.0 | arm64 | | Hide security codes on the lockscreen |
 | MovieBoxPro Text Fixes | 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ | Fix broken English translations in MovieBox |

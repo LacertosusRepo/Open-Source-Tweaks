@@ -7,8 +7,6 @@
  */
 #import <Cephei/HBPreferences.h>
 #import "libcolorpicker.h"
-#import "iOSPalette/Palette.h"
-#import "iOSPalette/UIImage+Palette.h"
 #import "LibellumView.h"
 #import "LibellumClasses.h"
 #define LD_DEBUG NO
@@ -31,6 +29,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   static NSString *customBackgroundColor;
   static NSString *customTextColor;
   static NSString *lockColor;
+  static NSString *customTintColor;
   static NSString *borderColor;
   static CGFloat borderWidth;
   static BOOL requireAuthentication;
@@ -169,42 +168,26 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
    * Function to determine blur based on iOS
    */
 static NSInteger decideBlurStyle(NSInteger blurStyle) {
-  if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0 ,0}]) {
-    switch (blurStyle) {
-      case lightStyle:
-      return 12;  //UIBlurEffectStyleSystemThinMaterialLight
-      break;
+  BOOL iOS13 = [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0 ,0}];
+  switch (blurStyle) {
+    case lightStyle:
+    //UIBlurEffectStyleSystemThinMaterialLight
+    return (iOS13) ? 12 : UIBlurEffectStyleLight;
+    break;
 
-      case darkStyle:
-      return 17;  //UIBlurEffectStyleSystemThinMaterialDark
-      break;
+    case darkStyle:
+    //UIBlurEffectStyleSystemThinMaterialDark
+    return (iOS13) ? 17 : UIBlurEffectStyleDark;
+    break;
 
-      case colorizedStyle:
-      return 3;
-      break;
+    case colorizedStyle:
+    return 3;
+    break;
 
-      case adaptive:
-      return 7; //UIBlurEffectStyleSystemThinMaterial
-      break;
-    }
-  } else {
-    switch (blurStyle) {
-      case lightStyle:
-      return UIBlurEffectStyleLight;
-      break;
-
-      case darkStyle:
-      return UIBlurEffectStyleDark;
-      break;
-
-      case colorizedStyle:
-      return 3;
-      break;
-
-      case adaptive:
-      return UIBlurEffectStyleRegular;
-      break;
-    }
+    case adaptiveStyle:
+    //UIBlurEffectStyleSystemThinMaterial
+    return (iOS13) ? 7 : UIBlurEffectStyleRegular;
+    break;
   }
 
   return UIBlurEffectStyleRegular;
@@ -219,9 +202,10 @@ static void libellumPreferencesChanged() {
   LBMNoteView.cornerRadius = cornerRadius;
   LBMNoteView.blurStyle = decideBlurStyle(blurStyle);
   LBMNoteView.ignoreAdaptiveColors = ignoreAdaptiveColors;
-  LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"#000000");
-  LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"#FFFFFF");
+  LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"000000");
+  LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"FFFFFF");
   LBMNoteView.lockColor = LCPParseColorString(lockColor, @"FFFFFF");
+  LBMNoteView.customTintColor = LCPParseColorString(customTintColor, @"007AFF");
   LBMNoteView.borderColor = LCPParseColorString(borderColor, @"FFFFFF");
   LBMNoteView.borderWidth = borderWidth;
   LBMNoteView.requireAuthentication = requireAuthentication;
@@ -232,26 +216,7 @@ static void libellumPreferencesChanged() {
   [LBMNoteView preferencesChanged];
 }
 
-static void libellumUseWallpaperColors() {
-  NSData *lockData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"];
-  CFArrayRef lockArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)lockData, NULL, 1, NULL);
-  NSArray *lockArray = (__bridge NSArray*)lockArrayRef;
-  UIImage *lockWallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(lockArray[0])];
-  CFRelease(lockArrayRef);
-
-  HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-  [lockWallpaper getPaletteImageColorWithMode:VIBRANT_PALETTE | LIGHT_VIBRANT_PALETTE | DARK_VIBRANT_PALETTE withCallBack:^(PaletteColorModel *recommendColor, NSDictionary *allModeColorDic, NSError *error) {
-    [preferences setObject:recommendColor.imageColorString forKey:@"customTextColor"];
-  }];
-  [lockWallpaper getPaletteImageColorWithMode:MUTED_PALETTE | LIGHT_MUTED_PALETTE | DARK_MUTED_PALETTE withCallBack:^(PaletteColorModel *recommendColor, NSDictionary *allModeColorDic, NSError *error) {
-    [preferences setObject:recommendColor.imageColorString forKey:@"customBackgroundColor"];
-    [preferences setObject:recommendColor.imageColorString forKey:@"borderColor"];
-  }];
-}
-
 %ctor {
-  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)libellumUseWallpaperColors, CFSTR("com.lacertosusrepo.libellumprefs-useWallpaperColors"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
-
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
   [preferences registerInteger:&noteSize default:121 forKey:@"noteSize"];
   [preferences registerInteger:&notePosition default:1 forKey:@"notePosition"];
@@ -259,9 +224,10 @@ static void libellumUseWallpaperColors() {
 
   [preferences registerInteger:&blurStyle default:darkStyle forKey:@"blurStyle"];
   [preferences registerBool:&ignoreAdaptiveColors default:NO forKey:@"ignoreAdaptiveColors"];
-  [preferences registerObject:&customBackgroundColor default:@"#000000" forKey:@"customBackgroundColor"];
-  [preferences registerObject:&customTextColor default:@"#FFFFFF" forKey:@"customTextColor"];
+  [preferences registerObject:&customBackgroundColor default:@"000000" forKey:@"customBackgroundColor"];
+  [preferences registerObject:&customTextColor default:@"FFFFFF" forKey:@"customTextColor"];
   [preferences registerObject:&lockColor default:@"FFFFFF" forKey:@"lockColor"];
+  [preferences registerObject:&customTintColor default:@"007AFF" forKey:@"customTintColor"];
 
   [preferences registerObject:&borderColor default:@"FFFFFF" forKey:@"borderColor"];
   [preferences registerFloat:&borderWidth default:0 forKey:@"borderWidth"];

@@ -22,11 +22,11 @@
 		if (!_specifiers) {
 			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 
-			NSArray *chosenTags = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor", @"FeedbackStyle"];
+			NSArray *chosenIDs = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor", @"FeedbackStyle"];
 			self.savedSpecifiers = (!self.savedSpecifiers) ? [[NSMutableDictionary alloc] init] : self.savedSpecifiers;
 			for(PSSpecifier *specifier in [self specifiers]) {
-				if([chosenTags containsObject:[specifier propertyForKey:@"tag"]]) {
-					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"tag"]];
+				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
+					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"id"]];
 				}
 			}
 		}
@@ -36,19 +36,19 @@
 
 	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
 		[super setPreferenceValue:value specifier:specifier];
-		
+
 		NSString *key = [specifier propertyForKey:@"key"];
 		if([key isEqualToString:@"blurStyle"]) {
 			if([value intValue] != 4) {
 				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
 			} else if(![self containsSpecifier:self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] afterSpecifier:[self specifierForTag:@"BlurStyle"] animated:YES];
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] afterSpecifierID:@"BlurStyle" animated:YES];
 			}
 
 			if([value intValue] != 3) {
 				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
 			} else if(![self containsSpecifier:self.savedSpecifiers[@"SetSolidColor"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] afterSpecifier:[self specifierForTag:@"BlurStyle"] animated:YES];
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] afterSpecifierID:@"BlurStyle" animated:YES];
 			}
 		}
 
@@ -63,6 +63,11 @@
 
 	-(void)viewDidLoad {
 		[super viewDidLoad];
+
+		if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){11, 0, 0}]) {
+			self.navigationController.navigationBar.prefersLargeTitles = NO;
+			self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+		}
 
 		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 		if([[preferences objectForKey:@"blurStyle"] intValue] != 4) {
@@ -112,10 +117,12 @@
 		if(offsetY > 100) {
 			[UIView animateWithDuration:0.2 animations:^{
 				self.navigationItem.titleView.alpha = 1;
+				self.navigationItem.titleView.transform = CGAffineTransformMakeScale(1.0, 1.0);
 			}];
 		} else {
 			[UIView animateWithDuration:0.2 animations:^{
 				self.navigationItem.titleView.alpha = 0;
+				self.navigationItem.titleView.transform = CGAffineTransformMakeScale(0.5, 0.5);
 			}];
 		}
 	}
@@ -124,10 +131,10 @@
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
 
-		HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 		NSString *customBackgroundColor = [preferences objectForKey:@"customBackgroundColor"];
 
-		UIColor *startColor = LCPParseColorString(customBackgroundColor, @"#FFFFFF");
+		UIColor *startColor = LCPParseColorString(customBackgroundColor, @"FFFFFF");
 		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
 		[alert displayWithCompletion:^void (UIColor *pickedColor) {
 			NSString *hexColor = [UIColor hexFromColor:pickedColor];
@@ -142,10 +149,10 @@
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
 
-		HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 		NSString *customTextColor = [preferences objectForKey:@"customTextColor"];
 
-		UIColor *startColor = LCPParseColorString(customTextColor, @"#FFFFFF");
+		UIColor *startColor = LCPParseColorString(customTextColor, @"FFFFFF");
 		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
 		[alert displayWithCompletion:^void (UIColor *pickedColor) {
 			NSString *hexColor = [UIColor hexFromColor:pickedColor];
@@ -160,15 +167,33 @@
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
 
-		HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 		NSString *lockColor = [preferences objectForKey:@"lockColor"];
 
-		UIColor *startColor = LCPParseColorString(lockColor, @"#FFFFFF");
+		UIColor *startColor = LCPParseColorString(lockColor, @"FFFFFF");
+		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
+		[alert displayWithCompletion:^void (UIColor *pickedColor) {
+			NSString *hexColor = [UIColor hexFromColor:pickedColor];
+			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
+			[preferences setObject:hexColor forKey:@"lockColor"];
+			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
+			cell.cellEnabled = YES;
+		}];
+	}
+
+	-(void)tintColorPicker:(PSSpecifier *)specifier {
+		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
+    cell.cellEnabled = NO;
+
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		NSString *customTintColor = [preferences objectForKey:@"customTintColor"];
+
+		UIColor *startColor = LCPParseColorString(customTintColor, @"007AFF");
 		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
 		[alert displayWithCompletion:^void (UIColor *pickedColor) {
 			NSString *hexColor = [UIColor hexFromColor:pickedColor];
 			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"lockColor"];
+			[preferences setObject:hexColor forKey:@"customTintColor"];
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
 			cell.cellEnabled = YES;
 		}];
@@ -178,14 +203,14 @@
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
 
-		HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 		NSString *borderColor = [preferences objectForKey:@"borderColor"];
 
-		UIColor *startColor = LCPParseColorString(borderColor, @"#FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
+		UIColor *startColor = LCPParseColorString(borderColor, @"FFFFFF");
+		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
 		[alert displayWithCompletion:^void (UIColor *pickedColor) {
 			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
+			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
 			[preferences setObject:hexColor forKey:@"borderColor"];
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
 			cell.cellEnabled = YES;
@@ -193,6 +218,9 @@
 	}
 
 	-(void)manageBackup:(PSSpecifier *)specifier {
+		HBPreferences *test = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		[test setObject:@"" forKey:@"customTintColor"];
+
 		static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
 	  static NSString *filePathBK = @"/User/Library/Preferences/LibellumNotes.bk";
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
@@ -206,9 +234,20 @@
 		[dateFormatter setDateFormat:@"MMMM d, yyyy"];
 
 		UIAlertController *notesBackupAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:[NSString stringWithFormat:@"Manage your notes backup here.\n\nLast backed up at:\n%@ on %@", [timeFormatter stringFromDate:lastModified], [dateFormatter stringFromDate:lastModified]] preferredStyle:UIAlertControllerStyleAlert];
+
 		UIAlertAction *backupNotes = [UIAlertAction actionWithTitle:@"Backup Notes Now" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 			[[LibellumView sharedInstance] backupNotes];
 			cell.cellEnabled = YES;
+		}];
+
+		UIAlertAction *viewBackup = [UIAlertAction actionWithTitle:@"View Backup Text" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			UIAlertController *viewBackupAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil] preferredStyle:UIAlertControllerStyleAlert];
+			UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+				cell.cellEnabled = YES;
+			}];
+
+			[viewBackupAlert addAction:cancelAction];
+			[self presentViewController:viewBackupAlert animated:YES completion:nil];
 		}];
 
 		UIAlertAction *restoreNotes = [UIAlertAction actionWithTitle:@"Restore From Backup" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
@@ -275,6 +314,7 @@
 
 		[notesBackupAlert addAction:backupNotes];
 		if([[NSFileManager defaultManager] fileExistsAtPath:filePathBK]) {
+			[notesBackupAlert addAction:viewBackup];
 			[notesBackupAlert addAction:restoreNotes];
 			[notesBackupAlert addAction:deleteNotes];
 		}
@@ -282,53 +322,10 @@
 		[self presentViewController:notesBackupAlert animated:YES completion:nil];
 	}
 
-	-(void)useWallpaperColors:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		UIAlertController *wallpaperColorsAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:@"Would you like to generate and use colors from your lockscreen wallpaper?\n\nThis will replace the colors that are set for the background, font, and border of Libellum. This is not perfect." preferredStyle:UIAlertControllerStyleAlert];
-		UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Get Colors" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-			if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"]) {
-				CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs-useWallpaperColors"), nil, nil, true);
-				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-					CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
-					cell.cellEnabled = YES;
-				});
-
-			} else {
-				UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:@"Error" message:@"No lockscreen wallpaper found at the following path: /User/Library/SpringBoard/OriginalLockBackground.cpbitmap\n\nContact me if you need help." preferredStyle:UIAlertControllerStyleAlert];
-				UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-					cell.cellEnabled = YES;
-				}];
-				[errorAlert addAction:cancelAction];
-				[self presentViewController:errorAlert animated:YES completion:nil];
-			}
-		}];
-		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Nevermind" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-			cell.cellEnabled = YES;
-		}];
-
-		[wallpaperColorsAlert addAction:confirmAction];
-		[wallpaperColorsAlert addAction:cancelAction];
-		[self presentViewController:wallpaperColorsAlert animated:YES completion:nil];
-	}
-
 	-(void)respring:(PSSpecifier *)specifier {
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-			[HBRespringController respring];
-		});
-	}
-
-	-(PSSpecifier *)specifierForTag:(NSString *)tag {
-		for(PSSpecifier *specifier in [self specifiers]) {
-			if([[specifier propertyForKey:@"tag"] isEqualToString:tag]) {
-				return specifier;
-			}
-		}
-
-		return nil;
+		[HBRespringController respring];
 	}
 
 @end

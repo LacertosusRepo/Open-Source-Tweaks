@@ -11,7 +11,7 @@
 #import "PreferencesColorDefinitions.h"
 #import "../LibellumView.h"
 
-@interface PSListController (iOS12Plus)
+@interface PSListController (iOS12Methods)
 -(BOOL)containsSpecifier:(id)arg1;
 @end
 
