@@ -49,6 +49,8 @@
 %hook VolumeControl
   -(void)increaseVolume {
     if(toggleVolumeLock) {
+      UINotificationFeedbackGenerator *feedback = [[UINotificationFeedbackGenerator alloc] init];
+      [feedback notificationOccurred:UINotificationFeedbackTypeWarning];
       return ;
     }
 
@@ -57,6 +59,8 @@
 
   -(void)decreaseVolume {
     if(toggleVolumeLock) {
+      UINotificationFeedbackGenerator *feedback = [[UINotificationFeedbackGenerator alloc] init];
+      [feedback notificationOccurred:UINotificationFeedbackTypeWarning];
       return ;
     }
 
