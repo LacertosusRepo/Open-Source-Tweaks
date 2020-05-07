@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Default alpha: 0.5. Default corner radius: 1.5.</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerOne</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Color One</string>
+			<key>cellClass</key>
+			<string>CIPColorIndicatorCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>key</key>
+			<string>gradientColorOne</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerTwo</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Color Two</string>
+			<key>cellClass</key>
+			<string>CIPColorIndicatorCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>key</key>
+			<string>gradientColorTwo</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.5</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>1</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>key</key>
+			<string>gradientAlpha</string>
+			<key>isSegmented</key>
+			<false/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Gradient Alpha</string>
+			<key>cellClass</key>
+			<string>CIPLabeledSliderCell</string>
+			<key>height</key>
+			<real>56</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>1.5</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>5</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>key</key>
+			<string>gradientCornerRadius</string>
+			<key>isSegmented</key>
+			<false/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Gradient Corner Radius</string>
+			<key>cellClass</key>
+			<string>CIPLabeledSliderCell</string>
+			<key>height</key>
+			<real>56</real>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>CIPGradientPreviewCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>height</key>
+			<real>20</real>
+		</dict>
+		<dict>
+    	<key>action</key>
+    	<string>flipGradient:</string>
+    	<key>cell</key>
+    	<string>PSButtonCell</string>
+    	<key>cellClass</key>
+    	<string>HBSpinnerTableCell</string>
+    	<key>label</key>
+    	<string>Flip Gradient</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Border Settings</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>2</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>key</key>
+			<string>gradientBorderWidth</string>
+			<key>isSegmented</key>
+			<false/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Border Width</string>
+			<key>cellClass</key>
+			<string>CIPLabeledSliderCell</string>
+			<key>height</key>
+			<real>56</real>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>colorPickerBorder</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Border Color</string>
+			<key>cellClass</key>
+			<string>CIPColorIndicatorCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>key</key>
+			<string>gradientBorderColor</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Support</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Github</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Donate</string>
+			<key>subtitle</key>
+			<string>Fund my next ski trip!</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerAlignment</key>
+			<integer>1</integer>
+			<key>footerText</key>
+			<string>ColoredScrollIndicator by LacertosusDeus</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
