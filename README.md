@@ -18,6 +18,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Tweak |  Compatibility | Version | Architecture | Annotated | Description |
 | :-----: | :-----------------: | :-------: | :------------: | :---------: | :-----------: |
 | Clauditis | 11 - 13 | v1.2 | arm64 arm64e | ✔ | Double tap homescreen to lock device |
+| ColoredScrollIndicator | 13 | v1.0 | arm64 arm64e | | Color the scroll indicator with a gradient |
 | DialerGradient | ??? - 12 | v1.0 | arm64 arm64e | | Add gradient to dialer screen in Phone app |
 | EinsteinVibes | 10 - 11 | v1.0 | arm64 | | Vibrate calculator buttons |
 | FLEX4Me | 11 - 12 | v1.2 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
@@ -30,6 +31,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | MovieBoxPro Text Fixes | 11 - 12.1.1 | v1.2 | arm64 arm64e | ✔ | Fix broken English translations in MovieBox |
 | Navale | 10 - 13 | v2.2.3 | arm64 arm64e | | Gradient dock background |
 | NoNut | 10 - 11 | v1.1 | arm64 | ✔ | Popup notification when opening incognito tab |
+| NowPlayingIcon | 13 | v1.0 | arm64 arm64e | | Replace now playing app icon with album art |
 | Return2Sender2 | 11 - 12 | v1.0 | arm64 arm64e | | Return button to send (buggy) |
 | Safi | 10 - 11 | v1.3 | arm64 | ✔ | Simple folder customization |
 | Speculum | 12 - 13 | v1.3.5 | arm64 arm64e | | Customizable lockscreen time, date, and weather information |
