@@ -1,0 +1,11 @@
+Package: com.lacertosusrepo.nowplayingicon
+Name: NowPlayingIcon
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Showoff the music's artwork on the app...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
+Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
+SileoDepiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
