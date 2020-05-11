@@ -5,9 +5,9 @@
 	UIColor *colorOne;
 	UIColor *colorTwo;
 
-	static NSInteger gradientDirection;
-	static NSString *colorOneString;
-	static NSString *colorTwoString;
+	NSInteger gradientDirection;
+	NSString *colorOneString;
+	NSString *colorTwoString;
 
 	+(void)updateColors {
 
@@ -35,7 +35,6 @@
 			[[self class] updateColors];
 		}];
 
-
 		if(!gradientLayer) {
 			gradientLayer = [CAGradientLayer layer];
 		}
@@ -51,6 +50,9 @@
 		colorOne = LCPParseColorString(colorOneString, @"#FFFFFF");
 		colorTwo = LCPParseColorString(colorTwoString, @"#FFFFFF");
   	gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
+		gradientLayer.cornerRadius = 10;
+		gradientLayer.borderWidth = 3;
+		gradientLayer.borderColor = ([UIColor respondsToSelector:@selector(labelColor)]) ? [UIColor opaqueSeparatorColor].CGColor : [UIColor systemGrayColor].CGColor;
 
   	[self.contentView.layer insertSublayer:gradientLayer atIndex:0];
 		[self.contentView.layer setMasksToBounds:YES];
@@ -61,6 +63,5 @@
 	-(void)layoutSubviews {
 		gradientLayer.frame = self.contentView.frame;
 		gradientLayer.bounds = CGRectInset(self.contentView.frame, 2, 2);
-		gradientLayer.cornerRadius = 5;
 	}
 @end

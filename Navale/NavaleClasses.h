@@ -5,19 +5,17 @@ enum gradientDirections {
   horizontal
 };
 
-@interface SBDockView : UIView <CFWColorDelegate>
+@interface SBDockView : UIView
 @property (nonatomic, copy) UIColor *primaryColor;
 @property (nonatomic, copy) UIColor *secondaryColor;
--(void)songAnalysisComplete:(MPModelSong *)song artwork:(UIImage *)artwork colorInfo:(CFWColorInfo *)colorInfo;
--(void)songHadNoArtwork:(MPModelSong *)song;
+-(void)updateGradient;
 @end
 
-@interface SBFloatingDockPlatterView : UIView <CFWColorDelegate>
+@interface SBFloatingDockPlatterView : UIView
 @property (nonatomic, copy) UIColor *primaryColor;
 @property (nonatomic, copy) UIColor *secondaryColor;
 -(double)maximumContinuousCornerRadius;
--(void)songAnalysisComplete:(MPModelSong *)song artwork:(UIImage *)artwork colorInfo:(CFWColorInfo *)colorInfo;
--(void)songHadNoArtwork:(MPModelSong *)song;
+-(void)updateGradient;
 @end
 
 @interface SBWallpaperEffectView : UIView
@@ -29,7 +27,7 @@ enum gradientDirections {
 
 @interface MTMaterialView : UIView
 @property (getter=_materialLayer,nonatomic,readonly) MTMaterialLayer *materialLayer;
-@property (assign,nonatomic) double weighting;
+@property (assign, nonatomic) double weighting;
 @end
 
 @interface _UIBackdropEffectView : UIView

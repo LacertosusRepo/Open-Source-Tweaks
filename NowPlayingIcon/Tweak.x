@@ -10,41 +10,39 @@
   SBIconController *iconController;
   SBApplicationIcon *appIcon;
   SBApplication *nowPlayingApp;
-  CALayer *maskLayer;
+  NSString *lastNowPlayingBunldeID;
+  UIImage *artwork;
   CALayer *artLayer;
-  static BOOL weightOver = YES;
-  static NSString *latestNowPlayingBundleID;
+  CALayer *maskLayer;
 
 void nowPlayingInfoDidChange() {
   nowPlayingApp = [[NSClassFromString(@"SBMediaController") sharedInstance] nowPlayingApplication];
-  if(iconController && nowPlayingApp && weightOver) {
-    if(![nowPlayingApp.bundleIdentifier isEqualToString:latestNowPlayingBundleID] && [latestNowPlayingBundleID length] > 0)  {
+  if(iconController) {
+    if((![nowPlayingApp.bundleIdentifier isEqualToString:lastNowPlayingBunldeID] && [lastNowPlayingBunldeID length] > 0) || !nowPlayingApp)  {
       __NSSingleObjectArrayI *purgeTheseIcons = [NSClassFromString(@"__NSSingleObjectArrayI") arrayWithObjects:appIcon, nil];
+      //NSLog(@"%@ || %@ || %@", nowPlayingApp, [appIcon applicationBundleID], purgeTheseIcons);
       [[iconController.iconManager iconImageCache] purgeCachedImagesForIcons:purgeTheseIcons];
       [[iconController.iconManager iconImageCache] notifyObserversOfUpdateForIcon:appIcon];
     }
 
     [iconController setNowPlayingArtworkForApp:nowPlayingApp];
-    latestNowPlayingBundleID = nowPlayingApp.bundleIdentifier;
-
-    weightOver = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-      weightOver = YES;
-    });
+    lastNowPlayingBunldeID = nowPlayingApp.bundleIdentifier;
   }
 }
 
-%hook SBHIconImageCache
--(void)cacheImageForIcon:(id)arg1 options:(unsigned long long)arg2 completionHandler:(/*^block*/id)arg3 {
-    %orig;
-    %log;
-    NSLog(@"icon %@", arg1);
-    NSLog(@"options %llu", arg2);
-  }
-%end
+void logginIt(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+  NSLog(@"center - %@", center);
+  NSLog(@"observer - %@", observer);
+  NSLog(@"name - %@", name);
+  NSLog(@"object - %@", object);
+  NSLog(@"userInfo - %@", userInfo);
+}
 
 %hook SBIconController
   -(id)initWithApplicationController:(id)arg1 applicationPlaceholderController:(id)arg2 userInterfaceController:(id)arg3 policyAggregator:(id)arg4 alertItemsController:(id)arg5 assistantController:(id)arg6 {
+
+      //the-casle ♥ Straw
+      //https://github.com/the-casle/straw/blob/master/TCMediaNotificationController.mm#L214-L220
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, nowPlayingInfoDidChange, (__bridge CFStringRef)@"com.apple.springboard.nowPlayingAppChanged", NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     appIcon = [NSClassFromString(@"SBApplicationIcon") alloc];
 
@@ -54,17 +52,28 @@ void nowPlayingInfoDidChange() {
 %new
   -(void)setNowPlayingArtworkForApp:(SBApplication *)app {
     if(app) {
+      appIcon = [appIcon initWithApplication:app];
+
       MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
         NSDictionary *nowPlayingInfo = (__bridge NSDictionary *)information;
         NSData *artworkData = [nowPlayingInfo objectForKey:(__bridge NSString *)kMRMediaRemoteNowPlayingInfoArtworkData];
+
         if(artworkData) {
+          NSData *oldArtworkData = UIImageJPEGRepresentation(artwork, 1.0);
+          NSData *newArtworkData = UIImageJPEGRepresentation([UIImage imageWithData:artworkData], 1.0);
+          if([oldArtworkData isEqualToData:newArtworkData]) {
+            NSLog(@"NowPlayingIcon || Duplicate artwork data");
+            return;
+          }
+
           SBHIconImageCache *hsImageCache = [self.iconManager iconImageCache];
-          UIImage *artwork = [UIImage imageWithData:artworkData];
-          NSArray *imageCaches = @[self.appSwitcherHeaderIconImageCache,
+          NSArray *imageCaches = @[hsImageCache,
+                                  self.appSwitcherHeaderIconImageCache,
                                   /*self.appSwitcherUnmaskedIconImageCache,
                                   self.tableUIIconImageCache,
-                                  self.notificationIconImageCache,*/
-                                  [self.iconManager iconImageCache]];
+                                  self.notificationIconImageCache,*/];
+
+          artwork = [UIImage imageWithData:artworkData];
 
           maskLayer = (maskLayer) ? maskLayer : [CALayer layer];
           maskLayer.frame = CGRectMake(0, 0, artwork.size.width, artwork.size.height);
@@ -78,16 +87,29 @@ void nowPlayingInfoDidChange() {
 
           UIGraphicsBeginImageContext(artwork.size);
           [artLayer renderInContext:UIGraphicsGetCurrentContext()];
-          artwork = UIGraphicsGetImageFromCurrentImageContext();
+          UIImage *artworkIcon = UIGraphicsGetImageFromCurrentImageContext();
           UIGraphicsEndImageContext();
 
-          appIcon = [[NSClassFromString(@"SBApplicationIcon") alloc] initWithApplication:app];
           for(SBHIconImageCache *cache in imageCaches) {
-            [cache cacheImage:artwork forIcon:appIcon];
+            [cache cacheImage:artworkIcon forIcon:appIcon];
             [cache notifyObserversOfUpdateForIcon:appIcon];
           }
+
+        } else {
+          artwork = nil;
         }
       });
     }
   }
+%end
+
+%hook SBIconImageCrossfadeView
+-(id)initWithImageView:(SBIconImageView *)arg1 crossfadeView:(UIView *)arg2 {
+  SBIcon *icon = [arg1 icon];
+  if([[icon applicationBundleID] isEqualToString:nowPlayingApp.bundleIdentifier] && artwork) {
+    arg1.layer.contents = (id)artwork.CGImage;
+  }
+
+  return %orig;
+}
 %end

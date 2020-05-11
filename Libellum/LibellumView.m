@@ -32,19 +32,19 @@
       self.translatesAutoresizingMaskIntoConstraints = NO;
       self.userInteractionEnabled = YES;
 
-      _dismissGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(toggleLibellum:)];
-      _dismissGesture.direction = UISwipeGestureRecognizerDirectionLeft;
-      [self addGestureRecognizer:_dismissGesture];
-
+        //Create blur
       self.blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
-      self.blurView.frame = self.bounds;
       self.blurView.translatesAutoresizingMaskIntoConstraints = NO;
 
-      self.vibrancyView = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:self.blurStyle]]];
-      self.vibrancyView.frame = self.bounds;
-      self.vibrancyView.translatesAutoresizingMaskIntoConstraints = NO;
-      [self.blurView.contentView addSubview:self.vibrancyView];
+        //Create gradient
+/*    self.gradient = [CAGradientLayer layer];
+      self.gradient.frame = self.bounds;
+      self.gradient.startPoint = CGPointMake(0.5, 0.0);
+      self.gradient.endPoint = CGPointMake(0.5, 1.0);
+      self.gradient.colors = @[(id)[UIColor clearColor].CGColor, (id)[UIColor purpleColor].CGColor];
+      [self.blurView.layer addSublayer:self.gradient];    */
 
+        //Create text view
       self.noteView = [[UITextView alloc] initWithFrame:self.bounds];
       self.noteView.backgroundColor = [UIColor clearColor];
       self.noteView.clipsToBounds = YES;
@@ -59,9 +59,10 @@
       self.noteView.tintColor = self.customTintColor;
       self.noteView.translatesAutoresizingMaskIntoConstraints = NO;
 
+        //Add lock icon if on iOS13
       self.lockIcon = [[UIImageView alloc] init];
       if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
-        self.lockIcon = [[UIImageView alloc] initWithImage:[UIImage systemImageNamed:@"lock.fill"]];
+        [self.lockIcon setImage:[UIImage systemImageNamed:@"lock.fill"]];
         self.lockIcon.hidden = !self.requireAuthentication;
         self.lockIcon.tintColor = self.lockColor;
         self.lockIcon.translatesAutoresizingMaskIntoConstraints = NO;
@@ -70,12 +71,14 @@
       if(self.blurStyle == 3) {
         self.blurView.alpha = 0;
         self.noteView.backgroundColor = self.customBackgroundColor;
+        self.noteView.textColor = self.customTextColor;
       }
 
       [self addSubview:self.blurView];
       [self addSubview:self.noteView];
       [self addSubview:self.lockIcon];
 
+        //Add constraints
       [NSLayoutConstraint activateConstraints:@[
         [self.blurView.topAnchor constraintEqualToAnchor:self.topAnchor],
         [self.blurView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
@@ -94,6 +97,7 @@
       ]];
 
       [self setNumberOfLines];
+      [self setupGestures];
       [self loadNotes];
 
       if(self.noteBackup) {
@@ -126,6 +130,10 @@
       default:
       NSLog(@"Libellum || noteSize unknown value - %lu", self.noteSize);
       break;
+    }
+
+    if(self.enableEndlessLines) {
+      self.noteView.textContainer.maximumNumberOfLines = 999;
     }
   }
 
@@ -201,26 +209,49 @@
     return (lineCount <= self.noteView.textContainer.maximumNumberOfLines);
   }
 
-#pragma mark - +/Done Button
+#pragma mark - ToolBar
 
   -(BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     UIToolbar *toolBar = [[UIToolbar alloc] init];
     [toolBar sizeToFit];
-    toolBar.barStyle = UIBarStyleBlack;
+    toolBar.barStyle = ([self isDarkMode]) ? UIBarStyleBlack : UIBarStyleDefault;
     toolBar.tintColor = self.customTintColor;
-    toolBar.items = @[
-      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(pointButton)],
-      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil],
-      [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButton)],
-    ];
-
+    toolBar.items = [self toolBarButtons];
     self.noteView.inputAccessoryView = toolBar;
 
     return YES;
   }
 
+  -(NSArray *)toolBarButtons {
+    NSMutableArray *buttons = [[NSMutableArray alloc] init];
+
+    if(self.enableUndoRedo) {
+      [buttons addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemUndo target:self action:@selector(undoButton)]];
+      [buttons addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRedo target:self action:@selector(redoButton)]];
+      [buttons addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil]];
+    }
+
+    [buttons addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(pointButton)]];
+    [buttons addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil]];
+    [buttons addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButton)]];
+
+    return [buttons copy];
+  }
+
   -(void)pointButton {
     [self.noteView replaceRange:self.noteView.selectedTextRange withText:@"\u2022 "];
+  }
+
+  -(void)undoButton {
+    if([[self.noteView undoManager] canUndo]) {
+      [[self.noteView undoManager] undo];
+    }
+  }
+
+  -(void)redoButton {
+    if([[self.noteView undoManager] canRedo]) {
+      [[self.noteView undoManager] redo];
+    }
   }
 
   -(void)doneButton {
@@ -229,6 +260,9 @@
 
   -(void)textViewDidBeginEditing:(UITextView *)textView {
     _editing = YES;
+
+    CGRect caretPosition = [self.noteView caretRectForPosition:textView.selectedTextRange.start];
+    [textView scrollRectToVisible:caretPosition animated:YES];
   }
 
   -(void)textViewDidEndEditing:(UITextView *)textView {
@@ -269,10 +303,24 @@
     }
   }
 
-#pragma mark - Show/Hide
+#pragma mark - Show/Hide Gestures
+
+  -(void)setupGestures {
+    _swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(toggleLibellum:)];
+    _swipeGesture.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self addGestureRecognizer:_swipeGesture];
+
+    /*_edgeGesture = [[NSClassFromString(@"SBScreenEdgePanGestureRecognizer") alloc] initWithTarget:self action:@selector(toggleLibellum:) type:SBSystemGestureTypeNone options:nil];
+    _edgeGesture.edges = UIRectEdgeTop;
+    _edgeGesture.maximumNumberOfTouches = 1;
+    [[NSClassFromString(@"FBSystemGestureManager") sharedInstance] addGestureRecognizer:_edgeGesture toDisplay:[NSClassFromString(@"FBDisplayManager") mainDisplay]];
+    [[NSClassFromString(@"SBMainDisplaySystemGestureManager") sharedInstance] addGestureRecognizer:_edgeGesture withType:SBSystemGestureTypeNone];*/
+  }
 
   -(void)toggleLibellum:(UIGestureRecognizer *)gesture {
     if(self.hideGesture && !_editing) {
+
+      HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 
       if(self.feedback) {
         AudioServicesPlaySystemSound(self.feedbackStyle);
@@ -286,6 +334,8 @@
           self.transform = CGAffineTransformMakeScale(1, 1);
           self.alpha = 1;
         } completion:nil];
+
+        [preferences setBool:NO forKey:@"isHidden"];
         return;
 
       } if(!self.hidden) {
@@ -296,6 +346,8 @@
           self.hidden = YES;
           [self.superview.superview layoutSubviews];
         }];
+
+        [preferences setBool:YES forKey:@"isHidden"];
         return;
       }
     }
@@ -309,7 +361,9 @@
     self.layer.borderWidth = self.borderWidth;
     self.noteView.tintColor = self.customTintColor;
     self.blurView.effect = [UIBlurEffect effectWithStyle:self.blurStyle];
-    self.vibrancyView.effect = [UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:self.blurStyle]];
+
+    _edgeGesture.enabled = self.useEdgeGesture;
+    _swipeGesture.enabled = self.useSwipeGesture;
 
     if(self.blurStyle == 3) {
       self.blurView.alpha = 0;

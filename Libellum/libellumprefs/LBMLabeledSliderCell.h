@@ -9,4 +9,5 @@
 +(UIColor *)opaqueSeparatorColor;
 +(UIColor *)labelColor;
 +(UIColor *)secondaryLabelColor;
++(UIColor *)systemGrayColor;
 @end

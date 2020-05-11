@@ -9,4 +9,5 @@
 @interface UIColor (iOS13)
 +(UIColor *)opaqueSeparatorColor;
 +(UIColor *)labelColor;
++(UIColor *)systemGrayColor;
 @end

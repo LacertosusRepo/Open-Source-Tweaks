@@ -17,11 +17,14 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
      */
   static CSScrollView *scrollViewCS;
   static SBPagedScrollView *scrollViewSB;
+  static BOOL isHidden;
 
     /*
      * Preferences Variables
      */
   static NSInteger noteSize;
+  static BOOL enableUndoRedo;
+  static BOOL enableEndlessLines;
   static NSInteger notePosition;
   static CGFloat cornerRadius;
   static NSInteger blurStyle;
@@ -35,6 +38,9 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   static BOOL requireAuthentication;
   static BOOL noteBackup;
   static BOOL hideGesture;
+  static BOOL useEdgeGesture;
+  static BOOL useSwipeGesture;
+  static BOOL useTapGesture;
   static BOOL feedback;
   static NSInteger feedbackStyle;
 
@@ -54,7 +60,11 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
       [self.LBMNoteView setSizeToMimic:self.sizeToMimic];
       [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
 
-      [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.dismissGesture];
+      [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.swipeGesture];
+
+      if(isHidden) {
+        [self.LBMNoteView toggleLibellum:nil];
+      }
     }
   }
 
@@ -89,7 +99,9 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 
 %new
   -(void)handleTaps:(UITapGestureRecognizer *)gesture {
-    [[LibellumView sharedInstance] toggleLibellum:gesture];
+    if(useTapGesture) {
+      [[LibellumView sharedInstance] toggleLibellum:gesture];
+    }
   }
 %end
 
@@ -109,7 +121,11 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
       [self.LBMNoteView setSizeToMimic:self.sizeToMimic];
       [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
 
-      [[scrollViewSB panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.dismissGesture];
+      [[scrollViewSB panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.swipeGesture];
+
+      if(isHidden) {
+        [self.LBMNoteView toggleLibellum:nil];
+      }
     }
   }
 
@@ -144,7 +160,9 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 
   %new
     -(void)handleTaps:(UITapGestureRecognizer *)gesture {
-      [[LibellumView sharedInstance] toggleLibellum:gesture];
+      if(useTapGesture) {
+        [[LibellumView sharedInstance] toggleLibellum:gesture];
+      }
     }
   %end
 
@@ -199,6 +217,8 @@ static NSInteger decideBlurStyle(NSInteger blurStyle) {
 static void libellumPreferencesChanged() {
   LibellumView *LBMNoteView = [LibellumView sharedInstance];
   LBMNoteView.noteSize = noteSize;
+  LBMNoteView.enableUndoRedo = enableUndoRedo;
+  LBMNoteView.enableEndlessLines = enableEndlessLines;
   LBMNoteView.cornerRadius = cornerRadius;
   LBMNoteView.blurStyle = decideBlurStyle(blurStyle);
   LBMNoteView.ignoreAdaptiveColors = ignoreAdaptiveColors;
@@ -211,6 +231,9 @@ static void libellumPreferencesChanged() {
   LBMNoteView.requireAuthentication = requireAuthentication;
   LBMNoteView.noteBackup = noteBackup;
   LBMNoteView.hideGesture = hideGesture;
+  LBMNoteView.useEdgeGesture = useEdgeGesture;
+  LBMNoteView.useSwipeGesture = useSwipeGesture;
+  LBMNoteView.useTapGesture = useTapGesture;
   LBMNoteView.feedback = feedback;
   LBMNoteView.feedbackStyle = feedbackStyle;
   [LBMNoteView preferencesChanged];
@@ -220,8 +243,10 @@ static void libellumPreferencesChanged() {
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
   [preferences registerInteger:&noteSize default:121 forKey:@"noteSize"];
   [preferences registerInteger:&notePosition default:1 forKey:@"notePosition"];
-  [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
+  [preferences registerBool:&enableUndoRedo default:NO forKey:@"enableUndoRedo"];
+  [preferences registerBool:&enableEndlessLines default:NO forKey:@"enableEndlessLines"];
 
+  [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
   [preferences registerInteger:&blurStyle default:darkStyle forKey:@"blurStyle"];
   [preferences registerBool:&ignoreAdaptiveColors default:NO forKey:@"ignoreAdaptiveColors"];
   [preferences registerObject:&customBackgroundColor default:@"000000" forKey:@"customBackgroundColor"];
@@ -236,8 +261,13 @@ static void libellumPreferencesChanged() {
   [preferences registerBool:&noteBackup default:NO forKey:@"noteBackup"];
 
   [preferences registerBool:&hideGesture default:YES forKey:@"hideGesture"];
+  [preferences registerBool:&useEdgeGesture default:YES forKey:@"useEdgeGesture"];
+  [preferences registerBool:&useSwipeGesture default:YES forKey:@"useSwipeGesture"];
+  [preferences registerBool:&useTapGesture default:YES forKey:@"useTapGesture"];
   [preferences registerBool:&feedback default:YES forKey:@"feedback"];
   [preferences registerInteger:&feedbackStyle default:1520 forKey:@"feedbackStyle"];
+
+  [preferences registerBool:&isHidden default:NO forKey:@"isHidden"];
 
   [preferences registerPreferenceChangeBlock:^{
     libellumPreferencesChanged();

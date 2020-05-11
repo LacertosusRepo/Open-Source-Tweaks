@@ -1,26 +1,31 @@
 #import "LBMColorIndicatorCell.h"
 
 @implementation LBMColorIndicatorCell {
-	UIView *_colorIndicator;
+	UIView *_indicatorView;
+	CAShapeLayer *_indicatorShape;
 }
 
 	-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier specifier:(PSSpecifier *)specifier {
 		self = [super initWithStyle:style reuseIdentifier:identifier specifier:specifier];
 
 		if(self) {
-			_colorIndicator = [[UIView alloc] initWithFrame:CGRectZero];
-			_colorIndicator.clipsToBounds = YES;
-			_colorIndicator.layer.borderColor = [UIColor opaqueSeparatorColor].CGColor;
-			_colorIndicator.layer.borderWidth = 3;
-			_colorIndicator.layer.cornerRadius = 15;
-			_colorIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-			[self.contentView addSubview:_colorIndicator];
+			_indicatorView = [[UIView alloc] initWithFrame:CGRectZero];
+			_indicatorView.clipsToBounds = YES;
+			_indicatorView.layer.borderColor = ([UIColor respondsToSelector:@selector(labelColor)]) ? [UIColor opaqueSeparatorColor].CGColor : [UIColor systemGrayColor].CGColor;
+			_indicatorView.layer.borderWidth = 3;
+			_indicatorView.layer.cornerRadius = 14.5;
+			_indicatorView.translatesAutoresizingMaskIntoConstraints = NO;
+			[self.contentView addSubview:_indicatorView];
+
+			_indicatorShape = [CAShapeLayer layer];
+			_indicatorShape.path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 29, 29) cornerRadius:14.5].CGPath;
+			[_indicatorView.layer addSublayer:_indicatorShape];
 
 			[NSLayoutConstraint activateConstraints:@[
-				[_colorIndicator.rightAnchor constraintEqualToAnchor:self.contentView.rightAnchor],
-				[_colorIndicator.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
-				[_colorIndicator.heightAnchor constraintEqualToConstant:30],
-				[_colorIndicator.widthAnchor constraintEqualToConstant:30],
+				[_indicatorView.rightAnchor constraintEqualToAnchor:self.contentView.rightAnchor],
+				[_indicatorView.centerYAnchor constraintEqualToAnchor:self.contentView.centerYAnchor],
+				[_indicatorView.heightAnchor constraintEqualToConstant:29],
+				[_indicatorView.widthAnchor constraintEqualToConstant:29],
 			]];
 		}
 
@@ -30,8 +35,8 @@
 			NSString *hex = ([colorComponents count] > 0) ? [colorComponents firstObject] : @"#FFFFFF";
 			CGFloat alpha = ([colorComponents count] > 1) ? [[colorComponents lastObject] floatValue] : 1.0;
 
-			[UIView transitionWithView:_colorIndicator duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-				_colorIndicator.backgroundColor = [self colorFromHex:hex withAlpha:alpha];
+			[UIView transitionWithView:_indicatorView duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+				_indicatorShape.fillColor = [self colorFromHex:hex withAlpha:alpha].CGColor;
 			} completion:nil];
 		}
 
@@ -47,8 +52,8 @@
 			NSString *hex = ([colorComponents count] > 0) ? [colorComponents firstObject] : @"#FFFFFF";
 			CGFloat alpha = ([colorComponents count] > 1) ? [[colorComponents lastObject] floatValue] : 1.0;
 
-			[UIView transitionWithView:_colorIndicator duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-				_colorIndicator.backgroundColor = [self colorFromHex:hex withAlpha:alpha];
+			[UIView transitionWithView:_indicatorView duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+				_indicatorShape.fillColor = [self colorFromHex:hex withAlpha:alpha].CGColor;
 			} completion:nil];
 		}
 	}

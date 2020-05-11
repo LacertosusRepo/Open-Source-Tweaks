@@ -11,7 +11,7 @@
 			_sliderLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 			_sliderLabel.font = [UIFont systemFontOfSize:15 weight:UIFontWeightBold];
 			_sliderLabel.text = [specifier propertyForKey:@"label"];
-			_sliderLabel.textColor = [UIColor secondaryLabelColor];
+			_sliderLabel.textColor = ([UIColor respondsToSelector:@selector(labelColor)]) ? [UIColor secondaryLabelColor] : [UIColor systemGrayColor];
 			_sliderLabel.translatesAutoresizingMaskIntoConstraints = NO;
 			[_sliderLabel sizeToFit];
 			[self.contentView addSubview:_sliderLabel];

@@ -341,4 +341,8 @@
     }
   }
 
+  -(BOOL)isDarkMode {
+    return ([[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle] == 2) ? YES : NO;
+  }
+
 @end

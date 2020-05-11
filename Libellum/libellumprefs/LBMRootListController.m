@@ -37,6 +37,9 @@
 	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
 		[super setPreferenceValue:value specifier:specifier];
 
+		//When a value is changed, enable respring button
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+
 		NSString *key = [specifier propertyForKey:@"key"];
 		if([key isEqualToString:@"blurStyle"]) {
 			if([value intValue] != 4) {
@@ -61,13 +64,25 @@
 		}
 	}
 
+	-(void)reloadSpecifiers {
+		[super reloadSpecifiers];
+
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		if([[preferences objectForKey:@"blurStyle"] intValue] != 4) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
+		}
+
+		if([[preferences objectForKey:@"blurStyle"] intValue] != 3) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
+		}
+
+		if(![[preferences objectForKey:@"feedback"] boolValue]) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
+		}
+	}
+
 	-(void)viewDidLoad {
 		[super viewDidLoad];
-
-		if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){11, 0, 0}]) {
-			self.navigationController.navigationBar.prefersLargeTitles = NO;
-			self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-		}
 
 		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 		if([[preferences objectForKey:@"blurStyle"] intValue] != 4) {
@@ -82,15 +97,19 @@
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
 		}
 
-		//Adds GitHub button in top right of preference pane
-		UIImage *iconBar = [[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/barbutton.png"];
-		iconBar = [iconBar imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-		UIBarButtonItem *webButton = [[UIBarButtonItem alloc] initWithImage:iconBar style:UIBarButtonItemStylePlain target:self action:@selector(webButtonAction)];
-		self.navigationItem.rightBarButtonItem = webButton;
+		if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){11, 0, 0}]) {
+			self.navigationController.navigationBar.prefersLargeTitles = NO;
+			self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
+		}
+
+		//Adds respring button in top right of preference pane
+		UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respring)];
+		self.navigationItem.rightBarButtonItem = respringButton;
+		self.navigationItem.rightBarButtonItem.enabled = NO;
 
 		//Adds header to table
 		UIView *LBMHeaderView = [[LBMHeaderCell alloc] init];
-		LBMHeaderView.frame = CGRectMake(0, 0, LBMHeaderView.bounds.size.width, 150);
+		LBMHeaderView.frame = CGRectMake(0, 0, LBMHeaderView.bounds.size.width, 175);
 		UITableView *tableView = [self valueForKey:@"_table"];
 		tableView.tableHeaderView = LBMHeaderView;
 	}
@@ -103,22 +122,24 @@
 		title.text = @"Libellum";
 		title.textAlignment = NSTextAlignmentCenter;
 		title.textColor = Sec_Color;
+		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
 		self.navigationItem.titleView = title;
 		self.navigationItem.titleView.alpha = 0;
 	}
 
-	-(IBAction)webButtonAction {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+	-(void)respring {
+		[HBRespringController respring];
 	}
 
 	//https://github.com/Nepeta/Axon/blob/master/Prefs/Preferences.m
 	-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 		CGFloat offsetY = scrollView.contentOffset.y;
-		if(offsetY > 100) {
+		if(offsetY > 120) {
 			[UIView animateWithDuration:0.2 animations:^{
 				self.navigationItem.titleView.alpha = 1;
 				self.navigationItem.titleView.transform = CGAffineTransformMakeScale(1.0, 1.0);
 			}];
+
 		} else {
 			[UIView animateWithDuration:0.2 animations:^{
 				self.navigationItem.titleView.alpha = 0;
@@ -320,12 +341,6 @@
 		}
 		[notesBackupAlert addAction:cancelAction];
 		[self presentViewController:notesBackupAlert animated:YES completion:nil];
-	}
-
-	-(void)respring:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-		[HBRespringController respring];
 	}
 
 @end

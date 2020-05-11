@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Set the size of the noteview, position, and the corner radius.</string>
+			<string>WARNING: If your notes lapse the size of the noteview, disabling endless lines will not allow you to type afterwards.</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -76,6 +76,44 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>enableUndoRedo</string>
+			<key>label</key>
+			<string>Enable Undo/Redo Buttons</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>enableEndlessLines</string>
+			<key>label</key>
+			<string>Enable Endless Lines</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Style</string>
+			<key>footerText</key>
+			<string>Adaptive blur changes based on the system's dark mode.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSSliderCell</string>
 			<key>default</key>
 			<string>15</string>
@@ -99,15 +137,6 @@
 			<string>LBMLabeledSliderCell</string>
 			<key>height</key>
 			<real>56</real>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Style</string>
-			<key>footerText</key>
-			<string>Adaptive blur changes based on the system's dark mode.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -332,7 +361,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Toggle Gesture</string>
+			<string>Toggle Notes</string>
 			<key>footerText</key>
 			<string>Toggle notes by triple tapping the lockscreen or dismiss notes by swiping left on them.</string>
 		</dict>
@@ -346,7 +375,49 @@
 			<key>key</key>
 			<string>hideGesture</string>
 			<key>label</key>
-			<string>Toggle Gesture</string>
+			<string>Enable Gestures</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+<!--		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useEdgeGesture</string>
+			<key>label</key>
+			<string>Swipe-In from Top</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict> 	-->
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useSwipeGesture</string>
+			<key>label</key>
+			<string>Swipe Left on Notes</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useTapGesture</string>
+			<key>label</key>
+			<string>Tripple Tap LockScreen</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
@@ -391,21 +462,6 @@
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
 			<string>FeedbackStyle</string>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-		</dict>
-		<dict>
-    	<key>action</key>
-    	<string>respring:</string>
-    	<key>cell</key>
-    	<string>PSButtonCell</string>
-    	<key>cellClass</key>
-    	<string>HBSpinnerTableCell</string>
-    	<key>label</key>
-    	<string>Respring</string>
 		</dict>
 
 		<dict>

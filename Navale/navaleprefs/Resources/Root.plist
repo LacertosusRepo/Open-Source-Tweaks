@@ -8,8 +8,14 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Use slider to change dock alpha. ColorFlow will only replace the colors when music is playing.</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -22,20 +28,6 @@
 			<string>usingFloatingDock</string>
 			<key>label</key>
 			<string>Apply to Floating Dock</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.navaleprefs</string>
-			<key>key</key>
-			<string>useColorFlow</string>
-			<key>label</key>
-			<string>Use ColorFlow 4 Colors</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
@@ -60,8 +52,6 @@
 				<string>0</string>
 				<string>1</string>
 			</array>
-			<key>id</key>
-			<string>ModeCell</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
@@ -84,13 +74,19 @@
 			<string>slidericon.png</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Alpha</string>
+			<key>cellClass</key>
+			<string>NAVLabeledSliderCell</string>
+			<key>height</key>
+			<real>56</real>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Color Options</string>
+			<string>Colors</string>
 			<key>footerText</key>
 			<string>Pull colors from your homescreen wallpaper and use them for your dock. Not perfect.</string>
 		</dict>
@@ -100,23 +96,35 @@
 		</dict>
 		<dict>
 			<key>action</key>
-			<string>colorPickerOne</string>
+			<string>colorOnePicker</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
 			<string>Color One</string>
 			<key>icon</key>
 			<string>colorpickericonone.png</string>
+			<key>cellClass</key>
+			<string>NAVColorIndicatorCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>colorOneString</string>
 		</dict>
 		<dict>
 			<key>action</key>
-			<string>colorPickerTwo</string>
+			<string>colorTwoPicker</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>label</key>
 			<string>Color Two</string>
 			<key>icon</key>
 			<string>colorpickericontwo.png</string>
+			<key>cellClass</key>
+			<string>NAVColorIndicatorCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>colorTwoString</string>
 		</dict>
 		<dict>
     	<key>action</key>
@@ -132,8 +140,100 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Respring to apply ColorFlow option.</string>
+			<key>label</key>
+			<string>Corner Radius</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>overrideCornerRadius</string>
+			<key>label</key>
+			<string>Override Corner Radius</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0</string>
+			<key>min</key>
+			<string>0</string>
+			<key>max</key>
+			<string>50</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>cornerRadius</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Corner Radius</string>
+			<key>cellClass</key>
+			<string>NAVLabeledSliderCell</string>
+			<key>height</key>
+			<real>56</real>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Border</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>borderColorPicker</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Border Color</string>
+			<key>cellClass</key>
+			<string>NAVColorIndicatorCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>borderColorString</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0</string>
+			<key>min</key>
+			<string>0</string>
+			<key>max</key>
+			<string>20</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>key</key>
+			<string>borderWidth</string>
+			<key>isSegmented</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Border Width</string>
+			<key>cellClass</key>
+			<string>NAVLabeledSliderCell</string>
+			<key>height</key>
+			<real>56</real>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 		</dict>
 		<dict>
     	<key>action</key>
@@ -146,20 +246,11 @@
     	<string>Respring</string>
 		</dict>
 
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Made with all natural ingredients by LacertosusDeus</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
 			<key>label</key>
-			<string>Lacertosus</string>
-			<key>user</key>
-			<string>LacertosusDeus</string>
+			<string>Support</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -184,6 +275,15 @@
 			<string>paypal.png</string>
 			<key>url</key>
 			<string>https://paypal.me/Lacertosus</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerAlignment</key>
+			<integer>1</integer>
+			<key>footerText</key>
+			<string>Navale by LacertosusDeus</string>
 		</dict>
 	</array>
 	<key>title</key>

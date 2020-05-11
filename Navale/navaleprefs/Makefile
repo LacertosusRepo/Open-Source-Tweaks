@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = navaleprefs
-navaleprefs_FILES = NAVRootListController.m NAVHeaderCell.m NAVGradientPreviewCell.m
+navaleprefs_FILES = NAVRootListController.m NAVColorIndicatorCell.m NAVLabeledSliderCell.m NAVHeaderCell.m NAVGradientPreviewCell.m
 navaleprefs_INSTALL_PATH = /Library/PreferenceBundles
 navaleprefs_FRAMEWORKS = UIKit
 navaleprefs_LIBRARIES = colorpicker

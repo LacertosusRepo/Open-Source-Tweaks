@@ -1,6 +1,6 @@
 export ARCHS = arm64 arm64e
 export SDKVERSION = 11.2
-THEOS_DEVICE_IP = 10.0.0.133
+THEOS_DEVICE_IP = 10.0.0.131
 
 # Simject
 # export ARCHS = x86_64
