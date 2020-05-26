@@ -42,9 +42,9 @@
 
   -(void)updatePreviewGradient {
     if(_preferences) {
-      _one = LCPParseColorString([_preferences objectForKey:@"gradientColorOne"], @"#FFFFFF");
-      _two = LCPParseColorString([_preferences objectForKey:@"gradientColorTwo"], @"#FFFFFF");
-      _border = LCPParseColorString([_preferences objectForKey:@"gradientBorderColor"], @"#FFFFFF");
+      _one = [UIColor PF_colorWithHex:[_preferences objectForKey:@"gradientColorOne"]];
+      _two = [UIColor PF_colorWithHex:[_preferences objectForKey:@"gradientColorTwo"]];
+      _border = [UIColor PF_colorWithHex:[_preferences objectForKey:@"gradientBorderColor"]];
       _gradient.colors = @[(id)_one.CGColor, (id)_two.CGColor];
       _gradient.opacity = [_preferences floatForKey:@"gradientAlpha"];
       _gradient.borderColor = _border.CGColor;

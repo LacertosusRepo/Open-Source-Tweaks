@@ -19,32 +19,40 @@
 			<string>LacertosusDeus</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>colorPickerOne</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>label</key>
-			<string>Color One</string>
 			<key>cellClass</key>
-			<string>CIPColorIndicatorCell</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>default</key>
+			<string>#8693AB</string>
 			<key>key</key>
 			<string>gradientColorOne</string>
+			<key>label</key>
+			<string>Top Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>colorPickerTwo</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>label</key>
-			<string>Color Two</string>
 			<key>cellClass</key>
-			<string>CIPColorIndicatorCell</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>default</key>
+			<string>#BDD4E7</string>
 			<key>key</key>
 			<string>gradientColorTwo</string>
+			<key>label</key>
+			<string>Bottom Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -155,18 +163,22 @@
 			<real>56</real>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>colorPickerBorder</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>label</key>
-			<string>Border Color</string>
 			<key>cellClass</key>
-			<string>CIPColorIndicatorCell</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.coloredscrollindicatorprefs</string>
+			<key>default</key>
+			<string>#FFFFFF</string>
 			<key>key</key>
 			<string>gradientBorderColor</string>
+			<key>label</key>
+			<string>Border Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.coloredscrollindicatorprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>

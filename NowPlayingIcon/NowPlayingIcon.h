@@ -19,21 +19,18 @@ struct SBIconImageInfo {
 
 @interface SBIcon : NSObject
 -(NSString *)applicationBundleID;
+-(id)application;
+-(id)parentFolderIcon;
 @end
 
 @interface SBIconView : UIView
 @end
 
 @interface SBIconImageView : UIView
--(void)clearCachedImages;
--(SBIconView *)iconView;
 -(SBIcon *)icon;
--(id)contentsImage;
 @end
 
 @interface SBIconImageCrossfadeView : UIView
-@property (nonatomic, readonly) SBIconImageView *iconImageView;
-@property (nonatomic, readonly) UIView *containerView;
 @end
 
 @interface SBApplication : NSObject
@@ -41,8 +38,10 @@ struct SBIconImageInfo {
 @end
 
 @interface SBApplicationIcon : SBIcon
--(id)initWithApplication:(SBApplication *)arg1;
--(void)reloadIconImage;
+@end
+
+@interface SBIconModel : NSObject
+-(SBApplicationIcon *)applicationIconForBundleIdentifier:(NSString *)arg1;
 @end
 
 @interface SBMediaController : NSObject
@@ -54,15 +53,17 @@ struct SBIconImageInfo {
 @property (nonatomic, readonly) struct SBIconImageInfo iconImageInfo;
 @property (nonatomic, readonly) UIImage *overlayImage;
 -(void)cacheImage:(UIImage *)arg1 forIcon:(SBApplicationIcon *)arg2;
--(void)iconImageDidUpdate:(SBApplicationIcon *)arg1;
 -(void)notifyObserversOfUpdateForIcon:(SBApplicationIcon *)arg1;
 -(void)purgeCachedImagesForIcons:(id)arg1;
--(void)purgeAllCachedImages;
--(UIImage *)imageForIcon:(SBApplicationIcon *)arg1;
+@end
+
+@interface SBFolderIconImageCache : NSObject
+-(void)iconImageCache:(id)arg1 didUpdateImageForIcon:(id)arg2;
 @end
 
 @interface SBHIconManager : NSObject
 -(SBHIconImageCache *)iconImageCache;
+-(SBFolderIconImageCache *)folderIconImageCache;
 @end
 
 @interface SBIconController : NSObject
@@ -71,6 +72,9 @@ struct SBIconImageInfo {
 @property (nonatomic, readonly) SBHIconImageCache *appSwitcherUnmaskedIconImageCache;
 @property (nonatomic, readonly) SBHIconImageCache *tableUIIconImageCache;
 @property (nonatomic, readonly) SBHIconImageCache *notificationIconImageCache;
+@property (nonatomic, retain) SBIconModel *model;
++(instancetype)sharedInstance;
+
   //NowPlayingIcon
 -(void)setNowPlayingArtworkForApp:(SBApplication *)app;
 @end

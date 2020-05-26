@@ -13,8 +13,7 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = ColoredScrollIndicator
 ColoredScrollIndicator_FILES = Tweak.x
 # Add ws.hbang.common (>= 1.13) to depencencies
-ColoredScrollIndicator_EXTRA_FRAMEWORKS += Cephei
-ColoredScrollIndicator_LIBRARIES = colorpicker
+ColoredScrollIndicator_EXTRA_FRAMEWORKS += Cephei Alderis
 ColoredScrollIndicator_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk

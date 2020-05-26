@@ -1,8 +1,8 @@
+@import Alderis;
 #import <Cephei/HBPreferences.h>
 #import <Preferences/PSSpecifier.h>
 #import <Preferences/PSTableCell.h>
-#import "libcolorpicker.h"
-
+#import "AlderisColorPicker.h"
 
 @interface CIPGradientPreviewCell : PSTableCell
 -(void)updatePreviewGradient;

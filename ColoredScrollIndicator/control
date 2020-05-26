@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.coloredscrollindicator
 Name: ColoredScrollIndicator
-Depends: mobilesubstrate, ws.hbang.common (>= 1.11), org.thebigboss.libcolorpicker
-Version: 1.0
+Depends: mobilesubstrate, ws.hbang.common (>= 1.11), ws.hbang.alderis
+Version: 1.1
 Architecture: iphoneos-arm
 Description: Spice up your scroll indicator...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

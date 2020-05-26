@@ -5,8 +5,9 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 5/5/2020.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
+@import Alderis;
+#import "AlderisColorPicker.h"
 #import <Cephei/HBPreferences.h>
-#import "libcolorpicker.h"
 #define LD_DEBUG NO
 
 @interface _UIScrollViewScrollIndicator : UIView
@@ -35,9 +36,9 @@
     UIView *scroller = %orig;
     scroller.backgroundColor = [UIColor clearColor];
 
-    one = LCPParseColorString(gradientColorOne, @"#8693AB");
-    two = LCPParseColorString(gradientColorTwo, @"#BDD4E7");
-    border = LCPParseColorString(gradientBorderColor, @"#FFFFFF");
+    one = [UIColor PF_colorWithHex:gradientColorOne];
+    two = [UIColor PF_colorWithHex:gradientColorTwo];
+    border = [UIColor PF_colorWithHex:gradientBorderColor];
 
     if([scroller.layer.sublayers count] == 0) {
       CAGradientLayer *gradient = [CAGradientLayer layer];
@@ -56,6 +57,7 @@
 
   -(void)layoutSubviews {
     %orig;
+    
     for(CAGradientLayer *gradient in self.roundedFillView.layer.sublayers) {
       gradient.frame = self.roundedFillView.bounds;
     }
