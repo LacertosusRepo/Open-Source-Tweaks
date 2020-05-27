@@ -11,7 +11,7 @@
 #define LD_DEBUG NO
 
 @interface _UIScrollViewScrollIndicator : UIView
-@property (nonatomic,retain) UIView * roundedFillView;
+@property (nonatomic, retain) UIView *roundedFillView;
 @end
 
 @interface UIView (iOS13)
@@ -57,7 +57,7 @@
 
   -(void)layoutSubviews {
     %orig;
-    
+
     for(CAGradientLayer *gradient in self.roundedFillView.layer.sublayers) {
       gradient.frame = self.roundedFillView.bounds;
     }
