@@ -5,12 +5,13 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 7/16/2019.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
+
+@import Alderis;
 #import <Cephei/HBPreferences.h>
-#import "libcolorpicker.h"
+#import "AlderisColorPicker.h"
 #import "LibellumView.h"
 #import "LibellumClasses.h"
 #define LD_DEBUG NO
-extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
     /*
      * Variables
@@ -25,9 +26,10 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   static NSInteger noteSize;
   static BOOL enableUndoRedo;
   static BOOL enableEndlessLines;
+  static BOOL enableAutoUnlockXBlock;
   static NSInteger notePosition;
   static CGFloat cornerRadius;
-  static NSInteger blurStyle;
+  static NSString *blurStyle;
   static BOOL ignoreAdaptiveColors;
   static NSString *customBackgroundColor;
   static NSString *customTextColor;
@@ -52,9 +54,8 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
    */
 %hook CSNotificationAdjunctListViewController
 %property (nonatomic, retain) LibellumView *LBMNoteView;
-  -(void)viewDidLoad {
+  -(void)viewDidLoad {    
     %orig;
-
     if(!self.LBMNoteView) {
       self.LBMNoteView = [[LibellumView sharedInstance] initWithFrame:CGRectZero];
       [self.LBMNoteView setSizeToMimic:self.sizeToMimic];
@@ -77,7 +78,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   }
 
   -(BOOL)isPresentingContent {
-    if([self.LBMNoteView isDescendantOfView:self.stackView]) {
+    if(!self.LBMNoteView.hidden) {
       return YES;
     }
 
@@ -138,7 +139,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
   }
 
   -(BOOL)isPresentingContent {
-    if([self.LBMNoteView isDescendantOfView:self.stackView]) {
+    if(!self.LBMNoteView.hidden) {
       return YES;
     }
 
@@ -183,33 +184,17 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 %end
 
   /*
-   * Function to determine blur based on iOS
+   * AutoUnlockX compatibility
    */
-static NSInteger decideBlurStyle(NSInteger blurStyle) {
-  BOOL iOS13 = [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0 ,0}];
-  switch (blurStyle) {
-    case lightStyle:
-    //UIBlurEffectStyleSystemThinMaterialLight
-    return (iOS13) ? 12 : UIBlurEffectStyleLight;
-    break;
+%hook SparkAutoUnlockX
+  -(BOOL)externalBlocksUnlock {
+    if([LibellumView sharedInstance] && enableAutoUnlockXBlock) {
+      return ![[LibellumView sharedInstance] isHidden];
+    }
 
-    case darkStyle:
-    //UIBlurEffectStyleSystemThinMaterialDark
-    return (iOS13) ? 17 : UIBlurEffectStyleDark;
-    break;
-
-    case colorizedStyle:
-    return 3;
-    break;
-
-    case adaptiveStyle:
-    //UIBlurEffectStyleSystemThinMaterial
-    return (iOS13) ? 7 : UIBlurEffectStyleRegular;
-    break;
+    return %orig;
   }
-
-  return UIBlurEffectStyleRegular;
-}
+%end
 
   /*
    * Update Preferences
@@ -220,13 +205,13 @@ static void libellumPreferencesChanged() {
   LBMNoteView.enableUndoRedo = enableUndoRedo;
   LBMNoteView.enableEndlessLines = enableEndlessLines;
   LBMNoteView.cornerRadius = cornerRadius;
-  LBMNoteView.blurStyle = decideBlurStyle(blurStyle);
+  LBMNoteView.blurStyle = blurStyle;
   LBMNoteView.ignoreAdaptiveColors = ignoreAdaptiveColors;
-  LBMNoteView.customBackgroundColor = LCPParseColorString(customBackgroundColor, @"000000");
-  LBMNoteView.customTextColor = LCPParseColorString(customTextColor, @"FFFFFF");
-  LBMNoteView.lockColor = LCPParseColorString(lockColor, @"FFFFFF");
-  LBMNoteView.customTintColor = LCPParseColorString(customTintColor, @"007AFF");
-  LBMNoteView.borderColor = LCPParseColorString(borderColor, @"FFFFFF");
+  LBMNoteView.customBackgroundColor = [UIColor PF_colorWithHex:customBackgroundColor];
+  LBMNoteView.customTextColor = [UIColor PF_colorWithHex:customTextColor];
+  LBMNoteView.lockColor = [UIColor PF_colorWithHex:lockColor];
+  LBMNoteView.customTintColor = [UIColor PF_colorWithHex:customTintColor];
+  LBMNoteView.borderColor = [UIColor PF_colorWithHex:borderColor];
   LBMNoteView.borderWidth = borderWidth;
   LBMNoteView.requireAuthentication = requireAuthentication;
   LBMNoteView.noteBackup = noteBackup;
@@ -245,31 +230,31 @@ static void libellumPreferencesChanged() {
   [preferences registerInteger:&notePosition default:1 forKey:@"notePosition"];
   [preferences registerBool:&enableUndoRedo default:NO forKey:@"enableUndoRedo"];
   [preferences registerBool:&enableEndlessLines default:NO forKey:@"enableEndlessLines"];
-
+  [preferences registerBool:&enableAutoUnlockXBlock default:NO forKey:@"enableAutoUnlockXBlock"];
   [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
-  [preferences registerInteger:&blurStyle default:darkStyle forKey:@"blurStyle"];
+  [preferences registerObject:&blurStyle default:@"platters" forKey:@"blurStyle"];
   [preferences registerBool:&ignoreAdaptiveColors default:NO forKey:@"ignoreAdaptiveColors"];
   [preferences registerObject:&customBackgroundColor default:@"000000" forKey:@"customBackgroundColor"];
   [preferences registerObject:&customTextColor default:@"FFFFFF" forKey:@"customTextColor"];
   [preferences registerObject:&lockColor default:@"FFFFFF" forKey:@"lockColor"];
   [preferences registerObject:&customTintColor default:@"007AFF" forKey:@"customTintColor"];
-
   [preferences registerObject:&borderColor default:@"FFFFFF" forKey:@"borderColor"];
   [preferences registerFloat:&borderWidth default:0 forKey:@"borderWidth"];
-
   [preferences registerBool:&requireAuthentication default:NO forKey:@"requireAuthentication"];
   [preferences registerBool:&noteBackup default:NO forKey:@"noteBackup"];
-
   [preferences registerBool:&hideGesture default:YES forKey:@"hideGesture"];
   [preferences registerBool:&useEdgeGesture default:YES forKey:@"useEdgeGesture"];
   [preferences registerBool:&useSwipeGesture default:YES forKey:@"useSwipeGesture"];
   [preferences registerBool:&useTapGesture default:YES forKey:@"useTapGesture"];
   [preferences registerBool:&feedback default:YES forKey:@"feedback"];
   [preferences registerInteger:&feedbackStyle default:1520 forKey:@"feedbackStyle"];
-
   [preferences registerBool:&isHidden default:NO forKey:@"isHidden"];
-
   [preferences registerPreferenceChangeBlock:^{
     libellumPreferencesChanged();
   }];
+
+    //Fix crash caused by preference value previosuly being an integer
+  if([[preferences objectForKey:@"blurStyle"] intValue] > 0) {
+    [preferences setObject:@"adaptive" forKey:@"blurStyle"];
+  }
 }

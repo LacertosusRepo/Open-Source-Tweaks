@@ -17,6 +17,8 @@
 			<string>Lacertosus</string>
 			<key>user</key>
 			<string>LacertosusDeus</string>
+			<key>avatarURL</key>
+			<string>https://avatars2.githubusercontent.com/u/14306024?v=4</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -102,6 +104,20 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>enableAutoUnlockXBlock</string>
+			<key>label</key>
+			<string>Prevent AutoUnlockX While Visible</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
 
 
 		<dict>
@@ -110,7 +126,7 @@
 			<key>label</key>
 			<string>Style</string>
 			<key>footerText</key>
-			<string>Adaptive blur changes based on the system's dark mode.</string>
+			<string>Changing background style requires respring.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -148,7 +164,7 @@
 			<key>label</key>
 			<string>Blur Style</string>
 			<key>default</key>
-			<string>2</string>
+			<string>adaptive</string>
 			<key>validTitles</key>
 			<array>
 				<string>Light Blur</string>
@@ -158,10 +174,10 @@
 			</array>
 			<key>validValues</key>
 			<array>
-				<integer>1</integer>
-				<integer>2</integer>
-				<integer>3</integer>
-				<integer>4</integer>
+				<string>platters</string>
+				<string>plattersDark</string>
+				<string>colorized</string>
+				<string>adaptive</string>
 			</array>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
@@ -205,61 +221,79 @@
 			<string>IgnoreAdaptivePresetColors</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>backgroundColorPicker:</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-    	<string>LBMColorIndicatorCell</string>
-			<key>label</key>
-			<string>Set Solid Color</string>
-			<key>id</key>
-			<string>SetSolidColor</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>default</key>
+			<string>#000000</string>
 			<key>key</key>
 			<string>customBackgroundColor</string>
+			<key>label</key>
+			<string>Set Solid Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>SetSolidColor</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>textColorPicker:</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-    	<string>LBMColorIndicatorCell</string>
-			<key>label</key>
-			<string>Set Font Color</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>default</key>
+			<string>#FFFFFF</string>
 			<key>key</key>
 			<string>customTextColor</string>
+			<key>label</key>
+			<string>Set Font Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>lockColorPicker:</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-    	<string>LBMColorIndicatorCell</string>
-			<key>label</key>
-			<string>Set Lock Color</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>default</key>
+			<string>#FFFFFF</string>
 			<key>key</key>
 			<string>lockColor</string>
+			<key>label</key>
+			<string>Set Lock Icon Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>tintColorPicker:</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-    	<string>LBMColorIndicatorCell</string>
-			<key>label</key>
-			<string>Set Tint Color</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>default</key>
+			<string>#007AFF</string>
 			<key>key</key>
+			<string>customTintColor</string>
+			<key>label</key>
+			<string>Set Tint Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
 			<string>customTintColor</string>
 		</dict>
 
@@ -270,18 +304,22 @@
 			<string>Border</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>borderColorPicker:</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-    	<string>LBMColorIndicatorCell</string>
-			<key>label</key>
-			<string>Set Border Color</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>default</key>
+			<string>#FFFFFF</string>
 			<key>key</key>
 			<string>borderColor</string>
+			<key>label</key>
+			<string>Set Border Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -378,6 +416,8 @@
 			<string>Enable Gestures</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>EnableGestures</string>
 		</dict>
 <!--		<dict>
 			<key>cell</key>
@@ -406,6 +446,8 @@
 			<string>Swipe Left on Notes</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>SwipeLeftOnNotes</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -417,9 +459,11 @@
 			<key>key</key>
 			<string>useTapGesture</string>
 			<key>label</key>
-			<string>Tripple Tap LockScreen</string>
+			<string>Triple Tap LockScreen</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>TripleTapLockScreen</string>
 		</dict>
 		<dict>
 			<key>cell</key>

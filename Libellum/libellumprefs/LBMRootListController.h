@@ -6,8 +6,9 @@
 #import <Cephei/HBRespringController.h>
 #import <Cephei/HBPreferences.h>
 
+@import Alderis;
 #import "LBMHeaderCell.h"
-#import "libcolorpicker.h"
+#import "AlderisColorPicker.h"
 #import "PreferencesColorDefinitions.h"
 #import "../LibellumView.h"
 

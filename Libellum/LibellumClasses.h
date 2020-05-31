@@ -1,12 +1,5 @@
 #import "LibellumView.h"
 
-enum blurModeEnums {
-  lightStyle = 1,
-  darkStyle,
-  colorizedStyle,
-  adaptiveStyle,
-};
-
 @interface CSNotificationAdjunctListViewController : UIViewController
 @property (nonatomic, retain) UIStackView *stackView;
 @property (nonatomic, assign) CGSize sizeToMimic;

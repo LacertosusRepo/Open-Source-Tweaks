@@ -1,4 +1,5 @@
 #import "PreferencesColorDefinitions.h"
+#import "../LibellumView.h"
 
 @interface LBMHeaderCell : UIView
 @property (nonatomic, strong) UIImageView *iconView;

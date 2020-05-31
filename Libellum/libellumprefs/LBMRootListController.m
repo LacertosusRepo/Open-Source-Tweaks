@@ -7,9 +7,8 @@
 		if(self) {
 			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
 			appearanceSettings.tintColor = Sec_Color;
-			appearanceSettings.navigationBarTintColor = Sec_Color;
-			appearanceSettings.navigationBarBackgroundColor = Pri_Color;
-			appearanceSettings.statusBarTintColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Pri_Color;
+			appearanceSettings.navigationBarBackgroundColor = Alt_Color;
 			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
 			appearanceSettings.translucentNavigationBar = NO;
 			self.hb_appearanceSettings = appearanceSettings;
@@ -22,7 +21,7 @@
 		if (!_specifiers) {
 			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 
-			NSArray *chosenIDs = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor", @"FeedbackStyle"];
+			NSArray *chosenIDs = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor", @"FeedbackStyle", @"SwipeLeftOnNotes", @"TripleTapLockScreen"];
 			self.savedSpecifiers = (!self.savedSpecifiers) ? [[NSMutableDictionary alloc] init] : self.savedSpecifiers;
 			for(PSSpecifier *specifier in [self specifiers]) {
 				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
@@ -37,18 +36,15 @@
 	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
 		[super setPreferenceValue:value specifier:specifier];
 
-		//When a value is changed, enable respring button
-		self.navigationItem.rightBarButtonItem.enabled = YES;
-
 		NSString *key = [specifier propertyForKey:@"key"];
 		if([key isEqualToString:@"blurStyle"]) {
-			if([value intValue] != 4) {
+			if(![value isEqualToString:@"adaptive"]) {
 				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
 			} else if(![self containsSpecifier:self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]]) {
 				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] afterSpecifierID:@"BlurStyle" animated:YES];
 			}
 
-			if([value intValue] != 3) {
+			if(![value isEqualToString:@"colorized"]) {
 				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
 			} else if(![self containsSpecifier:self.savedSpecifiers[@"SetSolidColor"]]) {
 				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] afterSpecifierID:@"BlurStyle" animated:YES];
@@ -62,22 +58,40 @@
 				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] afterSpecifierID:@"Haptic Feedback" animated:YES];
 			}
 		}
+
+		if([key isEqualToString:@"hideGesture"]) {
+			if(![value boolValue]) {
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"TripleTapLockScreen"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"TripleTapLockScreen"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"TripleTapLockScreen"]] afterSpecifierID:@"EnableGestures" animated:YES];
+			}
+
+			if(![value boolValue]) {
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SwipeLeftOnNotes"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"SwipeLeftOnNotes"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"SwipeLeftOnNotes"]] afterSpecifierID:@"EnableGestures" animated:YES];
+			}
+		}
 	}
 
 	-(void)reloadSpecifiers {
 		[super reloadSpecifiers];
 
 		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		if([[preferences objectForKey:@"blurStyle"] intValue] != 4) {
+		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"adaptive"]) {
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
 		}
 
-		if([[preferences objectForKey:@"blurStyle"] intValue] != 3) {
+		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"colorized"]) {
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
 		}
 
-		if(![[preferences objectForKey:@"feedback"] boolValue]) {
+		if(![preferences boolForKey:@"feedback"]) {
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
+		}
+
+		if(![preferences boolForKey:@"hideGesture"]) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SwipeLeftOnNotes"], self.savedSpecifiers[@"TripleTapLockScreen"]] animated:YES];
 		}
 	}
 
@@ -85,16 +99,20 @@
 		[super viewDidLoad];
 
 		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		if([[preferences objectForKey:@"blurStyle"] intValue] != 4) {
+		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"adaptive"]) {
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
 		}
 
-		if([[preferences objectForKey:@"blurStyle"] intValue] != 3) {
+		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"colorized"]) {
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
 		}
 
 		if(![[preferences objectForKey:@"feedback"] boolValue]) {
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
+		}
+
+		if(![preferences boolForKey:@"hideGesture"]) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SwipeLeftOnNotes"], self.savedSpecifiers[@"TripleTapLockScreen"]] animated:YES];
 		}
 
 		if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){11, 0, 0}]) {
@@ -105,7 +123,6 @@
 		//Adds respring button in top right of preference pane
 		UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respring)];
 		self.navigationItem.rightBarButtonItem = respringButton;
-		self.navigationItem.rightBarButtonItem.enabled = NO;
 
 		//Adds header to table
 		UIView *LBMHeaderView = [[LBMHeaderCell alloc] init];
@@ -121,7 +138,7 @@
 		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
 		title.text = @"Libellum";
 		title.textAlignment = NSTextAlignmentCenter;
-		title.textColor = Sec_Color;
+		title.textColor = Pri_Color;
 		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
 		self.navigationItem.titleView = title;
 		self.navigationItem.titleView.alpha = 0;
@@ -146,96 +163,6 @@
 				self.navigationItem.titleView.transform = CGAffineTransformMakeScale(0.5, 0.5);
 			}];
 		}
-	}
-
-	-(void)backgroundColorPicker:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		NSString *customBackgroundColor = [preferences objectForKey:@"customBackgroundColor"];
-
-		UIColor *startColor = LCPParseColorString(customBackgroundColor, @"FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"customBackgroundColor"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
-			cell.cellEnabled = YES;
-		}];
-	}
-
-	-(void)textColorPicker:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		NSString *customTextColor = [preferences objectForKey:@"customTextColor"];
-
-		UIColor *startColor = LCPParseColorString(customTextColor, @"FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"customTextColor"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
-			cell.cellEnabled = YES;
-		}];
-	}
-
-	-(void)lockColorPicker:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		NSString *lockColor = [preferences objectForKey:@"lockColor"];
-
-		UIColor *startColor = LCPParseColorString(lockColor, @"FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"lockColor"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
-			cell.cellEnabled = YES;
-		}];
-	}
-
-	-(void)tintColorPicker:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		NSString *customTintColor = [preferences objectForKey:@"customTintColor"];
-
-		UIColor *startColor = LCPParseColorString(customTintColor, @"007AFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:NO];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			//hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"customTintColor"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
-			cell.cellEnabled = YES;
-		}];
-	}
-
-	-(void)borderColorPicker:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		NSString *borderColor = [preferences objectForKey:@"borderColor"];
-
-		UIColor *startColor = LCPParseColorString(borderColor, @"FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"borderColor"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.libellumprefs/ReloadPrefs"), nil, nil, true);
-			cell.cellEnabled = YES;
-		}];
 	}
 
 	-(void)manageBackup:(PSSpecifier *)specifier {

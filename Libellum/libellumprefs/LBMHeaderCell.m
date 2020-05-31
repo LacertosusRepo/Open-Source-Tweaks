@@ -1,4 +1,5 @@
 #import "LBMHeaderCell.h"
+extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
 @implementation LBMHeaderCell
 
@@ -19,17 +20,15 @@
       [self.titleLabel setFont:[UIFont systemFontOfSize:40 weight:UIFontWeightSemibold]];
       [self.titleLabel setText:@"Libellum"];
       [self.titleLabel setBackgroundColor:[UIColor clearColor]];
-      [self.titleLabel setTextColor:Pri_Color];
       [self.titleLabel setTextAlignment:NSTextAlignmentCenter];
 
 			UILabel *tweakSubtitle = [[UILabel alloc] initWithFrame:CGRectZero];
       self.subtitleLabel = tweakSubtitle;
 			self.subtitleLabel.alpha = 0;
       [self.subtitleLabel setNumberOfLines:1];
-      [self.subtitleLabel setFont:[UIFont systemFontOfSize:13 weight:UIFontWeightRegular]];
+      [self.subtitleLabel setFont:[UIFont systemFontOfSize:13 weight:UIFontWeightThin]];
       [self.subtitleLabel setText:self.randomLabels[arc4random_uniform(self.randomLabels.count)]];
       [self.subtitleLabel setBackgroundColor:[UIColor clearColor]];
-      [self.subtitleLabel setTextColor:Sec_Color];
       [self.subtitleLabel setTextAlignment:NSTextAlignmentCenter];
 
 			[NSLayoutConstraint activateConstraints:@[
@@ -56,6 +55,45 @@
 				[headerStackView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
 				[headerStackView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
 			]];
+
+			if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
+				NSData *wallpaperData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"];
+				CFArrayRef wallpaperArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)wallpaperData, NULL, 1, NULL);
+				NSArray *wallpaperArray = (__bridge NSArray *)wallpaperArrayRef;
+				UIImage *wallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(wallpaperArray[0])];
+				CFRelease(wallpaperArrayRef);
+
+				UIImageView *wallpaperView = [[UIImageView alloc] initWithImage:wallpaper];
+				wallpaperView.clipsToBounds = YES;
+				wallpaperView.contentMode = UIViewContentModeScaleAspectFill;
+				wallpaperView.layer.cornerRadius = 10;
+				wallpaperView.translatesAutoresizingMaskIntoConstraints = NO;
+				[wallpaperView setContentCompressionResistancePriority:0 forAxis:UILayoutConstraintAxisHorizontal];
+				[wallpaperView setContentCompressionResistancePriority:0 forAxis:UILayoutConstraintAxisVertical];
+				[self addSubview:wallpaperView];
+
+				MTMaterialView *materialView = [NSClassFromString(@"MTMaterialView") materialViewWithRecipeNamed:@"plattersDark" inBundle:nil configuration:1 initialWeighting:1 scaleAdjustment:nil];
+				materialView.layer.cornerRadius = 10;
+				materialView.recipe = 1;
+      	materialView.recipeDynamic = YES;
+				materialView.translatesAutoresizingMaskIntoConstraints = NO;
+				[self addSubview:materialView];
+
+				[self sendSubviewToBack:materialView];
+				[self sendSubviewToBack:wallpaperView];
+
+				[NSLayoutConstraint activateConstraints:@[
+					[materialView.centerXAnchor constraintEqualToAnchor:headerStackView.centerXAnchor],
+					[materialView.centerYAnchor constraintEqualToAnchor:headerStackView.centerYAnchor],
+					[materialView.widthAnchor constraintEqualToAnchor:headerStackView.widthAnchor constant:50],
+					[materialView.heightAnchor constraintEqualToAnchor:headerStackView.heightAnchor constant:20],
+
+					[wallpaperView.centerXAnchor constraintEqualToAnchor:materialView.centerXAnchor],
+					[wallpaperView.centerYAnchor constraintEqualToAnchor:materialView.centerYAnchor],
+					[wallpaperView.widthAnchor constraintEqualToAnchor:materialView.widthAnchor],
+					[wallpaperView.heightAnchor constraintEqualToAnchor:materialView.heightAnchor],
+				]];
+			}
 		}
 
 		return self;
