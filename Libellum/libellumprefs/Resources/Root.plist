@@ -184,26 +184,20 @@
 			<key>id</key>
 			<string>BlurStyle</string>
 		</dict>
-
-<!--		<dict>
-			<key>cellClass</key>
-			<string>HBStepperTableCell</string>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
 			<key>default</key>
-			<real>0</real>
+			<false/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
-			<string>blurStyle</string>
+			<string>useKalmTintColor</string>
 			<key>label</key>
-			<string>%i</string>
-			<key>max</key>
-			<real>20</real>
-			<key>min</key>
-			<real>0</real>
+			<string>Use Kalm Tint Color</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
-		</dict> 	-->
-
+		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>

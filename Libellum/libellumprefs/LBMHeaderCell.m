@@ -94,13 +94,30 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 					[wallpaperView.heightAnchor constraintEqualToAnchor:materialView.heightAnchor],
 				]];
 			}
+
+			[self addInterpolatingMotion];
 		}
 
 		return self;
 	}
 
+	-(void)addInterpolatingMotion {
+		UIInterpolatingMotionEffect *horizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+		horizontal.minimumRelativeValue = @-5;
+		horizontal.maximumRelativeValue = @5;
+
+		UIInterpolatingMotionEffect *vertical = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+		vertical.minimumRelativeValue = @-5;
+		vertical.maximumRelativeValue = @5;
+
+		UIMotionEffectGroup *effectsGroup = [[UIMotionEffectGroup alloc] init];
+		effectsGroup.motionEffects = @[horizontal, vertical];
+
+		[self addMotionEffect:effectsGroup];
+	}
+
 	-(NSArray *)randomLabels {
-		return @[@"Open source on github!", @"Customizable notepad on your lockscreen", @"Customizable notepad in your notification center", @"Save the trees"];
+		return @[@"Check out the source code on github!", @"Customizable notepad on your lockscreen", @"Customizable notepad in your notification center", @"Why did the bike fall over? It was too tired."];
 	}
 
 	-(void)didMoveToSuperview {

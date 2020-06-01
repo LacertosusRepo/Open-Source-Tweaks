@@ -52,6 +52,10 @@
 +(id)materialViewWithRecipeNamed:(id)arg1 inBundle:(id)arg2 configuration:(long long)arg3 initialWeighting:(double)arg4 scaleAdjustment:(/*^block*/id)arg5 ;
 @end
 
+@interface KalmAPI : NSObject
++(UIColor *)getColor;
+@end
+
 @interface LibellumView : UIView <UITextViewDelegate>
 @property (nonatomic, retain) UIImageView *lockIcon;
 @property (nonatomic, retain) UITextView *noteView;
@@ -68,6 +72,7 @@
 @property (nonatomic, assign) BOOL enableEndlessLines;
 @property (nonatomic, assign) CGFloat cornerRadius;
 @property (nonatomic, copy) NSString *blurStyle;
+@property (nonatomic, assign) BOOL useKalmTintColor;
 @property (nonatomic, assign) BOOL ignoreAdaptiveColors;
 @property (nonatomic, copy) UIColor *customBackgroundColor;
 @property (nonatomic, copy) UIColor *customTextColor;

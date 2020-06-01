@@ -166,7 +166,15 @@
 	}
 
 	-(void)manageBackup:(PSSpecifier *)specifier {
-		HBPreferences *test = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
+    cell.cellEnabled = NO;
+
+		LBMNoteBackupViewController *backupViewController = [[NSClassFromString(@"LBMNoteBackupViewController") alloc] init];
+		[self presentViewController:backupViewController animated:YES completion:^{
+			cell.cellEnabled = YES;
+		}];
+
+		/*HBPreferences *test = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 		[test setObject:@"" forKey:@"customTintColor"];
 
 		static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
@@ -267,7 +275,7 @@
 			[notesBackupAlert addAction:deleteNotes];
 		}
 		[notesBackupAlert addAction:cancelAction];
-		[self presentViewController:notesBackupAlert animated:YES completion:nil];
+		[self presentViewController:notesBackupAlert animated:YES completion:nil];*/
 	}
 
 @end

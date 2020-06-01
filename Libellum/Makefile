@@ -6,7 +6,7 @@ THEOS_DEVICE_IP = 10.0.0.130
 # export ARCHS = x86_64
 # TARGET = simulator:clang::12
 
-INSTALL_TARGET_PROCESSES = Preferences #SpringBoard
+INSTALL_TARGET_PROCESSES = SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 

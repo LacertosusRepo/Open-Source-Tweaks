@@ -24,21 +24,26 @@
      * Preferences Variables
      */
   static NSInteger noteSize;
+  static NSInteger notePosition;
   static BOOL enableUndoRedo;
   static BOOL enableEndlessLines;
   static BOOL enableAutoUnlockXBlock;
-  static NSInteger notePosition;
+
   static CGFloat cornerRadius;
   static NSString *blurStyle;
+  static BOOL useKalmTintColor;
   static BOOL ignoreAdaptiveColors;
   static NSString *customBackgroundColor;
   static NSString *customTextColor;
   static NSString *lockColor;
   static NSString *customTintColor;
+
   static NSString *borderColor;
   static CGFloat borderWidth;
+
   static BOOL requireAuthentication;
   static BOOL noteBackup;
+
   static BOOL hideGesture;
   static BOOL useEdgeGesture;
   static BOOL useSwipeGesture;
@@ -53,18 +58,18 @@
    * Axon - Nepeta & BawApple https://github.com/Baw-Appie/Axon/blob/master/Tweak/Tweak.xm
    */
 %hook CSNotificationAdjunctListViewController
-%property (nonatomic, retain) LibellumView *LBMNoteView;
-  -(void)viewDidLoad {    
+%property (nonatomic, retain) LibellumView *libellum;
+  -(void)viewDidLoad {
     %orig;
-    if(!self.LBMNoteView) {
-      self.LBMNoteView = [[LibellumView sharedInstance] initWithFrame:CGRectZero];
-      [self.LBMNoteView setSizeToMimic:self.sizeToMimic];
-      [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
+    if(!self.libellum) {
+      self.libellum = [[LibellumView sharedInstance] init];
+      [self.libellum setSizeToMimic:self.sizeToMimic];
+      [self.stackView insertArrangedSubview:self.libellum atIndex:0];
 
-      [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.swipeGesture];
+      [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.libellum.swipeGesture];
 
       if(isHidden) {
-        [self.LBMNoteView toggleLibellum:nil];
+        [self.libellum toggleLibellum:nil];
       }
     }
   }
@@ -73,12 +78,12 @@
     %orig;
 
     if(notePosition == 2) {
-      [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:[self.stackView.arrangedSubviews count]];
+      [self.stackView insertArrangedSubview:self.libellum atIndex:[self.stackView.arrangedSubviews count]];
     }
   }
 
   -(BOOL)isPresentingContent {
-    if(!self.LBMNoteView.hidden) {
+    if(!self.libellum.hidden) {
       return YES;
     }
 
@@ -113,19 +118,19 @@
    * Axon - Nepeta & BawApple https://github.com/Baw-Appie/Axon/blob/master/Tweak/Tweak.xm
    */
 %hook SBDashBoardNotificationAdjunctListViewController
-%property (nonatomic, retain) LibellumView *LBMNoteView;
+%property (nonatomic, retain) LibellumView *libellum;
   -(void)viewDidLoad {
     %orig;
 
-    if(!self.LBMNoteView) {
-      self.LBMNoteView = [[LibellumView sharedInstance] initWithFrame:CGRectZero];
-      [self.LBMNoteView setSizeToMimic:self.sizeToMimic];
-      [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:0];
+    if(!self.libellum) {
+      self.libellum = [[LibellumView sharedInstance] init];
+      [self.libellum setSizeToMimic:self.sizeToMimic];
+      [self.stackView insertArrangedSubview:self.libellum atIndex:0];
 
-      [[scrollViewSB panGestureRecognizer] requireGestureRecognizerToFail:self.LBMNoteView.swipeGesture];
+      [[scrollViewSB panGestureRecognizer] requireGestureRecognizerToFail:self.libellum.swipeGesture];
 
       if(isHidden) {
-        [self.LBMNoteView toggleLibellum:nil];
+        [self.libellum toggleLibellum:nil];
       }
     }
   }
@@ -134,12 +139,12 @@
     %orig;
 
     if(notePosition == 2) {
-      [self.stackView insertArrangedSubview:self.LBMNoteView atIndex:[self.stackView.arrangedSubviews count]];
+      [self.stackView insertArrangedSubview:self.libellum atIndex:[self.stackView.arrangedSubviews count]];
     }
   }
 
   -(BOOL)isPresentingContent {
-    if(!self.LBMNoteView.hidden) {
+    if(!self.libellum.hidden) {
       return YES;
     }
 
@@ -200,28 +205,29 @@
    * Update Preferences
    */
 static void libellumPreferencesChanged() {
-  LibellumView *LBMNoteView = [LibellumView sharedInstance];
-  LBMNoteView.noteSize = noteSize;
-  LBMNoteView.enableUndoRedo = enableUndoRedo;
-  LBMNoteView.enableEndlessLines = enableEndlessLines;
-  LBMNoteView.cornerRadius = cornerRadius;
-  LBMNoteView.blurStyle = blurStyle;
-  LBMNoteView.ignoreAdaptiveColors = ignoreAdaptiveColors;
-  LBMNoteView.customBackgroundColor = [UIColor PF_colorWithHex:customBackgroundColor];
-  LBMNoteView.customTextColor = [UIColor PF_colorWithHex:customTextColor];
-  LBMNoteView.lockColor = [UIColor PF_colorWithHex:lockColor];
-  LBMNoteView.customTintColor = [UIColor PF_colorWithHex:customTintColor];
-  LBMNoteView.borderColor = [UIColor PF_colorWithHex:borderColor];
-  LBMNoteView.borderWidth = borderWidth;
-  LBMNoteView.requireAuthentication = requireAuthentication;
-  LBMNoteView.noteBackup = noteBackup;
-  LBMNoteView.hideGesture = hideGesture;
-  LBMNoteView.useEdgeGesture = useEdgeGesture;
-  LBMNoteView.useSwipeGesture = useSwipeGesture;
-  LBMNoteView.useTapGesture = useTapGesture;
-  LBMNoteView.feedback = feedback;
-  LBMNoteView.feedbackStyle = feedbackStyle;
-  [LBMNoteView preferencesChanged];
+  LibellumView *libellum = [LibellumView sharedInstance];
+  libellum.noteSize = noteSize;
+  libellum.enableUndoRedo = enableUndoRedo;
+  libellum.enableEndlessLines = enableEndlessLines;
+  libellum.cornerRadius = cornerRadius;
+  libellum.blurStyle = blurStyle;
+  libellum.useKalmTintColor = useKalmTintColor;
+  libellum.ignoreAdaptiveColors = ignoreAdaptiveColors;
+  libellum.customBackgroundColor = [UIColor PF_colorWithHex:customBackgroundColor];
+  libellum.customTextColor = [UIColor PF_colorWithHex:customTextColor];
+  libellum.lockColor = [UIColor PF_colorWithHex:lockColor];
+  libellum.customTintColor = [UIColor PF_colorWithHex:customTintColor];
+  libellum.borderColor = [UIColor PF_colorWithHex:borderColor];
+  libellum.borderWidth = borderWidth;
+  libellum.requireAuthentication = requireAuthentication;
+  libellum.noteBackup = noteBackup;
+  libellum.hideGesture = hideGesture;
+  libellum.useEdgeGesture = useEdgeGesture;
+  libellum.useSwipeGesture = useSwipeGesture;
+  libellum.useTapGesture = useTapGesture;
+  libellum.feedback = feedback;
+  libellum.feedbackStyle = feedbackStyle;
+  [libellum preferencesChanged];
 }
 
 %ctor {
@@ -233,6 +239,7 @@ static void libellumPreferencesChanged() {
   [preferences registerBool:&enableAutoUnlockXBlock default:NO forKey:@"enableAutoUnlockXBlock"];
   [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
   [preferences registerObject:&blurStyle default:@"platters" forKey:@"blurStyle"];
+  [preferences registerBool:&useKalmTintColor default:NO forKey:@"useKalmTintColor"];
   [preferences registerBool:&ignoreAdaptiveColors default:NO forKey:@"ignoreAdaptiveColors"];
   [preferences registerObject:&customBackgroundColor default:@"000000" forKey:@"customBackgroundColor"];
   [preferences registerObject:&customTextColor default:@"FFFFFF" forKey:@"customTextColor"];

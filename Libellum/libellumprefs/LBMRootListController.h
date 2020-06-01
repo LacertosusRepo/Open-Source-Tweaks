@@ -8,6 +8,7 @@
 
 @import Alderis;
 #import "LBMHeaderCell.h"
+#import "LBMNoteBackupViewController.h"
 #import "AlderisColorPicker.h"
 #import "PreferencesColorDefinitions.h"
 #import "../LibellumView.h"

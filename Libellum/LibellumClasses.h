@@ -3,7 +3,7 @@
 @interface CSNotificationAdjunctListViewController : UIViewController
 @property (nonatomic, retain) UIStackView *stackView;
 @property (nonatomic, assign) CGSize sizeToMimic;
-@property (nonatomic, retain) LibellumView *LBMNoteView;
+@property (nonatomic, retain) LibellumView *libellum;
 @end
 
 @interface CSScrollView : UIScrollView
@@ -12,7 +12,7 @@
 @interface SBDashBoardNotificationAdjunctListViewController : UIViewController
 @property (nonatomic, retain) UIStackView *stackView;
 @property (nonatomic, assign) CGSize sizeToMimic;
-@property (nonatomic, retain) LibellumView *LBMNoteView;
+@property (nonatomic, retain) LibellumView *libellum;
 @end
 
 @interface SBPagedScrollView : UIScrollView

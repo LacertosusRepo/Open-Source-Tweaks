@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.libellum
 Name: Libellum
 Depends: mobilesubstrate, ws.hbang.common (>= 1.11), ws.hbang.alderis
-Version: 1.4.4
+Version: 1.4.5
 Architecture: iphoneos-arm
 Description: Notes on your lockscreen and notification center...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
