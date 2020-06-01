@@ -25,6 +25,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Navale | 10 - 13 | v2.2.4-1 | arm64 arm64e | | Gradient dock background |
 | VolumeLock | 10 - 13 | v1.2 | arm64 arm64e | | Lock volume changing by pressing both volume buttons down |
 | ExampleCepheiProject | ??? - 13 | v1.0 | arm64 arm64e | ✔ | Example project that uses Cephei |
+| BadgeColor | ??? - 13 | v1.0 | arm64 arm64e | | Small tweak to color notification badges |
 
 ### iOS 12
 | Tweak |  Compatibility | Version | Architecture | Annotated | Description |
