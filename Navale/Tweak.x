@@ -5,12 +5,13 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 4/30/2019.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
+@import Alderis;
 #import <Cephei/HBPreferences.h>
 #import "NavaleClasses.h"
 #import "iOSPalette/Palette.h"
 #import "iOSPalette/UIImage+Palette.h"
 #import "ColorFlowAPI.h"
-#import "libcolorpicker.h"
+#import "AlderisColorPicker.h"
 #define LD_DEBUG NO
 extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
@@ -85,8 +86,8 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     }
 
     if(self.primaryColor == nil || self.secondaryColor == nil) {
-      colorOne = LCPParseColorString(colorOneString, @"#3A7BD5");
-      colorTwo = LCPParseColorString(colorTwoString, @"#3A6073");
+      colorOne = [UIColor PF_colorWithHex:colorOneString];
+      colorTwo = [UIColor PF_colorWithHex:colorTwoString];
     } else {
       colorOne = self.primaryColor;
       colorTwo = self.secondaryColor;
@@ -95,7 +96,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
     gradientLayer.opacity = dockAlpha;
 
-    borderColor = LCPParseColorString(borderColorString, @"#FFFFFF");
+    borderColor = [UIColor PF_colorWithHex:borderColorString];
     gradientLayer.borderColor = borderColor.CGColor;
     gradientLayer.borderWidth = borderWidth;
   }
@@ -148,8 +149,8 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     }
 
     if(self.primaryColor == nil || self.secondaryColor == nil) {
-      colorOne = LCPParseColorString(colorOneString, @"#3A7BD5");
-      colorTwo = LCPParseColorString(colorTwoString, @"#3A6073");
+      colorOne = [UIColor PF_colorWithHex:colorOneString];
+      colorTwo = [UIColor PF_colorWithHex:colorTwoString];
     } else {
       colorOne = self.primaryColor;
       colorTwo = self.secondaryColor;
@@ -158,7 +159,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
     gradientLayer.colors = @[(id)colorOne.CGColor, (id)colorTwo.CGColor];
     gradientLayer.cornerRadius = (overrideCornerRadius) ? cornerRadius : [self maximumContinuousCornerRadius];
 
-    borderColor = LCPParseColorString(borderColorString, @"#FFFFFF");
+    borderColor = [UIColor PF_colorWithHex:borderColorString];
     gradientLayer.borderColor = borderColor.CGColor;
     gradientLayer.borderWidth = borderWidth;
   }

@@ -93,38 +93,60 @@
 		<dict>
 			<key>cellClass</key>
 			<string>NAVGradientPreviewCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>height</key>
+			<real>40</real>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>colorOnePicker</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBColorPickerTableCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>default</key>
+			<string>#3A7BD5</string>
+			<key>key</key>
+			<string>colorOneString</string>
 			<key>label</key>
 			<string>Color One</string>
 			<key>icon</key>
 			<string>colorpickericonone.png</string>
-			<key>cellClass</key>
-			<string>NAVColorIndicatorCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.navaleprefs</string>
-			<key>key</key>
-			<string>colorOneString</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>colorTwoPicker</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBColorPickerTableCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>default</key>
+			<string>#3A6073</string>
+			<key>key</key>
+			<string>colorTwoString</string>
 			<key>label</key>
 			<string>Color Two</string>
 			<key>icon</key>
 			<string>colorpickericontwo.png</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>flipGradient:</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>NAVColorIndicatorCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.navaleprefs</string>
-			<key>key</key>
-			<string>colorTwoString</string>
+			<string>HBSpinnerTableCell</string>
+			<key>label</key>
+			<string>Flip Gradient</string>
 		</dict>
 		<dict>
     	<key>action</key>
@@ -191,18 +213,22 @@
 			<string>Border</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>borderColorPicker</string>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>label</key>
-			<string>Border Color</string>
 			<key>cellClass</key>
-			<string>NAVColorIndicatorCell</string>
+			<string>HBColorPickerTableCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.navaleprefs</string>
+			<key>default</key>
+			<string>#FFFFFF</string>
 			<key>key</key>
 			<string>borderColorString</string>
+			<key>label</key>
+			<string>Border Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.navaleprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>

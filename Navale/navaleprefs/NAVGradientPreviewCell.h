@@ -1,9 +1,11 @@
-#import "libcolorpicker.h"
-#import "Preferences/PSTableCell.h"
+@import Alderis;
 #import <Cephei/HBPreferences.h>
+#import <Preferences/PSSpecifier.h>
+#import <Preferences/PSTableCell.h>
+#import "AlderisColorPicker.h"
 
 @interface NAVGradientPreviewCell : PSTableCell
-+(void)updateColors;
+-(void)updatePreviewGradient;
 @end
 
 @interface UIColor (iOS13)

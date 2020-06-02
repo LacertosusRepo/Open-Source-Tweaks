@@ -8,7 +8,6 @@
 
 #import "NAVHeaderCell.h"
 #import "NAVGradientPreviewCell.h"
-#import "libcolorpicker.h"
 #import "PreferencesColorDefinitions.h"
 
 @interface NAVRootListController : HBRootListController

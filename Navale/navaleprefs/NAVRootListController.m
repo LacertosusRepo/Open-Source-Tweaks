@@ -79,34 +79,6 @@
 		}
 	}
 
-	-(void)colorOnePicker {
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.navaleprefs"];
-		NSString *colorOneString = [preferences objectForKey:@"colorOneString"];
-
-		UIColor *startColor = LCPParseColorString(colorOneString, @"#3A7BD5");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"colorOneString"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs/ReloadPrefs"), nil, nil, true);
-		}];
-	}
-
-	-(void)colorTwoPicker {
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.navaleprefs"];
-		NSString *colorTwoString = [preferences objectForKey:@"colorTwoString"];
-
-		UIColor *startColor = LCPParseColorString(colorTwoString, @"#3A6073");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"colorTwoString"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs/ReloadPrefs"), nil, nil, true);
-		}];
-	}
-
 	-(void)colorsFromWallpaper:(PSSpecifier *)specifier {
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
@@ -129,26 +101,21 @@
 		[self presentViewController:wallpaperColorsAlert animated:YES completion:nil];
 	}
 
-	-(void)borderColorPicker {
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.navaleprefs"];
-		NSString *borderColorString = [preferences objectForKey:@"borderColorString"];
-
-		UIColor *startColor = LCPParseColorString(borderColorString, @"#FFFFFF");
-		PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:YES];
-		[alert displayWithCompletion:^void (UIColor *pickedColor) {
-			NSString *hexColor = [UIColor hexFromColor:pickedColor];
-			hexColor = [hexColor stringByAppendingFormat:@":%f", pickedColor.alpha];
-			[preferences setObject:hexColor forKey:@"borderColorString"];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.lacertosusrepo.navaleprefs/ReloadPrefs"), nil, nil, true);
-		}];
-	}
-
 	-(void)respring:(PSSpecifier *)specifier {
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 			[HBRespringController respring];
 		});
+	}
+
+	-(void)flipGradient:(PSSpecifier *)specifer {
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.navaleprefs"];
+		NSString *oldColorOne = [preferences objectForKey:@"colorOneString"];
+		NSString *oldColorTwo = [preferences objectForKey:@"colorTwoString"];
+
+		[preferences setObject:oldColorTwo forKey:@"colorOneString"];
+		[preferences setObject:oldColorOne forKey:@"colorTwoString"];
 	}
 
 @end
