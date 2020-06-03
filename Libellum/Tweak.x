@@ -27,11 +27,12 @@
   static NSInteger notePosition;
   static BOOL enableUndoRedo;
   static BOOL enableEndlessLines;
+  static BOOL hideNoOlderNotifications;
   static BOOL enableAutoUnlockXBlock;
+  static BOOL useKalmTintColor;
 
   static CGFloat cornerRadius;
   static NSString *blurStyle;
-  static BOOL useKalmTintColor;
   static BOOL ignoreAdaptiveColors;
   static NSString *customBackgroundColor;
   static NSString *customTextColor;
@@ -202,6 +203,16 @@
 %end
 
   /*
+   * Hide "No Older Notifications" label
+   */
+%hook NCNotificationListSectionRevealHintView
+  -(void)_layoutRevealHintTitle {
+    %orig;
+    self.hidden = YES;
+  }
+%end
+
+  /*
    * Update Preferences
    */
 static void libellumPreferencesChanged() {
@@ -209,9 +220,9 @@ static void libellumPreferencesChanged() {
   libellum.noteSize = noteSize;
   libellum.enableUndoRedo = enableUndoRedo;
   libellum.enableEndlessLines = enableEndlessLines;
+  libellum.useKalmTintColor = useKalmTintColor;
   libellum.cornerRadius = cornerRadius;
   libellum.blurStyle = blurStyle;
-  libellum.useKalmTintColor = useKalmTintColor;
   libellum.ignoreAdaptiveColors = ignoreAdaptiveColors;
   libellum.customBackgroundColor = [UIColor PF_colorWithHex:customBackgroundColor];
   libellum.customTextColor = [UIColor PF_colorWithHex:customTextColor];
@@ -236,10 +247,11 @@ static void libellumPreferencesChanged() {
   [preferences registerInteger:&notePosition default:1 forKey:@"notePosition"];
   [preferences registerBool:&enableUndoRedo default:NO forKey:@"enableUndoRedo"];
   [preferences registerBool:&enableEndlessLines default:NO forKey:@"enableEndlessLines"];
+  [preferences registerBool:&hideNoOlderNotifications default:YES forKey:@"hideNoOlderNotifications"];
   [preferences registerBool:&enableAutoUnlockXBlock default:NO forKey:@"enableAutoUnlockXBlock"];
+  [preferences registerBool:&useKalmTintColor default:NO forKey:@"useKalmTintColor"];
   [preferences registerFloat:&cornerRadius default:15 forKey:@"cornerRadius"];
   [preferences registerObject:&blurStyle default:@"platters" forKey:@"blurStyle"];
-  [preferences registerBool:&useKalmTintColor default:NO forKey:@"useKalmTintColor"];
   [preferences registerBool:&ignoreAdaptiveColors default:NO forKey:@"ignoreAdaptiveColors"];
   [preferences registerObject:&customBackgroundColor default:@"000000" forKey:@"customBackgroundColor"];
   [preferences registerObject:&customTextColor default:@"FFFFFF" forKey:@"customTextColor"];

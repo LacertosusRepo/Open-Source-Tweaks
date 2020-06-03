@@ -1,5 +1,4 @@
 #import "LBMNoteBackupViewController.h"
-#import "PreferencesColorDefinitions.h"
 
   static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
   static NSString *filePathBK = @"/User/Library/Preferences/LibellumNotes.bk";
@@ -13,6 +12,8 @@
   UIButton *_restoreBackupButton;
   UIButton *_deleteBackupButton;
   UIButton *_closeButton;
+  UIImageView *_notADuckImage;
+  AVAudioPlayer *_notAQuack;
 }
 
   -(instancetype)init {
@@ -21,16 +22,17 @@
 
       if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
         MTMaterialView *materialView = [NSClassFromString(@"MTMaterialView") materialViewWithRecipeNamed:@"plattersDark" inBundle:nil configuration:1 initialWeighting:1 scaleAdjustment:nil];
-        materialView.layer.cornerRadius = 10;
         materialView.recipe = 1;
         materialView.recipeDynamic = YES;
-        materialView.translatesAutoresizingMaskIntoConstraints = NO;
         _backgroundView = materialView;
       } else {
         _backgroundView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular]];
       }
-
+      _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
       [self.view addSubview:_backgroundView];
+
+      UILongPressGestureRecognizer *dontLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(duckify)];
+      dontLongPress.minimumPressDuration = 8;
 
       _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
       _titleLabel.font = [UIFont systemFontOfSize:30 weight:UIFontWeightBlack];
@@ -38,7 +40,9 @@
       _titleLabel.text = @"Backup Management";
       _titleLabel.textAlignment = NSTextAlignmentCenter;
       _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+      _titleLabel.userInteractionEnabled = YES;
       [_titleLabel sizeToFit];
+      [_titleLabel addGestureRecognizer:dontLongPress];
       [self.view addSubview:_titleLabel];
 
       _textView = [[UITextView alloc] initWithFrame:CGRectZero];
@@ -48,8 +52,8 @@
       _textView.scrollEnabled = YES;
       _textView.textAlignment = NSTextAlignmentLeft;
       _textView.translatesAutoresizingMaskIntoConstraints = NO;
-      [self lastBackupUpText];
       [self.view addSubview:_textView];
+      [self lastBackupUpText];
 
       if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
         _titleLabel.textColor = [UIColor labelColor];
@@ -64,7 +68,7 @@
       _viewBackupButton.tintColor = [UIColor whiteColor];
       _viewBackupButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_viewBackupButton addTarget:self action:@selector(viewBackupNotes) forControlEvents:UIControlEventTouchUpInside];
-      [_viewBackupButton setTitle:@"View Backup Notes" forState:UIControlStateNormal];
+      [_viewBackupButton setTitle:@"View Notes Backup" forState:UIControlStateNormal];
       [_viewBackupButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_viewBackupButton];
 
@@ -86,7 +90,7 @@
       _restoreBackupButton.tintColor = [UIColor whiteColor];
       _restoreBackupButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_restoreBackupButton addTarget:self action:@selector(restoreBackupNotes) forControlEvents:UIControlEventTouchUpInside];
-      [_restoreBackupButton setTitle:@"Restore From Backup" forState:UIControlStateNormal];
+      [_restoreBackupButton setTitle:@"Restore Notes From Backup" forState:UIControlStateNormal];
       [_restoreBackupButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_restoreBackupButton];
 
@@ -97,7 +101,7 @@
       _deleteBackupButton.tintColor = [UIColor whiteColor];
       _deleteBackupButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_deleteBackupButton addTarget:self action:@selector(deleteBackupNotes) forControlEvents:UIControlEventTouchUpInside];
-      [_deleteBackupButton setTitle:@"Delete Backup" forState:UIControlStateNormal];
+      [_deleteBackupButton setTitle:@"Delete Notes Backup" forState:UIControlStateNormal];
       [_deleteBackupButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_deleteBackupButton];
 
@@ -112,6 +116,16 @@
       [_closeButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_closeButton];
 
+      UITapGestureRecognizer *dontTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(quack)];
+      dontTap.numberOfTapsRequired = 1;
+
+      _notADuckImage = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/inconspicuous.png"]];
+      _notADuckImage.alpha = 0;
+      _notADuckImage.translatesAutoresizingMaskIntoConstraints = NO;
+      _notADuckImage.userInteractionEnabled = YES;
+      [_notADuckImage addGestureRecognizer:dontTap];
+      [self.view addSubview:_notADuckImage];
+
       [NSLayoutConstraint activateConstraints:@[
         [_backgroundView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
         [_backgroundView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor],
@@ -119,7 +133,7 @@
         [_titleLabel.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:25],
         [_titleLabel.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
 
-        [_textView.topAnchor constraintEqualToAnchor:_titleLabel.bottomAnchor constant:25],
+        [_textView.topAnchor constraintEqualToAnchor:_titleLabel.bottomAnchor constant:20],
         [_textView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_textView.widthAnchor constraintEqualToConstant:330],
         [_textView.heightAnchor constraintEqualToConstant:180],
@@ -148,6 +162,11 @@
         [_closeButton.widthAnchor constraintEqualToConstant:330],
         [_closeButton.heightAnchor constraintEqualToConstant:50],
         [_closeButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-40],
+
+        [_notADuckImage.bottomAnchor constraintEqualToAnchor:_viewBackupButton.topAnchor constant:-30],
+        [_notADuckImage.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [_notADuckImage.widthAnchor constraintEqualToConstant:100],
+        [_notADuckImage.heightAnchor constraintEqualToConstant:109],
       ]];
     }
 
@@ -155,7 +174,7 @@
   }
 
   -(void)animateTextChangeTo:(NSString *)text {
-    [UIView transitionWithView:_textView duration:0.25f options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    [UIView transitionWithView:_textView duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
       _textView.text = text;
     } completion:nil];
   }
@@ -165,11 +184,11 @@
       NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePathBK error:nil];
       NSDate *lastModified = [fileAttributes objectForKey:NSFileModificationDate];
       NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-      [timeFormatter setDateFormat:@"hh:mm"];
+      [timeFormatter setDateFormat:@"h:mm a zzz"];
       NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
       [dateFormatter setDateFormat:@"MMMM d, yyyy"];
 
-      [self animateTextChangeTo:[NSString stringWithFormat:@"You last backed up your notes at %@ on %@.", [timeFormatter stringFromDate:lastModified], [dateFormatter stringFromDate:lastModified]]];
+      [self animateTextChangeTo:[NSString stringWithFormat:@"You last backed up your notes on %@ at %@.", [dateFormatter stringFromDate:lastModified], [timeFormatter stringFromDate:lastModified]]];
     } else {
       [self animateTextChangeTo:@"Your notes have never been backed up."];
     }
@@ -243,6 +262,33 @@
     gradientLayer.endPoint = CGPointMake(1, 1);
     gradientLayer.colors = @[(id)[UIColor colorWithRed: 0.39 green: 0.27 blue: 0.47 alpha: 1.00].CGColor, (id)[UIColor colorWithRed: 0.29 green: 0.26 blue: 0.45 alpha: 1.00].CGColor];
     return gradientLayer;
+  }
+
+  -(void)duckify {
+    [UIView animateWithDuration:5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+      _notADuckImage.alpha = 1;
+    } completion:nil];
+
+    _titleLabel.text = @"Duck Management";
+
+    [_viewBackupButton setTitle:@"View Duck Backup" forState:UIControlStateNormal];
+    [_backupNowButton setTitle:@"Backup Ducks Now" forState:UIControlStateNormal];
+    [_restoreBackupButton setTitle:@"Restore Ducks From Backup" forState:UIControlStateNormal];
+    [_deleteBackupButton setTitle:@"Delete Ducks Backup" forState:UIControlStateNormal];
+    [_closeButton setTitle:@"Duck" forState:UIControlStateNormal];
+
+    [self animateTextChangeTo:@"You last backed up your duck today."];
+  }
+
+  -(void)quack {
+    if(_notADuckImage.alpha == 1) {
+      if(!_notAQuack) {
+          _notAQuack = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:@"/Library/PreferenceBundles/LibellumPrefs.bundle/inconspicuoussound.mp3"] error:nil];
+          [[AVAudioSession sharedInstance] setCategory:@"AVAudioSessionCategoryAmbient" error:nil];
+      }
+
+      [_notAQuack play];
+    }
   }
 
 @end

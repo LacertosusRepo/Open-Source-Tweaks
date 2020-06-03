@@ -17,3 +17,6 @@
 
 @interface SBPagedScrollView : UIScrollView
 @end
+
+@interface NCNotificationListSectionRevealHintView : UIView
+@end

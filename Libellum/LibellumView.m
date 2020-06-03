@@ -35,9 +35,12 @@
         //Create blur
       if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
         MTMaterialView *materialView = [NSClassFromString(@"MTMaterialView") materialViewWithRecipeNamed:[self getRecipeForBlurStyle:_blurStyle] inBundle:nil configuration:1 initialWeighting:1 scaleAdjustment:nil];
-        materialView.recipe = 1;
-        materialView.recipeDynamic = [_blurStyle isEqualToString:@"adaptive"];
+        if([_blurStyle isEqualToString:@"adaptive"]) {
+          materialView.recipe = 1;
+          materialView.recipeDynamic = YES;
+        }
         _blurView = materialView;
+
       } else {
         _blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:[self getBlurEffectForBlurStyle:_blurStyle]]];
       }
@@ -108,19 +111,19 @@
   }
 
     //Determine what platter reciper to use, if its adaptive or colorized just use the default light platter
-  -(NSString *)getRecipeForBlurStyle:(NSString *)blurStyle {
-    if([blurStyle isEqualToString:@"adaptive"] || [blurStyle isEqualToString:@"colorized"]) {
-      blurStyle = @"platters";
+  -(NSString *)getRecipeForBlurStyle:(NSString *)style {
+    if([style isEqualToString:@"adaptive"] || [style isEqualToString:@"colorized"]) {
+      style = @"platters";
     }
 
-    return blurStyle;
+    return style;
   }
 
     //iOS 12 compatible blurs
-  -(UIBlurEffectStyle)getBlurEffectForBlurStyle:(NSString *)blurStyle {
-    if([blurStyle isEqualToString:@"platters"]) {
+  -(UIBlurEffectStyle)getBlurEffectForBlurStyle:(NSString *)style {
+    if([style isEqualToString:@"platters"]) {
       return UIBlurEffectStyleLight;
-    } if([blurStyle isEqualToString:@"plattersDark"]) {
+    } if([style isEqualToString:@"plattersDark"]) {
       return UIBlurEffectStyleDark;
     }
 

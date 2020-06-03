@@ -89,8 +89,8 @@
 @property (nonatomic, assign) BOOL feedback;
 @property (nonatomic, assign) NSInteger feedbackStyle;
 +(id)sharedInstance;
--(NSString *)getRecipeForBlurStyle:(NSString *)blurStyle;
--(UIBlurEffectStyle)getBlurEffectForBlurStyle:(NSString *)blurStyle;
+-(NSString *)getRecipeForBlurStyle:(NSString *)style;
+-(UIBlurEffectStyle)getBlurEffectForBlurStyle:(NSString *)style;
 -(void)setNumberOfLines;
 -(void)authenticationStatusFromAggregator:(id)aggregator;
 -(void)preferencesChanged;

@@ -145,7 +145,15 @@
 	}
 
 	-(void)respring {
-		[HBRespringController respring];
+		if([self.navigationItem.rightBarButtonItem.title isEqualToString:@"Are you sure?"]) {
+			[HBRespringController respring];
+		} else {
+			self.navigationItem.rightBarButtonItem.title = @"Are you sure?"
+
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+				self.navigationItem.rightBarButtonItem.title = @"Apply";
+			});
+		}
 	}
 
 	//https://github.com/Nepeta/Axon/blob/master/Prefs/Preferences.m
@@ -173,109 +181,6 @@
 		[self presentViewController:backupViewController animated:YES completion:^{
 			cell.cellEnabled = YES;
 		}];
-
-		/*HBPreferences *test = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		[test setObject:@"" forKey:@"customTintColor"];
-
-		static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
-	  static NSString *filePathBK = @"/User/Library/Preferences/LibellumNotes.bk";
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePathBK error:nil];
-		NSDate *lastModified = [fileAttributes objectForKey:NSFileModificationDate];
-		NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-		[timeFormatter setDateFormat:@"h:m"];
-		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateFormat:@"MMMM d, yyyy"];
-
-		UIAlertController *notesBackupAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:[NSString stringWithFormat:@"Manage your notes backup here.\n\nLast backed up at:\n%@ on %@", [timeFormatter stringFromDate:lastModified], [dateFormatter stringFromDate:lastModified]] preferredStyle:UIAlertControllerStyleAlert];
-
-		UIAlertAction *backupNotes = [UIAlertAction actionWithTitle:@"Backup Notes Now" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-			[[LibellumView sharedInstance] backupNotes];
-			cell.cellEnabled = YES;
-		}];
-
-		UIAlertAction *viewBackup = [UIAlertAction actionWithTitle:@"View Backup Text" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-			UIAlertController *viewBackupAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:[NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil] preferredStyle:UIAlertControllerStyleAlert];
-			UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-				cell.cellEnabled = YES;
-			}];
-
-			[viewBackupAlert addAction:cancelAction];
-			[self presentViewController:viewBackupAlert animated:YES completion:nil];
-		}];
-
-		UIAlertAction *restoreNotes = [UIAlertAction actionWithTitle:@"Restore From Backup" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-			UIAlertController *cautionAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:@"Are you sure you want to restore the backup of your notes? This will delete your current notes." preferredStyle:UIAlertControllerStyleAlert];
-			UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-				NSError *error = nil;
-				NSString *notesFromBK = [NSString stringWithContentsOfFile:filePathBK encoding:NSUTF8StringEncoding error:&error];
-				[notesFromBK writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-				if(error) {
-					UIAlertController *completionError = [UIAlertController alertControllerWithTitle:@"Error!" message:[NSString stringWithFormat:@"%@", error] preferredStyle:UIAlertControllerStyleAlert];
-					UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-						cell.cellEnabled = YES;
-					}];
-
-					[completionError addAction:cancelAction];
-					[self presentViewController:completionError animated:YES completion:nil];
-				} else {
-					dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-						[[LibellumView sharedInstance] loadNotes];
-						cell.cellEnabled = YES;
-					});
-				}
-			}];
-
-			UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Nevermind" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-				cell.cellEnabled = YES;
-			}];
-
-			[cautionAlert addAction:confirmAction];
-			[cautionAlert addAction:cancelAction];
-			[self presentViewController:cautionAlert animated:YES completion:nil];
-		}];
-
-		UIAlertAction *deleteNotes = [UIAlertAction actionWithTitle:@"Delete Backup" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-			UIAlertController *cautionAlert = [UIAlertController alertControllerWithTitle:@"Libellum" message:@"Are you sure you want to delete the backup of your notes?" preferredStyle:UIAlertControllerStyleAlert];
-			UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-				NSError *error = nil;
-				[[NSFileManager defaultManager] removeItemAtPath:filePathBK error:&error];
-				if(error) {
-					UIAlertController *completionError = [UIAlertController alertControllerWithTitle:@"Error!" message:[NSString stringWithFormat:@"%@", error] preferredStyle:UIAlertControllerStyleAlert];
-					UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-						cell.cellEnabled = YES;
-					}];
-
-					[completionError addAction:cancelAction];
-					[self presentViewController:completionError animated:YES completion:nil];
-				} else {
-					cell.cellEnabled = YES;
-				}
-			}];
-
-			UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Nevermind" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-				cell.cellEnabled = YES;
-			}];
-
-			[cautionAlert addAction:confirmAction];
-			[cautionAlert addAction:cancelAction];
-			[self presentViewController:cautionAlert animated:YES completion:nil];
-		}];
-
-		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Nevermind" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
-			cell.cellEnabled = YES;
-		}];
-
-		[notesBackupAlert addAction:backupNotes];
-		if([[NSFileManager defaultManager] fileExistsAtPath:filePathBK]) {
-			[notesBackupAlert addAction:viewBackup];
-			[notesBackupAlert addAction:restoreNotes];
-			[notesBackupAlert addAction:deleteNotes];
-		}
-		[notesBackupAlert addAction:cancelAction];
-		[self presentViewController:notesBackupAlert animated:YES completion:nil];*/
 	}
 
 @end
