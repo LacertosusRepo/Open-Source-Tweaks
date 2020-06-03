@@ -23,7 +23,7 @@
 
 			NSArray *chosenIDs = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor", @"FeedbackStyle", @"SwipeLeftOnNotes", @"TripleTapLockScreen"];
 			self.savedSpecifiers = (!self.savedSpecifiers) ? [[NSMutableDictionary alloc] init] : self.savedSpecifiers;
-			for(PSSpecifier *specifier in [self specifiers]) {
+			for(PSSpecifier *specifier in _specifiers) {
 				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
 					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"id"]];
 				}
@@ -98,22 +98,7 @@
 	-(void)viewDidLoad {
 		[super viewDidLoad];
 
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"adaptive"]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
-		}
-
-		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"colorized"]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
-		}
-
-		if(![[preferences objectForKey:@"feedback"] boolValue]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
-		}
-
-		if(![preferences boolForKey:@"hideGesture"]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SwipeLeftOnNotes"], self.savedSpecifiers[@"TripleTapLockScreen"]] animated:YES];
-		}
+		[self reloadSpecifiers];
 
 		if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){11, 0, 0}]) {
 			self.navigationController.navigationBar.prefersLargeTitles = NO;
@@ -121,14 +106,33 @@
 		}
 
 		//Adds respring button in top right of preference pane
-		UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respring)];
-		self.navigationItem.rightBarButtonItem = respringButton;
+		[self respringApply];
 
 		//Adds header to table
 		UIView *LBMHeaderView = [[LBMHeaderCell alloc] init];
 		LBMHeaderView.frame = CGRectMake(0, 0, LBMHeaderView.bounds.size.width, 175);
 		UITableView *tableView = [self valueForKey:@"_table"];
 		tableView.tableHeaderView = LBMHeaderView;
+	}
+
+	-(void)respringApply {
+		_respringApplyButton = (_respringApplyButton) ? _respringApplyButton : [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+		_respringApplyButton.tintColor = Pri_Color;
+		[self.navigationItem setRightBarButtonItem:_respringApplyButton animated:YES];
+	}
+
+	-(void)respringConfirm {
+		if([self.navigationItem.rightBarButtonItem isEqual:_respringConfirmButton]) {
+			[HBRespringController respring];
+		} else {
+			_respringConfirmButton = (_respringConfirmButton) ? _respringConfirmButton : [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+			_respringConfirmButton.tintColor = [UIColor redColor];
+			[self.navigationItem setRightBarButtonItem:_respringConfirmButton animated:YES];
+
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+				[self respringApply];
+			});
+		}
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
@@ -139,23 +143,9 @@
 		title.text = @"Libellum";
 		title.textAlignment = NSTextAlignmentCenter;
 		title.textColor = Pri_Color;
-		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
+		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
 		self.navigationItem.titleView = title;
 		self.navigationItem.titleView.alpha = 0;
-	}
-
-	-(void)respring {
-		if([self.navigationItem.rightBarButtonItem.title isEqualToString:@"Are you sure?"]) {
-			[HBRespringController respring];
-		} else {
-			self.navigationItem.rightBarButtonItem.title = @"Are you sure?"
-			self.navigationItem.rightBarButtonItem.tintColor = [UIColor redColor];
-
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				self.navigationItem.rightBarButtonItem.title = @"Apply";
-				self.navigationItem.rightBarButtonItem.tintColor = Pri_Color;
-			});
-		}
 	}
 
 	//https://github.com/Nepeta/Axon/blob/master/Prefs/Preferences.m
