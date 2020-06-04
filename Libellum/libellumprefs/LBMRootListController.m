@@ -126,7 +126,7 @@
 			[HBRespringController respring];
 		} else {
 			_respringConfirmButton = (_respringConfirmButton) ? _respringConfirmButton : [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
-			_respringConfirmButton.tintColor = [UIColor redColor];
+			_respringConfirmButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
 			[self.navigationItem setRightBarButtonItem:_respringConfirmButton animated:YES];
 
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

@@ -3,7 +3,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 
 @implementation LBMHeaderCell
 	-(id)init {
-		self = [super initWithFrame:CGRectZero];
+		self = [super init];
 
 		if(self) {
 				//Add icon above labels (150x150)

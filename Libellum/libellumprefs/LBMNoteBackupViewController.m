@@ -1,8 +1,5 @@
 #import "LBMNoteBackupViewController.h"
 
-  static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
-  static NSString *filePathBK = @"/User/Library/Preferences/LibellumNotes.bk";
-
 @implementation LBMNoteBackupViewController {
   UIView *_backgroundView;
   UILabel *_titleLabel;
@@ -173,9 +170,19 @@
     return self;
   }
 
-  -(void)animateTextChangeTo:(NSString *)text {
+  -(void)animateTextChangeTo:(id)text {
+    NSMutableAttributedString *attributedText;
+    if([text isKindOfClass:[NSString class]]) {
+      attributedText = [[NSMutableAttributedString alloc] initWithString:text];
+      [attributedText addAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]} range:(NSRange){0, attributedText.length}];
+    } else {
+      attributedText = text;
+    }
+
+    [attributedText addAttributes:@{NSForegroundColorAttributeName: _textView.textColor} range:(NSRange){0, attributedText.length}];
+
     [UIView transitionWithView:_textView duration:0.25 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-      _textView.text = text;
+      _textView.attributedText = attributedText;
     } completion:nil];
   }
 
@@ -195,18 +202,21 @@
   }
 
   -(IBAction)viewBackupNotes {
-    NSString *backupContent = [NSString stringWithContentsOfFile:filePathBK encoding:NSUTF8StringEncoding error:nil];
-    if([backupContent length] > 0) {
-      [self animateTextChangeTo:backupContent];
+    NSError *error = nil;
+    NSMutableAttributedString *backupContent = [[NSMutableAttributedString alloc] initWithData:[NSData dataWithContentsOfFile:filePathBK] options:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} documentAttributes:nil error:&error];
+    if(error) {
+      [self animateTextChangeTo:[NSString stringWithFormat:@"Error viewing backed up notes:\n\n%@\n\nThere is no backup of your notes.", error]];
     } else {
-      [self animateTextChangeTo:@"There is no backup of your notes."];
+      [self animateTextChangeTo:backupContent];
     }
   }
 
   -(IBAction)backupNotesNow {
     NSError *error = nil;
-    NSString *notes = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
-    [notes writeToFile:filePathBK atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithData:[NSData dataWithContentsOfFile:filePath] options:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} documentAttributes:nil error:&error];
+    NSData *data = [content dataFromRange:(NSRange){0, content.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:&error];
+    [data writeToFile:filePathBK atomically:YES];
+
     if(error) {
       [self animateTextChangeTo:[NSString stringWithFormat:@"Error backing up notes:\n\n%@", error]];
     } else {
@@ -218,8 +228,9 @@
     UIAlertController *cautionAlert = [UIAlertController alertControllerWithTitle:@"Restore" message:@"Are you sure you want to restore the backup of your notes? This will delete your current notes and respring your device." preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
       NSError *error = nil;
-      NSString *notesFromBK = [NSString stringWithContentsOfFile:filePathBK encoding:NSUTF8StringEncoding error:&error];
-      [notesFromBK writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+      NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithData:[NSData dataWithContentsOfFile:filePathBK] options:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} documentAttributes:nil error:&error];
+      NSData *data = [content dataFromRange:(NSRange){0, content.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:&error];
+      [data writeToFile:filePath atomically:YES];
       if(error) {
         [self animateTextChangeTo:[NSString stringWithFormat:@"Error restoring backed up notes:\n\n%@", error]];
       } else {
@@ -290,5 +301,4 @@
       [_notAQuack play];
     }
   }
-
 @end

@@ -7,9 +7,6 @@
  */
 #import "LibellumView.h"
 
-  static NSString *filePath = @"/User/Library/Preferences/LibellumNotes.txt";
-  static NSString *filePathBK = @"/User/Library/Preferences/LibellumNotes.bk";
-
 @implementation LibellumView
   +(id)sharedInstance {
     static LibellumView *sharedInstance = nil;
@@ -48,6 +45,7 @@
 
         //Create text view
       _noteView = [[UITextView alloc] initWithFrame:self.bounds];
+      _noteView.allowsEditingTextAttributes = YES;
       _noteView.backgroundColor = [UIColor clearColor];
       _noteView.clipsToBounds = YES;
       _noteView.contentInset = UIEdgeInsetsZero;
@@ -60,6 +58,8 @@
       _noteView.textContainerInset = UIEdgeInsetsMake(10, 5, 10, 5);
       _noteView.tintColor = [self getTintColor];
       _noteView.translatesAutoresizingMaskIntoConstraints = NO;
+      [self setNumberOfLines];
+      [self loadNotes];
 
         //Add lock icon if on iOS13
       _lockIcon = [[UIImageView alloc] init];
@@ -98,9 +98,7 @@
         [self.heightAnchor constraintEqualToConstant:_noteSize],
       ]];
 
-      [self setNumberOfLines];
       [self setupGestures];
-      [self loadNotes];
 
       if(_noteBackup) {
         [self backupNotes];
@@ -179,17 +177,12 @@
     [UIView transitionWithView:_noteView duration:0.2 options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
       if(_authenticated) {
         _noteView.userInteractionEnabled = YES;
+        _noteView.alpha = 1;
         _lockIcon.alpha = 0;
-
-        if([_blurStyle isEqualToString:@"adaptive"] && !_ignoreAdaptiveColors) {
-          _noteView.textColor = ([self isDarkMode]) ? [UIColor whiteColor] : [UIColor blackColor];
-        } else {
-          _noteView.textColor = _customTextColor;
-        }
 
       } else {
         _noteView.userInteractionEnabled = NO;
-        _noteView.textColor = [UIColor clearColor];
+        _noteView.alpha = 0;
         _lockIcon.alpha = 1;
       }
     } completion:nil];
@@ -231,7 +224,15 @@
     return (lineCount <= _noteView.textContainer.maximumNumberOfLines);
   }
 
-#pragma mark - ToolBar
+#pragma mark - UITextView Delegate Methods
+
+  -(void)textViewDidBeginEditing:(UITextView *)textView {
+    _editing = YES;
+  }
+
+  -(void)textViewDidEndEditing:(UITextView *)textView {
+    _editing = NO;
+  }
 
   -(BOOL)textViewShouldBeginEditing:(UITextView *)textView {
     UIToolbar *toolBar = [[UIToolbar alloc] init];
@@ -243,6 +244,23 @@
 
     return YES;
   }
+
+  -(BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
+    [self resignFirstResponder];
+    return YES;
+  }
+
+  -(void)textViewDidChange:(UITextView *)textView {
+    [self saveNotes];
+
+    [[NSClassFromString(@"SBIdleTimerGlobalCoordinator") sharedInstance] resetIdleTimer];
+  }
+
+  -(void)textViewDidChangeSelection:(UITextView *)textView {
+    [[NSClassFromString(@"SBIdleTimerGlobalCoordinator") sharedInstance] resetIdleTimer];
+  }
+
+#pragma mark - UIToolbar
 
   -(NSArray *)toolBarButtons {
     NSMutableArray *buttons = [[NSMutableArray alloc] init];
@@ -280,29 +298,12 @@
     [_noteView resignFirstResponder];
   }
 
-  -(void)textViewDidBeginEditing:(UITextView *)textView {
-    _editing = YES;
-
-    CGRect caretPosition = [_noteView caretRectForPosition:textView.selectedTextRange.start];
-    [textView scrollRectToVisible:caretPosition animated:YES];
-  }
-
-  -(void)textViewDidEndEditing:(UITextView *)textView {
-    _editing = NO;
-  }
-
 #pragma mark - Loading/Saving/Backup Notes/Idle Timer Reset
-
-  -(void)textViewDidChange:(UITextView *)textView {
-    [self saveNotes];
-
-    [[NSClassFromString(@"SBIdleTimerGlobalCoordinator") sharedInstance] resetIdleTimer];
-  }
 
   -(void)saveNotes {
     NSError *error = nil;
-    NSString *notes = _noteView.text;
-    [notes writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    NSData *data = [_noteView.attributedText dataFromRange:(NSRange){0, _noteView.attributedText.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:&error];
+    [data writeToFile:filePath atomically:YES];
     if(error) {
       os_log(OS_LOG_DEFAULT, "Libellum || Error saving notes - %@", error);
     }
@@ -310,7 +311,13 @@
 
   -(void)loadNotes {
     NSError *error = nil;
-    _noteView.text = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
+    NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithData:[NSData dataWithContentsOfFile:filePath] options:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} documentAttributes:nil error:&error];
+    _noteView.attributedText = content;
+
+    if(_ignoreAdaptiveColors) {
+      _noteView.textColor = _customTextColor;
+    }
+
     if(error) {
       os_log(OS_LOG_DEFAULT, "Libellum || Error loading notes - %@", error);
     }
@@ -318,8 +325,8 @@
 
   -(void)backupNotes {
     NSError *error = nil;
-    NSString *notes = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:&error];
-    [notes writeToFile:filePathBK atomically:YES encoding:NSUTF8StringEncoding error:&error];
+    NSData *data = [_noteView.attributedText dataFromRange:(NSRange){0, _noteView.attributedText.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:&error];
+    [data writeToFile:filePathBK atomically:YES];
     if(error) {
       os_log(OS_LOG_DEFAULT, "Libellum || Error backing up notes - %@", error);
     }
@@ -341,7 +348,6 @@
 
   -(void)toggleLibellum:(UIGestureRecognizer *)gesture {
     if(_hideGesture && !_editing) {
-
       HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 
       if(_feedback) {

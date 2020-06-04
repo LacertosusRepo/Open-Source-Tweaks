@@ -7,11 +7,10 @@
 #import <Cephei/HBPreferences.h>
 
 @import Alderis;
+#import "AlderisColorPicker.h"
 #import "LBMHeaderCell.h"
 #import "LBMNoteBackupViewController.h"
-#import "AlderisColorPicker.h"
 #import "PreferencesColorDefinitions.h"
-#import "../LibellumView.h"
 
 @interface PSListController (iOS12Methods)
 -(BOOL)containsSpecifier:(id)arg1;

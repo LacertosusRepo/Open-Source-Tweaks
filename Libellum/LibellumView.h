@@ -1,5 +1,9 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <Cephei/HBPreferences.h>
+#import "MTMaterialView.h"
+
+#define filePath @"/User/Library/Preferences/LibellumNotes.rtf"
+#define filePathBK @"/User/Library/Preferences/LibellumNotes.rtf.bk"
 
 @interface SBLockStateAggregator : NSObject
 +(id)sharedInstance;
@@ -44,12 +48,6 @@
 
 @interface UITextView (iOS13)
 @property (nonatomic, readonly) _UIScrollViewScrollIndicator *verticalScrollIndicator;
-@end
-
-@interface MTMaterialView : UIView
-@property (nonatomic, assign, readwrite) NSUInteger recipe;
-@property (assign, nonatomic) BOOL recipeDynamic;
-+(id)materialViewWithRecipeNamed:(id)arg1 inBundle:(id)arg2 configuration:(long long)arg3 initialWeighting:(double)arg4 scaleAdjustment:(/*^block*/id)arg5 ;
 @end
 
 @interface KalmAPI : NSObject

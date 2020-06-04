@@ -5,7 +5,7 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 7/16/2019.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
-
+ 
 @import Alderis;
 #import <Cephei/HBPreferences.h>
 #import "AlderisColorPicker.h"
@@ -275,5 +275,22 @@ static void libellumPreferencesChanged() {
     //Fix crash caused by preference value previosuly being an integer
   if([[preferences objectForKey:@"blurStyle"] intValue] > 0) {
     [preferences setObject:@"adaptive" forKey:@"blurStyle"];
+  }
+
+    //convert old notes data to rtf
+  if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/LibellumNotes.txt"]) {
+    NSString *contents = [NSString stringWithContentsOfFile:@"/User/Library/Preferences/LibellumNotes.txt" encoding:NSUTF8StringEncoding error:nil];
+    NSAttributedString *newContents = [[NSAttributedString alloc] initWithString:contents attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]}];
+    NSData *data = [newContents dataFromRange:(NSRange){0, newContents.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:nil];
+    [data writeToFile:filePath atomically:YES];
+    [[NSFileManager defaultManager] removeItemAtPath:@"/User/Library/Preferences/LibellumNotes.txt" error:nil];
+  }
+
+  if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/LibellumNotes.bk"]) {
+    NSString *contents = [NSString stringWithContentsOfFile:@"/User/Library/Preferences/LibellumNotes.bk" encoding:NSUTF8StringEncoding error:nil];
+    NSAttributedString *newContents = [[NSAttributedString alloc] initWithString:contents attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]}];
+    NSData *data = [newContents dataFromRange:(NSRange){0, newContents.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:nil];
+    [data writeToFile:filePathBK atomically:YES];
+    [[NSFileManager defaultManager] removeItemAtPath:@"/User/Library/Preferences/LibellumNotes.bk" error:nil];
   }
 }
