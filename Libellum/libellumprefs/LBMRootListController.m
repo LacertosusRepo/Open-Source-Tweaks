@@ -109,10 +109,10 @@
 		[self respringApply];
 
 		//Adds header to table
-		UIView *LBMHeaderView = [[LBMHeaderCell alloc] init];
-		LBMHeaderView.frame = CGRectMake(0, 0, LBMHeaderView.bounds.size.width, 175);
+		UIView *header = [[LBMHeaderView alloc] init];
+		header.frame = CGRectMake(0, 0, header.bounds.size.width, 175);
 		UITableView *tableView = [self valueForKey:@"_table"];
-		tableView.tableHeaderView = LBMHeaderView;
+		tableView.tableHeaderView = header;
 	}
 
 	-(void)respringApply {

@@ -8,7 +8,7 @@
 
 @import Alderis;
 #import "AlderisColorPicker.h"
-#import "LBMHeaderCell.h"
+#import "LBMHeaderView.h"
 #import "LBMNoteBackupViewController.h"
 #import "PreferencesColorDefinitions.h"
 

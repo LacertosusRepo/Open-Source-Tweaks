@@ -1,7 +1,7 @@
 #import "PreferencesColorDefinitions.h"
 #import "../MTMaterialView.h"
 
-@interface LBMHeaderCell : UIView
+@interface LBMHeaderView : UIView
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, assign) UILabel *titleLabel;
 @property (nonatomic, assign) UILabel *subtitleLabel;

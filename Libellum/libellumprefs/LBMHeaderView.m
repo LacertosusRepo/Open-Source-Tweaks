@@ -1,7 +1,7 @@
-#import "LBMHeaderCell.h"
+#import "LBMHeaderView.h"
 extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
-@implementation LBMHeaderCell
+@implementation LBMHeaderView
 	-(id)init {
 		self = [super init];
 
