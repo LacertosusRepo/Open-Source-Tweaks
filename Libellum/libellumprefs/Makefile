@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = LibellumPrefs
-LibellumPrefs_FILES = LBMRootListController.m LBMLabeledSliderCell.m LBMHeaderView.m LBMNoteBackupViewController.m
+LibellumPrefs_FILES = LBMRootListController.m LBMLabeledSliderCell.m LBMHeaderView.m LBMBackupViewController.m LBMStylePickerCell.m LBMStyleOptionView.m LBMStyleCheckView.m
 LibellumPrefs_INSTALL_PATH = /Library/PreferenceBundles
 LibellumPrefs_LIBRARIES = colorpicker
 LibellumPrefs_FRAMEWORKS = UIKit AVFoundation

@@ -1,5 +1,6 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <Cephei/HBPreferences.h>
+#import "LGestureRecognizer.h"
 #import "MTMaterialView.h"
 
 #define filePath @"/User/Library/Preferences/LibellumNotes.rtf"
@@ -59,6 +60,7 @@
 @property (nonatomic, retain) UITextView *noteView;
 @property (nonatomic, retain) UIView *blurView;
 @property (nonatomic, readonly) UISwipeGestureRecognizer *swipeGesture;
+@property (nonatomic, readonly) LGestureRecognizer *lGesture;
 @property (nonatomic, readonly) UIScreenEdgePanGestureRecognizer *edgeGesture;
 @property (nonatomic, readonly) BOOL editing;
 @property (nonatomic, readonly) BOOL authenticated;

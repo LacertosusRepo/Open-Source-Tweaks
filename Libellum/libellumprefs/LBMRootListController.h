@@ -9,7 +9,7 @@
 @import Alderis;
 #import "AlderisColorPicker.h"
 #import "LBMHeaderView.h"
-#import "LBMNoteBackupViewController.h"
+#import "LBMBackupViewController.h"
 #import "PreferencesColorDefinitions.h"
 
 @interface PSListController (iOS12Methods)

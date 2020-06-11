@@ -130,6 +130,11 @@
 
     //Formula for figuring out height of the noteview: (lineHeight (16.7) * maximumNumberOfLines) + padding (20)
   -(void)setNumberOfLines {
+    if(_enableEndlessLines) {
+      _noteView.textContainer.maximumNumberOfLines = 999;
+      return;
+    }
+
     switch (_noteSize) {
       case 71:
       _noteView.textContainer.maximumNumberOfLines = 3;
@@ -150,10 +155,6 @@
       default:
       os_log(OS_LOG_DEFAULT, "Libellum || noteSize unknown value - %lu", _noteSize);
       break;
-    }
-
-    if(_enableEndlessLines) {
-      _noteView.textContainer.maximumNumberOfLines = 999;
     }
   }
 
@@ -242,11 +243,6 @@
     toolBar.items = [self toolBarButtons];
     _noteView.inputAccessoryView = toolBar;
 
-    return YES;
-  }
-
-  -(BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange interaction:(UITextItemInteraction)interaction {
-    [self resignFirstResponder];
     return YES;
   }
 
@@ -339,6 +335,9 @@
     _swipeGesture.direction = UISwipeGestureRecognizerDirectionLeft;
     [self addGestureRecognizer:_swipeGesture];
 
+    _lGesture = [[LGestureRecognizer alloc] initWithTarget:self action:@selector(toggleLibellum:)];
+    _lGesture.enabled = NO;
+
     /*_edgeGesture = [[NSClassFromString(@"SBScreenEdgePanGestureRecognizer") alloc] initWithTarget:self action:@selector(toggleLibellum:) type:SBSystemGestureTypeNone options:nil];
     _edgeGesture.edges = UIRectEdgeTop;
     _edgeGesture.maximumNumberOfTouches = 1;
@@ -348,6 +347,10 @@
 
   -(void)toggleLibellum:(UIGestureRecognizer *)gesture {
     if(_hideGesture && !_editing) {
+      if([gesture isKindOfClass:[LGestureRecognizer class]] && gesture.state != UIGestureRecognizerStateRecognized) {
+        return;
+      }
+
       HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 
       if(_feedback) {
@@ -355,13 +358,23 @@
       }
 
       if(self.hidden) {
-        self.hidden = NO;
+        /*self.hidden = NO;
         [self.superview.superview layoutSubviews];
         self.transform = CGAffineTransformMakeScale(0.5, 0.5);
         [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
           self.transform = CGAffineTransformMakeScale(1, 1);
           self.alpha = 1;
-        } completion:nil];
+        } completion:nil];*/
+
+        self.hidden = NO;
+        [self.superview.superview layoutSubviews];
+        self.transform = CGAffineTransformMakeScale(0.5, 0.5);
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+          [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.transform = CGAffineTransformMakeScale(1, 1);
+            self.alpha = 1;
+          } completion:nil];
+        });
 
         [preferences setBool:NO forKey:@"isHidden"];
         return;
@@ -448,8 +461,15 @@
     return _customTintColor;
   }
 
+#pragma mark - Misc.
+
   -(BOOL)isDarkMode {
     return ([[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle] == 2) ? YES : NO;
+  }
+
+  -(void)openPrefs {
+    //Only works from the homescreen, of course
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"App-prefs:Libellum"] options:@{} completionHandler:nil];
   }
 
 @end

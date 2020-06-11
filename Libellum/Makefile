@@ -1,17 +1,15 @@
 export ARCHS = arm64 arm64e
-export SDKVERSION = 12.4
-THEOS_DEVICE_IP = 10.0.0.130
 
 # Simject
 # export ARCHS = x86_64
 # TARGET = simulator:clang::12
 
-INSTALL_TARGET_PROCESSES = SpringBoard
+INSTALL_TARGET_PROCESSES = Preferences #SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Libellum
-Libellum_FILES = Tweak.x LibellumView.m
+Libellum_FILES = Tweak.x LibellumView.m LGestureRecognizer.m
 Libellum_LIBRARIES = colorpicker
 Libellum_PRIVATE_FRAMEWORKS = AppSupport
 # Add ws.hbang.common (>= 1.13) to depencencies

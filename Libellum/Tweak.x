@@ -5,7 +5,7 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 7/16/2019.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
- 
+
 @import Alderis;
 #import <Cephei/HBPreferences.h>
 #import "AlderisColorPicker.h"
@@ -67,9 +67,12 @@
       [self.libellum setSizeToMimic:self.sizeToMimic];
       [self.stackView insertArrangedSubview:self.libellum atIndex:0];
 
-      [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.libellum.swipeGesture];
+      [scrollViewCS addGestureRecognizer:self.libellum.lGesture];
 
-      if(isHidden) {
+      [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.libellum.swipeGesture];
+      [[scrollViewCS panGestureRecognizer] requireGestureRecognizerToFail:self.libellum.lGesture];
+
+      if(isHidden && hideGesture) {
         [self.libellum toggleLibellum:nil];
       }
     }
@@ -130,7 +133,7 @@
 
       [[scrollViewSB panGestureRecognizer] requireGestureRecognizerToFail:self.libellum.swipeGesture];
 
-      if(isHidden) {
+      if(isHidden && hideGesture) {
         [self.libellum toggleLibellum:nil];
       }
     }

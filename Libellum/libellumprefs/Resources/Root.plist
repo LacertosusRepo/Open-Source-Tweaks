@@ -143,7 +143,6 @@
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
 
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
@@ -151,6 +150,58 @@
 			<string>Style</string>
 			<key>footerText</key>
 			<string>Changing background style requires respring.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSTableCell</string>
+			<key>cellClass</key>
+			<string>LBMStylePickerCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>blurStyle</string>
+			<key>default</key>
+			<string>adaptive</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>height</key>
+			<real>210</real>
+			<key>firstOption</key>
+			<dict>
+				<key>image</key>
+				<string>firstImage</string>
+				<key>style</key>
+				<string>platters</string>
+				<key>label</key>
+				<string>Light Mode</string>
+			</dict>
+			<key>secondOption</key>
+			<dict>
+				<key>image</key>
+				<string>secondImage</string>
+				<key>style</key>
+				<string>plattersDark</string>
+				<key>label</key>
+				<string>Dark Mode</string>
+			</dict>
+			<key>thirdOption</key>
+			<dict>
+				<key>image</key>
+				<string>thirdImage</string>
+				<key>style</key>
+				<string>colorized</string>
+				<key>label</key>
+				<string>Colorized</string>
+			</dict>
+			<key>fourthOption</key>
+			<dict>
+				<key>image</key>
+				<string>fourthImage</string>
+				<key>style</key>
+				<string>adaptive</string>
+				<key>label</key>
+				<string>Adaptive</string>
+			</dict>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -177,36 +228,8 @@
 			<string>LBMLabeledSliderCell</string>
 			<key>height</key>
 			<real>56</real>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSegmentCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.libellumprefs</string>
-			<key>key</key>
-			<string>blurStyle</string>
-			<key>label</key>
-			<string>Blur Style</string>
-			<key>default</key>
-			<string>adaptive</string>
-			<key>validTitles</key>
-			<array>
-				<string>Light Blur</string>
-				<string>Dark Blur</string>
-				<string>Colorized</string>
-				<string>Adaptive</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<string>platters</string>
-				<string>plattersDark</string>
-				<string>colorized</string>
-				<string>adaptive</string>
-			</array>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>BlurStyle</string>
+			<string>CornerRadius</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -549,7 +572,8 @@
 			<key>footerAlignment</key>
 			<integer>1</integer>
 			<key>footerText</key>
-			<string>Libellum by LacertosusDeus</string>
+			<string>Libellum
+LacertosusDeus</string>
 		</dict>
 	</array>
 	<key>title</key>

@@ -1,4 +1,4 @@
-#import "LBMNoteBackupViewController.h"
+#import "LBMBackupViewController.h"
 
 @implementation LBMNoteBackupViewController {
   UIView *_backgroundView;
@@ -60,57 +60,57 @@
 
       _viewBackupButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _viewBackupButton.clipsToBounds = YES;
-      _viewBackupButton.layer.cornerRadius = 10;
+      _viewBackupButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
+      _viewBackupButton.layer.cornerRadius = 5;
       _viewBackupButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _viewBackupButton.tintColor = [UIColor whiteColor];
       _viewBackupButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_viewBackupButton addTarget:self action:@selector(viewBackupNotes) forControlEvents:UIControlEventTouchUpInside];
       [_viewBackupButton setTitle:@"View Notes Backup" forState:UIControlStateNormal];
-      [_viewBackupButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_viewBackupButton];
 
       _backupNowButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _backupNowButton.clipsToBounds = YES;
-      _backupNowButton.layer.cornerRadius = 10;
+      _backupNowButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
+      _backupNowButton.layer.cornerRadius = 5;
       _backupNowButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _backupNowButton.tintColor = [UIColor whiteColor];
       _backupNowButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_backupNowButton addTarget:self action:@selector(backupNotesNow) forControlEvents:UIControlEventTouchUpInside];
       [_backupNowButton setTitle:@"Backup Notes Now" forState:UIControlStateNormal];
-      [_backupNowButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_backupNowButton];
 
       _restoreBackupButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _restoreBackupButton.clipsToBounds = YES;
-      _restoreBackupButton.layer.cornerRadius = 10;
+      _restoreBackupButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
+      _restoreBackupButton.layer.cornerRadius = 5;
       _restoreBackupButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _restoreBackupButton.tintColor = [UIColor whiteColor];
       _restoreBackupButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_restoreBackupButton addTarget:self action:@selector(restoreBackupNotes) forControlEvents:UIControlEventTouchUpInside];
       [_restoreBackupButton setTitle:@"Restore Notes From Backup" forState:UIControlStateNormal];
-      [_restoreBackupButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_restoreBackupButton];
 
       _deleteBackupButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _deleteBackupButton.clipsToBounds = YES;
-      _deleteBackupButton.layer.cornerRadius = 10;
+      _deleteBackupButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
+      _deleteBackupButton.layer.cornerRadius = 5;
       _deleteBackupButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _deleteBackupButton.tintColor = [UIColor whiteColor];
       _deleteBackupButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_deleteBackupButton addTarget:self action:@selector(deleteBackupNotes) forControlEvents:UIControlEventTouchUpInside];
       [_deleteBackupButton setTitle:@"Delete Notes Backup" forState:UIControlStateNormal];
-      [_deleteBackupButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_deleteBackupButton];
 
       _closeButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _closeButton.clipsToBounds = YES;
-      _closeButton.layer.cornerRadius = 10;
+      _closeButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
+      _closeButton.layer.cornerRadius = 5;
       _closeButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _closeButton.tintColor = [UIColor whiteColor];
       _closeButton.translatesAutoresizingMaskIntoConstraints = NO;
       [_closeButton addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
       [_closeButton setTitle:@"Done" forState:UIControlStateNormal];
-      [_closeButton.layer insertSublayer:[self getGradientLayer] atIndex:0];
       [self.view addSubview:_closeButton];
 
       UITapGestureRecognizer *dontTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(quack)];
@@ -127,10 +127,10 @@
         [_backgroundView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
         [_backgroundView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor],
 
-        [_titleLabel.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:25],
+        [_titleLabel.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:30],
         [_titleLabel.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
 
-        [_textView.topAnchor constraintEqualToAnchor:_titleLabel.bottomAnchor constant:20],
+        [_textView.topAnchor constraintEqualToAnchor:_titleLabel.bottomAnchor constant:22],
         [_textView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_textView.widthAnchor constraintEqualToConstant:330],
         [_textView.heightAnchor constraintEqualToConstant:180],
@@ -264,15 +264,6 @@
 
   -(IBAction)close {
     [self dismissViewControllerAnimated:YES completion:nil];
-  }
-
-  -(CAGradientLayer *)getGradientLayer {
-    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-    gradientLayer.frame = CGRectMake(0, 0, 330, 50);
-    gradientLayer.startPoint = CGPointMake(0, 0);
-    gradientLayer.endPoint = CGPointMake(1, 1);
-    gradientLayer.colors = @[(id)[UIColor colorWithRed: 0.39 green: 0.27 blue: 0.47 alpha: 1.00].CGColor, (id)[UIColor colorWithRed: 0.29 green: 0.26 blue: 0.45 alpha: 1.00].CGColor];
-    return gradientLayer;
   }
 
   -(void)duckify {
