@@ -6,7 +6,7 @@
   UILongPressGestureRecognizer *_pressGesture;
 }
 
-  -(id)initWithFrame:(CGRect)frame appearanceOption:(NSString *)option {
+  -(id)initWithFrame:(CGRect)frame appearanceOption:(id)option {
     self = [super initWithFrame:frame];
 
     if(self) {

@@ -166,41 +166,55 @@
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>height</key>
 			<real>210</real>
-			<key>firstOption</key>
+			<key>options</key>
 			<dict>
-				<key>image</key>
-				<string>firstImage</string>
-				<key>style</key>
-				<string>platters</string>
-				<key>label</key>
-				<string>Light Mode</string>
-			</dict>
-			<key>secondOption</key>
-			<dict>
-				<key>image</key>
-				<string>secondImage</string>
-				<key>style</key>
-				<string>plattersDark</string>
-				<key>label</key>
-				<string>Dark Mode</string>
-			</dict>
-			<key>thirdOption</key>
-			<dict>
-				<key>image</key>
-				<string>thirdImage</string>
-				<key>style</key>
-				<string>colorized</string>
-				<key>label</key>
-				<string>Colorized</string>
-			</dict>
-			<key>fourthOption</key>
-			<dict>
-				<key>image</key>
-				<string>fourthImage</string>
-				<key>style</key>
-				<string>adaptive</string>
-				<key>label</key>
-				<string>Adaptive</string>
+				<key>lightOption</key>
+				<dict>
+					<key>image</key>
+					<string>lightimage</string>
+					<key>appearanceOption</key>
+					<string>platters</string>
+					<key>label</key>
+					<string>Light Mode</string>
+					<key>position</key>
+					<integer>1</integer>
+				</dict>
+
+				<key>darkOption</key>
+				<dict>
+					<key>image</key>
+					<string>darkimage</string>
+					<key>appearanceOption</key>
+					<string>plattersDark</string>
+					<key>label</key>
+					<string>Dark Mode</string>
+					<key>position</key>
+					<integer>2</integer>
+				</dict>
+
+				<key>colorizedOption</key>
+				<dict>
+					<key>image</key>
+					<string>colorizedimage</string>
+					<key>appearanceOption</key>
+					<string>colorized</string>
+					<key>label</key>
+					<string>Colorized</string>
+					<key>position</key>
+					<integer>3</integer>
+				</dict>
+
+				<key>adaptiveOption</key>
+				<dict>
+					<key>image</key>
+					<string>adaptiveimage</string>
+					<key>appearanceOption</key>
+					<string>adaptive</string>
+					<key>label</key>
+					<string>Adaptive</string>
+					<key>position</key>
+					<integer>4</integer>
+				</dict>
 			</dict>
 		</dict>
 		<dict>

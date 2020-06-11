@@ -19,7 +19,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | :-----: | :-----------------: | :-------: | :------------: | :---------: | :-----------: |
 | ColoredScrollIndicator | 13 | v1.1-1 | arm64 arm64e | | Color the scroll indicator with a gradient |
 | NowPlayingIcon | 13 | v1.2 | arm64 arm64e | | Replace now playing app icon with album art |
-| Libellum | 12 - 13 | v1.4.7 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
+| Libellum | 12 - 13 | v1.4.8 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
 | Speculum | 12 - 13 | v1.3.5 | arm64 arm64e | | Customizable lockscreen time, date, and weather information |
 | Clauditis | 11 - 13 | v1.2 | arm64 arm64e | ✔ | Double tap homescreen to lock device |
 | Navale | 10 - 13 | v2.2.6 | arm64 arm64e | | Gradient dock background |
