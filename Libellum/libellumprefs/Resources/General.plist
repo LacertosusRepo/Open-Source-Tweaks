@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>WARNING: If your notes lapse the size of the noteview, disabling endless lines will not allow you to type afterwards.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>enableUndoRedo</string>
+			<key>label</key>
+			<string>Enable Undo/Redo Buttons</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>enableEndlessLines</string>
+			<key>label</key>
+			<string>Enable Endless Lines</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>hideNoOlderNotifications</string>
+			<key>label</key>
+			<string>Hide No Older Notifications Text</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>enableAutoUnlockXBlock</string>
+			<key>label</key>
+			<string>Prevent AutoUnlockX While Visible</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>

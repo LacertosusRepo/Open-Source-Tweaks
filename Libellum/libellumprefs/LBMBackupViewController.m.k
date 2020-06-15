@@ -9,6 +9,8 @@
   UIButton *_restoreBackupButton;
   UIButton *_deleteBackupButton;
   UIButton *_closeButton;
+  UIImageView *_notADuckImage;
+  AVAudioPlayer *_notAQuack;
 }
 
   -(instancetype)init {
@@ -26,6 +28,9 @@
       _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
       [self.view addSubview:_backgroundView];
 
+      UILongPressGestureRecognizer *dontLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(duckify)];
+      dontLongPress.minimumPressDuration = 8;
+
       _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
       _titleLabel.font = [UIFont systemFontOfSize:30 weight:UIFontWeightBlack];
       _titleLabel.numberOfLines = 1;
@@ -34,6 +39,7 @@
       _titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
       _titleLabel.userInteractionEnabled = YES;
       [_titleLabel sizeToFit];
+      [_titleLabel addGestureRecognizer:dontLongPress];
       [self.view addSubview:_titleLabel];
 
       _textView = [[UITextView alloc] initWithFrame:CGRectZero];
@@ -54,7 +60,7 @@
 
       _viewBackupButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _viewBackupButton.clipsToBounds = YES;
-      _viewBackupButton.backgroundColor = Pri_Color;
+      _viewBackupButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
       _viewBackupButton.layer.cornerRadius = 5;
       _viewBackupButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _viewBackupButton.tintColor = [UIColor whiteColor];
@@ -65,7 +71,7 @@
 
       _backupNowButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _backupNowButton.clipsToBounds = YES;
-      _backupNowButton.backgroundColor = Pri_Color;
+      _backupNowButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
       _backupNowButton.layer.cornerRadius = 5;
       _backupNowButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _backupNowButton.tintColor = [UIColor whiteColor];
@@ -76,7 +82,7 @@
 
       _restoreBackupButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _restoreBackupButton.clipsToBounds = YES;
-      _restoreBackupButton.backgroundColor = Pri_Color;
+      _restoreBackupButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
       _restoreBackupButton.layer.cornerRadius = 5;
       _restoreBackupButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _restoreBackupButton.tintColor = [UIColor whiteColor];
@@ -87,7 +93,7 @@
 
       _deleteBackupButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _deleteBackupButton.clipsToBounds = YES;
-      _deleteBackupButton.backgroundColor = Pri_Color;
+      _deleteBackupButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
       _deleteBackupButton.layer.cornerRadius = 5;
       _deleteBackupButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _deleteBackupButton.tintColor = [UIColor whiteColor];
@@ -98,7 +104,7 @@
 
       _closeButton = [UIButton buttonWithType:UIButtonTypeSystem];
       _closeButton.clipsToBounds = YES;
-      _closeButton.backgroundColor = Pri_Color;
+      _closeButton.backgroundColor = [UIColor colorWithRed:0.39 green:0.27 blue:0.47 alpha:1.00];
       _closeButton.layer.cornerRadius = 5;
       _closeButton.titleLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightSemibold];
       _closeButton.tintColor = [UIColor whiteColor];
@@ -107,45 +113,67 @@
       [_closeButton setTitle:@"Done" forState:UIControlStateNormal];
       [self.view addSubview:_closeButton];
 
+      UIStackView *_stackViewButtons = [[UIStackView alloc] initWithArrangedSubviews:@[_viewBackupButton, _backupNowButton, _restoreBackupButton, _deleteBackupButton, _closeButton]];
+      _stackViewButtons.alignment = UIStackViewAlignmentCenter;
+      _stackViewButtons.axis = UILayoutConstraintAxisVertical;
+      _stackViewButtons.distribution = UIStackViewDistributionFill;
+      _stackViewButtons.spacing = 15;
+      _stackViewButtons.translatesAutoresizingMaskIntoConstraints = NO;
+      [self.view addSubview:_stackViewButtons];
+
+      UIStackView *_stackViewText = [[UIStackView alloc] initWithArrangedSubviews:@[_titleLabel, _textView]];
+      _stackViewText.alignment = UIStackViewAlignmentCenter;
+      _stackViewText.axis = UILayoutConstraintAxisVertical;
+      _stackViewText.distribution = UIStackViewDistributionFill;
+      _stackViewText.spacing = 30;
+      _stackViewText.translatesAutoresizingMaskIntoConstraints = NO;
+      [self.view addSubview:_stackViewText];
+
       UITapGestureRecognizer *dontTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(quack)];
       dontTap.numberOfTapsRequired = 1;
 
+      _notADuckImage = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/inconspicuous.png"]];
+      _notADuckImage.alpha = 0;
+      _notADuckImage.translatesAutoresizingMaskIntoConstraints = NO;
+      _notADuckImage.userInteractionEnabled = YES;
+      [_notADuckImage addGestureRecognizer:dontTap];
+      [self.view addSubview:_notADuckImage];
+
       [NSLayoutConstraint activateConstraints:@[
+        [_stackViewText.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:30],
+        [_stackViewText.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [_stackViewText.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [_stackViewText.bottomAnchor constraintEqualToAnchor:_stackViewButtons.topAnchor constant:-15],
+
         [_backgroundView.widthAnchor constraintEqualToAnchor:self.view.widthAnchor],
         [_backgroundView.heightAnchor constraintEqualToAnchor:self.view.heightAnchor],
 
-        [_titleLabel.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:30],
-        [_titleLabel.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
-
-        [_textView.topAnchor constraintEqualToAnchor:_titleLabel.bottomAnchor constant:22],
-        [_textView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_textView.widthAnchor constraintEqualToConstant:330],
         [_textView.heightAnchor constraintEqualToConstant:180],
 
-        [_viewBackupButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [_stackViewButtons.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [_stackViewButtons.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        [_stackViewButtons.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-30],
+
         [_viewBackupButton.widthAnchor constraintEqualToConstant:330],
         [_viewBackupButton.heightAnchor constraintEqualToConstant:50],
 
-        [_backupNowButton.topAnchor constraintEqualToAnchor:_viewBackupButton.bottomAnchor constant:10],
-        [_backupNowButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_backupNowButton.widthAnchor constraintEqualToConstant:330],
         [_backupNowButton.heightAnchor constraintEqualToConstant:50],
 
-        [_restoreBackupButton.topAnchor constraintEqualToAnchor:_backupNowButton.bottomAnchor constant:10],
-        [_restoreBackupButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_restoreBackupButton.widthAnchor constraintEqualToConstant:330],
         [_restoreBackupButton.heightAnchor constraintEqualToConstant:50],
 
-        [_deleteBackupButton.topAnchor constraintEqualToAnchor:_restoreBackupButton.bottomAnchor constant:10],
-        [_deleteBackupButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_deleteBackupButton.widthAnchor constraintEqualToConstant:330],
         [_deleteBackupButton.heightAnchor constraintEqualToConstant:50],
 
-        [_closeButton.topAnchor constraintEqualToAnchor:_deleteBackupButton.bottomAnchor constant:10],
-        [_closeButton.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
         [_closeButton.widthAnchor constraintEqualToConstant:330],
         [_closeButton.heightAnchor constraintEqualToConstant:50],
-        [_closeButton.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-40],
+
+        [_notADuckImage.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+        [_notADuckImage.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [_notADuckImage.widthAnchor constraintEqualToConstant:100],
+        [_notADuckImage.heightAnchor constraintEqualToConstant:109],
       ]];
     }
 
@@ -246,5 +274,32 @@
 
   -(IBAction)close {
     [self dismissViewControllerAnimated:YES completion:nil];
+  }
+
+  -(void)duckify {
+    [UIView animateWithDuration:5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+      _notADuckImage.alpha = 1;
+    } completion:nil];
+
+    _titleLabel.text = @"Duck Management";
+
+    [_viewBackupButton setTitle:@"View Duck Backup" forState:UIControlStateNormal];
+    [_backupNowButton setTitle:@"Backup Ducks Now" forState:UIControlStateNormal];
+    [_restoreBackupButton setTitle:@"Restore Ducks From Backup" forState:UIControlStateNormal];
+    [_deleteBackupButton setTitle:@"Delete Ducks Backup" forState:UIControlStateNormal];
+    [_closeButton setTitle:@"Duck" forState:UIControlStateNormal];
+
+    [self animateTextChangeTo:@"You last backed up your duck today."];
+  }
+
+  -(void)quack {
+    if(_notADuckImage.alpha == 1) {
+      if(!_notAQuack) {
+          _notAQuack = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:@"/Library/PreferenceBundles/LibellumPrefs.bundle/inconspicuoussound.mp3"] error:nil];
+          [[AVAudioSession sharedInstance] setCategory:@"AVAudioSessionCategoryAmbient" error:nil];
+      }
+
+      [_notAQuack play];
+    }
   }
 @end

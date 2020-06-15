@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<!--<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useEdgeGesture</string>
+			<key>label</key>
+			<string>Swipe-In from Top</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>-->
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useSwipeGesture</string>
+			<key>label</key>
+			<string>Swipe Left on Notes</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>SwipeLeftOnNotes</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useTapGesture</string>
+			<key>label</key>
+			<string>Triple Tap LockScreen</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>TripleTapLockScreen</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>

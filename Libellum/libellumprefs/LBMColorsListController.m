@@ -1,6 +1,6 @@
-#include "LBMRootListController.h"
+#include "LBMColorsListController.h"
 
-@implementation LBMRootListController
+@implementation LBMColorsListController
 
 	-(id)init {
 		self = [super init];
@@ -19,9 +19,9 @@
 
 	-(NSArray *)specifiers {
 		if (!_specifiers) {
-			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
+			_specifiers = [self loadSpecifiersFromPlistName:@"Colors" target:self];
 
-			NSArray *chosenIDs = @[@"FeedbackStyle", @"GestureOptions"];
+			NSArray *chosenIDs = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor"];
 			self.savedSpecifiers = (!self.savedSpecifiers) ? [[NSMutableDictionary alloc] init] : self.savedSpecifiers;
 			for(PSSpecifier *specifier in _specifiers) {
 				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
@@ -33,37 +33,16 @@
 		return _specifiers;
 	}
 
-	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
-		[super setPreferenceValue:value specifier:specifier];
-
-		NSString *key = [specifier propertyForKey:@"key"];
-		if([key isEqualToString:@"feedback"]) {
-			if(![value boolValue]) {
-				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
-			} else if(![self containsSpecifier:self.savedSpecifiers[@"FeedbackStyle"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] afterSpecifierID:@"Haptic Feedback" animated:YES];
-			}
-		}
-
-		if([key isEqualToString:@"hideGesture"]) {
-			if(![value boolValue]) {
-				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"GestureOptions"]] animated:YES];
-			} else if(![self containsSpecifier:self.savedSpecifiers[@"GestureOptions"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"GestureOptions"]] afterSpecifierID:@"EnableGestures" animated:YES];
-			}
-		}
-	}
-
 	-(void)reloadSpecifiers {
 		[super reloadSpecifiers];
 
 		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		if(![preferences boolForKey:@"feedback"]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
+		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"adaptive"]) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"IgnoreAdaptivePresetColors"]] animated:YES];
 		}
 
-		if(![preferences boolForKey:@"hideGesture"]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"GestureOptions"]] animated:YES];
+		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"colorized"]) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
 		}
 	}
 
@@ -75,15 +54,9 @@
 			self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 		}
 
-		//Adds respring button in top right of preference pane and hide any specifiers
+		//Adds respring button in top right of preference pane and hide any cells
 		[self respringApply];
 		[self reloadSpecifiers];
-
-		//Adds header to table
-		UIView *header = [[LBMHeaderView alloc] init];
-		header.frame = CGRectMake(0, 0, header.bounds.size.width, 175);
-		UITableView *tableView = [self valueForKey:@"_table"];
-		tableView.tableHeaderView = header;
 	}
 
 	-(void)respringApply {
@@ -109,7 +82,7 @@
 	-(void)viewDidAppear:(BOOL)animated {
 		//Adds label to center of preferences
 		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
-		title.text = @"Libellum";
+		title.text = @"Colors";
 		title.textAlignment = NSTextAlignmentCenter;
 		title.textColor = Pri_Color;
 		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
@@ -120,16 +93,6 @@
 
 		[UIView animateWithDuration:0.2 animations:^{
 			self.navigationItem.titleView.alpha = 1;
-		}];
-	}
-
-	-(void)manageBackup:(PSSpecifier *)specifier {
-		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
-    cell.cellEnabled = NO;
-
-		LBMNoteBackupViewController *backupViewController = [[NSClassFromString(@"LBMNoteBackupViewController") alloc] init];
-		[self presentViewController:backupViewController animated:YES completion:^{
-			cell.cellEnabled = YES;
 		}];
 	}
 

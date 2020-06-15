@@ -40,6 +40,7 @@
 
       for(LBMStyleOptionView *view in _stackView.arrangedSubviews) {
         view.enabled = [view.appearanceOption isEqual:[specifier performGetter]];
+        view.highlighted = [view.appearanceOption isEqual:[specifier performGetter]];
       }
 
       [NSLayoutConstraint activateConstraints:@[

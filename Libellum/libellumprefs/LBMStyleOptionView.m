@@ -3,7 +3,7 @@
 @implementation LBMStyleOptionView {
   UIStackView *_stackView;
   LBMStyleCheckView *_checkView;
-  UILongPressGestureRecognizer *_pressGesture;
+  UITapGestureRecognizer *_tapGesture;
 }
 
   -(id)initWithFrame:(CGRect)frame appearanceOption:(id)option {
@@ -15,7 +15,8 @@
       _previewImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
       _previewImageView.clipsToBounds = YES;
       _previewImageView.contentMode = UIViewContentModeScaleAspectFit;
-      _previewImageView.layer.cornerRadius = 5;
+      _previewImageView.layer.cornerRadius = 8;
+      _previewImageView.layer.borderColor = Pri_Color.CGColor;
       _previewImageView.translatesAutoresizingMaskIntoConstraints = NO;
 
       _label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -44,10 +45,8 @@
         [_checkView.widthAnchor constraintEqualToConstant:22],
       ]];
 
-      _pressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlePress:)];
-      _pressGesture.allowableMovement = 0;
-      _pressGesture.minimumPressDuration = 0.025;
-      [self addGestureRecognizer:_pressGesture];
+      _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+      [self addGestureRecognizer:_tapGesture];
     }
 
     return self;
@@ -67,29 +66,34 @@
     _highlighted = highlighted;
 
     if(_highlighted) {
-      [UIView animateWithDuration:0.1 animations:^{
-        _previewImageView.alpha = 0.5;
-      }];
-    } else {
-      [UIView animateWithDuration:0.1 animations:^{
-        _previewImageView.alpha = 1.0;
-      }];
+      CABasicAnimation *showBorder = [CABasicAnimation animationWithKeyPath:@"borderWidth"];
+      showBorder.duration = 0.1;
+      showBorder.fromValue = @0;
+      showBorder.toValue = @3;
+
+      _previewImageView.layer.borderWidth = 3;
+      [_previewImageView.layer addAnimation:showBorder forKey:@"Show Border"];
+    }
+
+    if(!_highlighted && _previewImageView.layer.borderWidth == 3) {
+      CABasicAnimation *hideBorder = [CABasicAnimation animationWithKeyPath:@"borderWidth"];
+      hideBorder.duration = 0.1;
+      hideBorder.fromValue = @3;
+      hideBorder.toValue = @0;
+
+      _previewImageView.layer.borderWidth = 0;
+      [_previewImageView.layer addAnimation:hideBorder forKey:@"Hide Border"];
     }
   }
 
   -(void)updateViewForStyle:(NSString *)style {
     self.enabled = [style isEqualToString:_appearanceOption];
+    self.highlighted = [style isEqualToString:_appearanceOption];
   }
 
-  -(void)handlePress:(UILongPressGestureRecognizer *)gesture {
-    if(gesture.state == UIGestureRecognizerStateBegan) {
-      self.highlighted = YES;
-
-    } else if(gesture.state == UIGestureRecognizerStateRecognized) {
-      self.highlighted = NO;
-      if(!_checkView.selected) {
-        [self.delegate selectedOption:self];
-      }
+  -(void)handleTap:(UIGestureRecognizer *)gesture {
+    if(gesture.state == UIGestureRecognizerStateRecognized && !_checkView.selected) {
+      [self.delegate selectedOption:self];
     }
   }
 
