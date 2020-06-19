@@ -1,0 +1,11 @@
+Package: com.lacertosusrepo.recentshue
+Name: RecentsHue
+Depends: mobilesubstrate, ws.hbang.common (>= 1.13), ws.hbang.alderis
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Colored indicator based on call type...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
+Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
+SileoDepiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/

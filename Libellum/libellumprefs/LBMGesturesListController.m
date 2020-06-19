@@ -58,13 +58,9 @@
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
-		//Adds label to center of preferences
-		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
-		title.text = @"Gestures";
-		title.textAlignment = NSTextAlignmentCenter;
-		title.textColor = Pri_Color;
-		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
-		self.navigationItem.titleView = title;
+		//Adds icon to center of preferences
+		UIImageView *iconView = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/gestures.png"]];
+		self.navigationItem.titleView = iconView;
 		self.navigationItem.titleView.alpha = 0;
 
 		[super viewDidAppear:animated];

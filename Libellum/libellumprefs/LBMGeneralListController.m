@@ -38,7 +38,7 @@
 	}
 
 	-(void)respringApply {
-		_respringApplyButton = (_respringApplyButton) ? _respringApplyButton : [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+		_respringApplyButton = (_respringApplyButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
 		_respringApplyButton.tintColor = Pri_Color;
 		[self.navigationItem setRightBarButtonItem:_respringApplyButton animated:YES];
 	}
@@ -47,7 +47,7 @@
 		if([self.navigationItem.rightBarButtonItem isEqual:_respringConfirmButton]) {
 			[HBRespringController respring];
 		} else {
-			_respringConfirmButton = (_respringConfirmButton) ? _respringConfirmButton : [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+			_respringConfirmButton = (_respringConfirmButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
 			_respringConfirmButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
 			[self.navigationItem setRightBarButtonItem:_respringConfirmButton animated:YES];
 
@@ -58,13 +58,9 @@
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
-		//Adds label to center of preferences
-		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
-		title.text = @"General";
-		title.textAlignment = NSTextAlignmentCenter;
-		title.textColor = Pri_Color;
-		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
-		self.navigationItem.titleView = title;
+		//Adds icon to center of preferences
+		UIImageView *iconView = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/general.png"]];
+		self.navigationItem.titleView = iconView;
 		self.navigationItem.titleView.alpha = 0;
 
 		[super viewDidAppear:animated];

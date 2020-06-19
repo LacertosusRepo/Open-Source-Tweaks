@@ -11,6 +11,12 @@
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+  		<string>XXXSwitchCell</string>
+  		<key>switchColor</key>
+  		<string>#76ab79</string>
+  		<key>switchColorAlpha</key>
+  		<real>0</real>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>

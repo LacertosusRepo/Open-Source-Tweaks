@@ -22,7 +22,7 @@
 			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 
 			NSArray *chosenIDs = @[@"FeedbackStyle", @"GestureOptions"];
-			self.savedSpecifiers = (!self.savedSpecifiers) ? [[NSMutableDictionary alloc] init] : self.savedSpecifiers;
+			self.savedSpecifiers = (self.savedSpecifiers) ?: [[NSMutableDictionary alloc] init];
 			for(PSSpecifier *specifier in _specifiers) {
 				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
 					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"id"]];
@@ -87,7 +87,7 @@
 	}
 
 	-(void)respringApply {
-		_respringApplyButton = (_respringApplyButton) ? _respringApplyButton : [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+		_respringApplyButton = (_respringApplyButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
 		_respringApplyButton.tintColor = Pri_Color;
 		[self.navigationItem setRightBarButtonItem:_respringApplyButton animated:YES];
 	}
@@ -96,7 +96,7 @@
 		if([self.navigationItem.rightBarButtonItem isEqual:_respringConfirmButton]) {
 			[HBRespringController respring];
 		} else {
-			_respringConfirmButton = (_respringConfirmButton) ? _respringConfirmButton : [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+			_respringConfirmButton = (_respringConfirmButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
 			_respringConfirmButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
 			[self.navigationItem setRightBarButtonItem:_respringConfirmButton animated:YES];
 
@@ -107,20 +107,22 @@
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
-		//Adds label to center of preferences
-		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
-		title.text = @"Libellum";
-		title.textAlignment = NSTextAlignmentCenter;
-		title.textColor = Pri_Color;
-		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
-		self.navigationItem.titleView = title;
-		self.navigationItem.titleView.alpha = 0;
-
 		[super viewDidAppear:animated];
 
-		[UIView animateWithDuration:0.2 animations:^{
-			self.navigationItem.titleView.alpha = 1;
-		}];
+		//Adds label to center of preferences
+		if(!self.navigationItem.titleView) {
+			UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+			title.text = @"Libellum";
+			title.textAlignment = NSTextAlignmentCenter;
+			title.textColor = Pri_Color;
+			title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
+			self.navigationItem.titleView = title;
+			self.navigationItem.titleView.alpha = 0;
+
+			[UIView animateWithDuration:0.2 animations:^{
+				self.navigationItem.titleView.alpha = 1;
+			}];
+		}
 	}
 
 	-(void)manageBackup:(PSSpecifier *)specifier {

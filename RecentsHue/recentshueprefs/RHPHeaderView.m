@@ -1,19 +1,20 @@
-#import "LBMHeaderView.h"
+#import "RHPHeaderView.h"
 extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
-@implementation LBMHeaderView {
+@implementation RHPHeaderView {
 	UIImageView *_iconView;
 	UILabel *_title;
 	UILabel *_subtitle;
 	UIStackView *_stackView;
 }
 
+
 	-(id)init {
 		self = [super init];
 
 		if(self) {
-				//Add icon above labels (150x150)
-			_iconView = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/iconlarge.png"]];
+				//Add icon over labels (225x225)
+			_iconView = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/recentshueprefs.bundle/iconlarge.png"]];
 			_iconView.alpha = 0;
 			_iconView.center = CGPointMake(self.bounds.size.width/2, 0);
 
@@ -22,7 +23,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 			_title.alpha = 0;
 			[_title setNumberOfLines:1];
 			[_title setFont:[UIFont systemFontOfSize:40 weight:UIFontWeightSemibold]];
-			[_title setText:@"Libellum"];
+			[_title setText:@"RecentsHue"];
 			[_title setBackgroundColor:[UIColor clearColor]];
 			[_title setTextAlignment:NSTextAlignmentCenter];
 
@@ -54,7 +55,6 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 				[_stackView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
 			]];
 
-				//Get user wallpaper
 			NSData *wallpaperData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"];
 			CFArrayRef wallpaperArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)wallpaperData, NULL, 1, NULL);
 			NSArray *wallpaperArray = (__bridge NSArray *)wallpaperArrayRef;
@@ -101,7 +101,6 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 				[wallpaperView.heightAnchor constraintEqualToAnchor:blurView.heightAnchor],
 			]];
 
-				//Add parallax effect
 			[self addInterpolatingMotion];
 		}
 
@@ -110,12 +109,12 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 
 	-(void)addInterpolatingMotion {
 		UIInterpolatingMotionEffect *horizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-		horizontal.minimumRelativeValue = @-10;
-		horizontal.maximumRelativeValue = @10;
+		horizontal.minimumRelativeValue = @-5;
+		horizontal.maximumRelativeValue = @5;
 
 		UIInterpolatingMotionEffect *vertical = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-		vertical.minimumRelativeValue = @-10;
-		vertical.maximumRelativeValue = @10;
+		vertical.minimumRelativeValue = @-5;
+		vertical.maximumRelativeValue = @5;
 
 		UIMotionEffectGroup *effectsGroup = [[UIMotionEffectGroup alloc] init];
 		effectsGroup.motionEffects = @[horizontal, vertical];
@@ -124,7 +123,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 	}
 
 	-(NSArray *)randomLabels {
-		return @[@"Check out the source code on github!", @"Customizable notepad on your lockscreen", @"Customizable notepad in your notification center", @"Why did the bike fall over? It was too tired."];
+		return @[@"Color coded based on call type"];
 	}
 
 	-(void)didMoveToSuperview {
