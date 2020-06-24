@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = badgecolorprefs
-badgecolorprefs_FILES = BCPRootListController.m #BCPLabeledSliderCell.m
+badgecolorprefs_FILES = BCPRootListController.m BCPLabeledSliderCell.m
 badgecolorprefs_INSTALL_PATH = /Library/PreferenceBundles
 badgecolorprefs_LIBRARIES = colorpicker
 badgecolorprefs_FRAMEWORKS = UIKit

@@ -2,10 +2,9 @@
  * Tweak.x
  * BadgeColor
  *
- * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on XX/XX/XXXX.
+ * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on who/XX/XXXX.
  * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
-//#import <Cephei/HBPreferences.h>
 #define LD_DEBUG NO
 @import Alderis;
 #import "AlderisColorPicker.h"
@@ -15,6 +14,7 @@
 @end
 
   static NSString *badgeColor;
+  static CGFloat badgeCornerRadius;
 
 %hook SBDarkeningImageView
   -(void)setImage:(UIImage *)image {
@@ -26,12 +26,15 @@
 
   -(void)layoutSubviews {
     %orig;
-    
-    self.layer.cornerRadius = self.bounds.size.height / 2;
+
+    if(self.layer.cornerRadius != badgeCornerRadius) {
+      self.layer.cornerRadius = badgeCornerRadius;
+    }
   }
 %end
 
 %ctor {
   HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.badgecolorprefs"];
   [preferences registerObject:&badgeColor default:@"#D83244" forKey:@"badgeColor"];
+  [preferences registerFloat:&badgeCornerRadius default:14.5 forKey:@"badgeCornerRadius"];
 }

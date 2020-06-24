@@ -36,6 +36,30 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.badgecolorprefs/ReloadPrefs</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>cellClass</key>
+			<string>BCPLabeledSliderCell</string>
+			<key>default</key>
+			<string>14.5</string>
+			<key>min</key>
+			<string>0.0</string>
+			<key>max</key>
+			<string>50</string>
+			<key>showValue</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.badgecolorprefs</string>
+			<key>key</key>
+			<string>badgeCornerRadius</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.badgecolorprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Set Badge Corner Radius</string>
+			<key>height</key>
+			<real>56</real>
+		</dict>
 
 		<dict>
 			<key>cell</key>
@@ -74,7 +98,8 @@
 			<key>footerAlignment</key>
 			<integer>1</integer>
 			<key>footerText</key>
-			<string>BadgeColor by LacertosusDeus</string>
+			<string>BadgeColor
+LacertosusDeus</string>
 		</dict>
 	</array>
 	<key>title</key>
