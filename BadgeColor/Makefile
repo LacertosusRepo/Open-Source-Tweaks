@@ -1,5 +1,4 @@
 export ARCHS = arm64 arm64e
-export SDKVERSION = 11.2
 
 # Simject
 # export ARCHS = x86_64

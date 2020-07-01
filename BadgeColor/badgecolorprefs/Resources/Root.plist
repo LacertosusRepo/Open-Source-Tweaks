@@ -26,6 +26,24 @@
 			<key>defaults</key>
 			<string>com.lacertosusrepo.badgecolorprefs</string>
 			<key>default</key>
+			<string>#D4D4D4</string>
+			<key>key</key>
+			<string>numberColor</string>
+			<key>label</key>
+			<string>Set Number Color</string>
+			<key>showAlphaSlider</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.badgecolorprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBColorPickerTableCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.badgecolorprefs</string>
+			<key>default</key>
 			<string>#D83244</string>
 			<key>key</key>
 			<string>badgeColor</string>
@@ -42,7 +60,7 @@
 			<key>cellClass</key>
 			<string>BCPLabeledSliderCell</string>
 			<key>default</key>
-			<string>14.5</string>
+			<string>13</string>
 			<key>min</key>
 			<string>0.0</string>
 			<key>max</key>

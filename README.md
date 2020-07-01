@@ -16,7 +16,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 ## Projects Info
 | Tweak |  Compatibility | Version | Architecture | Annotated | Description |
 | :-----: | :-----------------: | :-------: | :------------: | :---------: | :-----------: |
-| BadgeColor | ??? - 13 | v1.0 | arm64 arm64e | | Small tweak to color notification badges |
+| BadgeColor | ??? - 13 | v1.1 | arm64 arm64e | | Small tweak to color notification badges |
 | Clauditis | 11 - 13 | v1.2 | arm64 arm64e | ✔ | Double tap homescreen to lock device |
 | ColoredScrollIndicator | 13 | v1.1-1 | arm64 arm64e | | Color the scroll indicator with a gradient |
 | DialerGradient | ??? - 12 | v1.0 | arm64 arm64e | | Add gradient to dialer screen in Phone app |
