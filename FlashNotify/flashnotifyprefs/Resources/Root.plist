@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Change the notifcation delay while the device is charging. If this is disabled the normal delay will be used.</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+			<key>avatarURL</key>
+			<string>https://avatars2.githubusercontent.com/u/14306024?v=4</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>FNPTimeIntervalPickerCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>default</key>
+			<integer>120</integer>
+			<key>key</key>
+			<string>unpluggedNotificationDelay</string>
+			<key>label</key>
+			<string>Set Normal Notifcation Delay</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>key</key>
+			<string>notifyWhileCharging</string>
+			<key>label</key>
+			<string>Charging Notifcation Delay</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>FNPTimeIntervalPickerCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>default</key>
+			<integer>180</integer>
+			<key>key</key>
+			<string>chargingNotificationDelay</string>
+			<key>label</key>
+			<string>Set Charging Notification Delay</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Accelerometer Flashlight Detection</string>
+			<key>id</key>
+			<string>AccelerometerFlashlightDetection</string>
+			<key>footerText</key>
+			<string>Disabled flashlight after sitting face down/up for a specified amount of time. Requires a respring.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>key</key>
+			<string>useAccelerometerType</string>
+			<key>label</key>
+			<string>Accelerometer Type</string>
+			<key>default</key>
+			<string>0</string>
+			<key>validTitles</key>
+			<array>
+				<string>Disabled</string>
+				<string>Face Up</string>
+				<string>Face Down</string>
+				<string>Both</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>AccelerometerType</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>FNPTimeIntervalPickerCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>default</key>
+			<integer>20</integer>
+			<key>key</key>
+			<string>faceUpDelay</string>
+			<key>label</key>
+			<string>Set Face Up Delay</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>faceUpDelay</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSTableCell</string>
+			<key>cellClass</key>
+			<string>FNPTimeIntervalPickerCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>default</key>
+			<integer>20</integer>
+			<key>key</key>
+			<string>faceDownDelay</string>
+			<key>label</key>
+			<string>Set Face Down Delay</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>faceDownDelay</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Flashlight Max Time Limit</string>
+			<key>footerText</key>
+			<string>Disable flashlight automatically after a specified amount of time.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>key</key>
+			<string>autoDisableFlashlight</string>
+			<key>label</key>
+			<string>Auto Disable Flashlight</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSTableCell</string>
+			<key>cellClass</key>
+			<string>FNPTimeIntervalPickerCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>default</key>
+			<integer>600</integer>
+			<key>key</key>
+			<string>maxFlashlightDuration</string>
+			<key>label</key>
+			<string>Set Auto Disable Delay</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Notification Icon Style</string>
+			<key>footerText</key>
+			<string>Changing icons requires a respring.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>cellClass</key>
+			<string>FNPSegmentTableImageCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.flashnotifyprefs</string>
+			<key>key</key>
+			<string>notificationIconStyle</string>
+			<key>label</key>
+			<string>Icon Style</string>
+			<key>default</key>
+			<string>darkIcon</string>
+			<key>validTitles</key>
+			<array>
+				<string>/Library/PreferenceBundles/flashnotifyprefs.bundle/icon~dark.png</string>
+				<string>/Library/PreferenceBundles/flashnotifyprefs.bundle/icon.png</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>icon~dark</string>
+				<string>icon</string>
+			</array>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>height</key>
+			<real>60</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>HBTintedTableCell</string>
+			<key>action</key>
+			<string>sendTestNotification</string>
+			<key>label</key>
+			<string>Show Test Notification</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Support</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Github</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Donate</string>
+			<key>subtitle</key>
+			<string>Fund my next ski trip!</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerAlignment</key>
+			<integer>1</integer>
+			<key>footerText</key>
+			<string>FlashNotify
+LacertosusDeus
+
+Concept by /u/thomasjadallah</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
