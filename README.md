@@ -40,6 +40,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Stellae | 11 - 12 | v1.2.4 | arm64 arm64e | ✔ | Get random daily wallpaper from a subreddit |
 | Swiper | 12 | v1.0 | arm64 arm64e | | Music control swipes on the dock |
 | ToneItDown | 11 - 12 | v1.0.1 | arm64 arm64e | ✔ | Mute tones when previewing them |
+| TweakSearch | 13 | v1.0.1 | arm64 arm64e | | Search through tweaks in PO2 or shuffle |
 | Vitrum | 11 | v1.2 | arm64 | | Control center customization |
 | VolbrateXI | 10 - 12 | v1.3 | arm64 arm64e | ✔ | Vibrate volume button interactions |
 | VolumeLock | 10 - 13 | v1.2 | arm64 arm64e | | Lock volume changing by pressing both volume buttons down |
