@@ -7,7 +7,6 @@
  */
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
-#define LD_DEBUG NO
 
 @interface TweakSpecifiersController : PSListController <UISearchResultsUpdating, UISearchBarDelegate>
 @property (nonatomic, assign) NSUInteger lastSearchBarTextLength;
@@ -39,10 +38,11 @@
     self.lastSearchBarTextLength = 0;
   }
 
-  -(void)viewWillDisappear:(BOOL)animated {
+  -(void)viewDidDisappear:(BOOL)animated {
     %orig;
 
     [self reloadSpecifiers];
+    [self.navigationItem.searchController setActive:NO];
     self.lastSearchBarTextLength = 0;
   }
 
@@ -58,8 +58,9 @@
 
 %new
   -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)text {
-    if([text length] < self.lastSearchBarTextLength)
+    if([text length] < self.lastSearchBarTextLength) {
       [self reloadSpecifiers]; // only reload if there are less characters than previously (otherwise we only remove items, without adding anything)
+    }
 
     if([text length] > 0) {
       for(PSSpecifier *specifier in [self valueForKey:@"_specifiers"]) {

@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.tweaksearch
 Name: TweakSearch
 Depends: mobilesubstrate
-Version: 1.0.1
+Version: 1.0.2
 Architecture: iphoneos-arm
 Description: Search for tweaks in preferences organizers...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
