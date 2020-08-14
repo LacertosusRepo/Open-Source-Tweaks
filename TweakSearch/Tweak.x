@@ -10,6 +10,7 @@
 #define LD_DEBUG NO
 
 @interface TweakSpecifiersController : PSListController <UISearchResultsUpdating, UISearchBarDelegate>
+@property (nonatomic, assign) NSUInteger lastSearchBarTextLength;
 @end
 
 @interface UISearchController (iOS13)
@@ -17,6 +18,8 @@
 @end
 
 %hook TweakSpecifiersController
+%property (nonatomic, assign) NSUInteger lastSearchBarTextLength;
+
   -(void)viewDidLoad {
     %orig;
 
@@ -33,12 +36,14 @@
 
     self.navigationItem.searchController = searchController;
     self.navigationItem.hidesSearchBarWhenScrolling = YES;
+    self.lastSearchBarTextLength = 0;
   }
 
   -(void)viewWillDisappear:(BOOL)animated {
     %orig;
 
     [self reloadSpecifiers];
+    self.lastSearchBarTextLength = 0;
   }
 
 %new
@@ -53,7 +58,8 @@
 
 %new
   -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)text {
-    [self reloadSpecifiers];
+    if([text length] < self.lastSearchBarTextLength)
+      [self reloadSpecifiers]; // only reload if there are less characters than previously (otherwise we only remove items, without adding anything)
 
     if([text length] > 0) {
       for(PSSpecifier *specifier in [self valueForKey:@"_specifiers"]) {
@@ -63,10 +69,13 @@
         }
       }
     }
+
+    self.lastSearchBarTextLength = [text length];
   }
 
 %new
   -(void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [self reloadSpecifiers];
+    self.lastSearchBarTextLength = 0;
   }
 %end
