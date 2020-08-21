@@ -1,9 +1,10 @@
 Package: com.lacertosusrepo.einsteinvibes
 Name: EinsteinVibes
 Depends: mobilesubstrate
-Version: 1.0
+Version: 1.1
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Add vibration to the calculator app buttons...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
 Author: LacertosusDeus <LacertosusThemes@gmail.com>
 Section: Tweaks
+Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
