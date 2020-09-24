@@ -3,7 +3,7 @@
  * LuxSit
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 6/27/2019.
- * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
 #import <Cephei/HBPreferences.h>
 #import "LuxSitClasses.h"

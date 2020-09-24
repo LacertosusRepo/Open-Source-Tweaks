@@ -3,7 +3,7 @@
  * TweakSearch
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 8/13/2020.
- * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>

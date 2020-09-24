@@ -3,7 +3,7 @@
  * ColoredScrollIndicator
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 5/5/2020.
- * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
 @import Alderis;
 #import "AlderisColorPicker.h"

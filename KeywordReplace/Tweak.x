@@ -3,7 +3,7 @@
  * KeywordReplace
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 9/13/2020.
- * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
 #import <Cephei/HBPreferences.h>
 #define LD_DEBUG NO

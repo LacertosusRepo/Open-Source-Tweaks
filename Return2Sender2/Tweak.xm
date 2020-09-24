@@ -3,7 +3,7 @@
  * Return2Sender2
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 05/28/2019.
- * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
 
 #define LD_DEBUG NO

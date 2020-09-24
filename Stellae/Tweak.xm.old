@@ -3,7 +3,7 @@
  * Stellae
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 3/11/2019.
- * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
 
 #import <PhotoLibrary/PLStaticWallpaperImageViewController.h>
