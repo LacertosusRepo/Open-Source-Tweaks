@@ -17,6 +17,7 @@
   SPTNowPlayingBarViewController *barController;
   UISelectionFeedbackGenerator *feedback;
 
+  HBPreferences *preferences;
   UIColor *offStateColor;
   NSString *savedPlaylist;
 
@@ -30,7 +31,7 @@ static void removeSongFromPlaylist(NSURL *song, NSURL *playlist) {
 
 static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPlaylist) {
   if(!playlist || [playlist.absoluteString length] == 0) {
-    SPTPopupDialog *missingPlaylistPopup = [%c(SPTPopupDialog) popupWithTitle:@"Error" message:@"You don't have a favorite playlist set. Go to a playlist and tap the heart icon in the playlist art." dismissButtonTitle:@"Ok!"];
+    SPTPopupDialog *missingPlaylistPopup = [%c(SPTPopupDialog) popupWithTitle:@"Error" message:@"You don't have a favorite playlist set. Go to a playlist, tap the three dots, then tap the heart icon next to the playlist art." dismissButtonTitle:@"Ok!"];
     [[%c(SPTPopupManager) sharedManager].presentationQueue addObject:missingPlaylistPopup];
     [[%c(SPTPopupManager) sharedManager] presentNextQueuedPopup];
     return;
@@ -38,7 +39,7 @@ static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPla
 
   if(playlistModel && song && playlist) {
     if(!songExistsInPlaylist) {
-      [playlistModel addTrackURLs:@[song] toPlaylistURL:playlist completion:^{
+      [playlistModel addTrackURLs:@[song] toPlaylistURL:playlist bySource:nil fromContext:nil completion:^{
         [%c(SPTProgressView) showGaiaContextMenuProgressViewWithTitle:@"Added to Playlist."];
       }];
 
@@ -67,7 +68,7 @@ static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPla
 %end
 
 %hook SPTPlaylistCosmosModel
-  -(id)initWithDictionaryDataLoader:(id)arg1 dataLoader:(id)arg2 timeGetter:(id)arg3 {
+  -(id)initWithDictionaryDataLoader:(id)arg1 dataLoader:(id)arg2 eventSender:(id)arg3 timeGetter:(id)arg4 {
     return playlistModel = %orig;
   }
 %end
@@ -127,8 +128,6 @@ static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPla
         addSongToPlaylist(trackURI, playlistURI, [set containsObject:trackURI]);
         [self performSelector:@selector(updateButtonColor) withObject:nil afterDelay:0.1];
       }];
-    } else {
-
     }
   }
 
@@ -182,7 +181,7 @@ static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPla
 
       [NSLayoutConstraint activateConstraints:@[
         [self.addToPlaylistButton.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
-        [self.addToPlaylistButton.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-50],
+        [self.addToPlaylistButton.rightAnchor constraintEqualToAnchor:self.view.rightAnchor constant:-110],
         [self.addToPlaylistButton.widthAnchor constraintEqualToConstant:40],
         [self.addToPlaylistButton.heightAnchor constraintEqualToConstant:54],
       ]];
@@ -234,34 +233,29 @@ static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPla
   }
 %end
 
-%hook SPTFreeTierPlaylistViewController
+%hook SPTContextMenuViewController
 %property (retain, nonatomic) GLUEButton *favoritePlaylistButton;
-  -(void)setupHeaderViewController {
+
+  -(void)viewDidLoad {
     %orig;
 
-    if(!self.favoritePlaylistButton && self.headerViewController.playlistHeaderController.contentView && ![self.headerViewController.playlistHeaderController.contentView isKindOfClass:[%c(VISREFFullBleedContentView) class]]) {
-      self.headerViewController.playlistHeaderController.contentView.imageView.userInteractionEnabled = YES;
-
+    if(!self.favoritePlaylistButton && ![self trackURL]) {
       UIImageSymbolConfiguration *symbolConfiguration = [%c(UIImageSymbolConfiguration) configurationWithScale:UIImageSymbolScaleLarge];
 
       self.favoritePlaylistButton = [[%c(GLUEButton) alloc] initWithFrame:CGRectZero];
       self.favoritePlaylistButton.tintColor = [UIColor whiteColor];
       self.favoritePlaylistButton.translatesAutoresizingMaskIntoConstraints = NO;
       [self.favoritePlaylistButton addTarget:self action:@selector(setFavoritePlaylist) forControlEvents:UIControlEventTouchUpInside];
-      [self.favoritePlaylistButton setImage:[UIImage systemImageNamed:@"heart.slash.circle" withConfiguration:symbolConfiguration] forState:UIControlStateNormal];
-      [self.favoritePlaylistButton setImage:[UIImage systemImageNamed:@"heart.circle.fill" withConfiguration:symbolConfiguration] forState:UIControlStateSelected];
-      [self.headerViewController.playlistHeaderController.contentView.imageView addSubview:self.favoritePlaylistButton];
+      [self.favoritePlaylistButton setImage:[UIImage systemImageNamed:@"heart" withConfiguration:symbolConfiguration] forState:UIControlStateNormal];
+      [self.favoritePlaylistButton setImage:[UIImage systemImageNamed:@"heart.fill" withConfiguration:symbolConfiguration] forState:UIControlStateSelected];
+      [[self headerView] addSubview:self.favoritePlaylistButton];
 
       [NSLayoutConstraint activateConstraints:@[
-        [self.favoritePlaylistButton.bottomAnchor constraintEqualToAnchor:self.headerViewController.playlistHeaderController.contentView.imageView.bottomAnchor],
-        [self.favoritePlaylistButton.rightAnchor constraintEqualToAnchor:self.headerViewController.playlistHeaderController.contentView.imageView.rightAnchor],
+        [self.favoritePlaylistButton.leftAnchor constraintEqualToAnchor:[self headerView].leftAnchor constant:14],
+        [self.favoritePlaylistButton.bottomAnchor constraintEqualToAnchor:[self headerView].bottomAnchor],
         [self.favoritePlaylistButton.widthAnchor constraintEqualToConstant:44],
         [self.favoritePlaylistButton.heightAnchor constraintEqualToConstant:44],
       ]];
-
-      self.favoritePlaylistButton.imageView.backgroundColor = [UIColor blackColor];
-      self.favoritePlaylistButton.imageView.layer.masksToBounds = YES;
-      self.favoritePlaylistButton.imageView.layer.cornerRadius = self.favoritePlaylistButton.imageView.frame.size.width / 2;
 
       if([[self spt_pageURI].absoluteString isEqualToString:savedPlaylist]) {
         [self.favoritePlaylistButton setSelected:YES];
@@ -272,8 +266,6 @@ static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPla
 
 %new
   -(void)setFavoritePlaylist {
-    HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.spotifyaddtofavoritesprefs"];
-
     if(self.favoritePlaylistButton.selected) {
       [self.favoritePlaylistButton setSelected:NO];
       self.favoritePlaylistButton.tintColor = [UIColor whiteColor];
@@ -290,6 +282,6 @@ static void addSongToPlaylist(NSURL *song, NSURL *playlist, BOOL songExistsInPla
 %end
 
 %ctor {
-  HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.spotifyaddtofavoritesprefs"];
+  preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.spotifyaddtofavoritesprefs"];
   [preferences registerObject:&savedPlaylist default:@"" forKey:@"savedPlaylist"];
 }

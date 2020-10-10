@@ -6,7 +6,7 @@
   UITapGestureRecognizer *_tapGesture;
 }
 
-  -(id)initWithFrame:(CGRect)frame appearanceOption:(id)option {
+  -(instancetype)initWithFrame:(CGRect)frame appearanceOption:(id)option {
     self = [super initWithFrame:frame];
 
     if(self) {

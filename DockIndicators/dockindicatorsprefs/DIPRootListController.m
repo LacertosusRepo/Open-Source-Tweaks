@@ -1,6 +1,6 @@
-#include "LBMGesturesListController.h"
+#include "DIPRootListController.h"
 
-@implementation LBMGesturesListController
+@implementation DIPRootListController
 
 	-(id)init {
 		self = [super init];
@@ -20,10 +20,40 @@
 
 	-(NSArray *)specifiers {
 		if (!_specifiers) {
-			_specifiers = [self loadSpecifiersFromPlistName:@"Gestures" target:self];
+			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
+
+			NSArray *chosenIDs = @[@"SetIndicatorColor"];
+			self.savedSpecifiers = (self.savedSpecifiers) ?: [[NSMutableDictionary alloc] init];
+			for(PSSpecifier *specifier in _specifiers) {
+				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
+					[self.savedSpecifiers setObject:specifier forKey:[specifier propertyForKey:@"id"]];
+				}
+			}
 		}
 
 		return _specifiers;
+	}
+
+	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
+		[super setPreferenceValue:value specifier:specifier];
+
+		NSString *key = [specifier propertyForKey:@"key"];
+		if([key isEqualToString:@"indicatorUseAppColor"]) {
+			if([value boolValue]) {
+				[self removeSpecifier:self.savedSpecifiers[@"SetIndicatorColor"] animated:YES];
+			} else {
+				[self insertSpecifier:self.savedSpecifiers[@"SetIndicatorColor"] afterSpecifierID:@"UseAppAverageColor" animated:YES];
+			}
+		}
+	}
+
+	-(void)reloadSpecifiers {
+		[super reloadSpecifiers];
+
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+		if([[preferences objectForKey:@"indicatorUseAppColor"] boolValue]) {
+			[self removeSpecifier:self.savedSpecifiers[@"SetIndicatorColor"] animated:YES];
+		}
 	}
 
 	-(void)viewDidLoad {
@@ -34,8 +64,14 @@
 			self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 		}
 
-		//Adds respring button in top right of preference pane
 		[self respringApply];
+		[self reloadSpecifiers];
+
+		//Adds header to table
+		UIView *header = [[DIPHeaderView alloc] init];
+		header.frame = CGRectMake(0, 0, header.bounds.size.width, 175);
+		UITableView *tableView = [self valueForKey:@"_table"];
+		tableView.tableHeaderView = header;
 	}
 
 	-(void)respringApply {
@@ -59,16 +95,19 @@
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
-		//Adds icon to center of preferences
-		UIImageView *iconView = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/gestures.png"]];
-		self.navigationItem.titleView = iconView;
-		self.navigationItem.titleView.alpha = 0;
-
 		[super viewDidAppear:animated];
 
-		[UIView animateWithDuration:0.2 animations:^{
-			self.navigationItem.titleView.alpha = 1;
-		}];
-	}
+		//Adds label to center of preferences
+		UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
+		title.text = @"Dock Indicators";
+		title.textAlignment = NSTextAlignmentCenter;
+		title.textColor = Pri_Color;
+		title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
+		self.navigationItem.titleView = title;
+		self.navigationItem.titleView.alpha = 0;
 
+		[UIView animateWithDuration:0.2 animations:^{
+				self.navigationItem.titleView.alpha = 1;
+			}];
+	}
 @end

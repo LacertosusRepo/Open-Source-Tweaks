@@ -1,5 +1,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <Cephei/HBPreferences.h>
+@import Alderis;
+#import "AlderisColorPicker.h"
 #import "LGestureRecognizer.h"
 #import "MTMaterialView.h"
 
@@ -7,12 +9,12 @@
 #define filePathBK @"/User/Library/Preferences/LibellumNotes.rtf.bk"
 
 @interface SBLockStateAggregator : NSObject
-+(id)sharedInstance;
++(instancetype)sharedInstance;
 -(NSUInteger)lockState;
 @end
 
 @interface UIUserInterfaceStyleArbiter : NSObject
-+(id)sharedInstance;
++(instancetype)sharedInstance;
 -(long long)currentStyle;
 @end
 
@@ -21,17 +23,17 @@
 @end
 
 @interface SBIdleTimerGlobalCoordinator : NSObject
-+(id)sharedInstance;
++(instancetype)sharedInstance;
 -(void)resetIdleTimer;
 @end
 
 @interface SBMainDisplaySystemGestureManager : NSObject
-+(id)sharedInstance;
++(instancetype)sharedInstance;
 -(void)addGestureRecognizer:(id)arg1 withType:(NSUInteger)arg2;
 @end
 
 @interface FBSystemGestureManager : NSObject
-+(id)sharedInstance;
++(instancetype)sharedInstance;
 -(void)addGestureRecognizer:(id)arg1 toDisplay:(id)arg2;
 @end
 
@@ -68,10 +70,13 @@
 
   //Preferences
 @property (nonatomic, assign) NSUInteger noteSize;
-@property (nonatomic, assign) BOOL enableUndoRedo;
-@property (nonatomic, assign) BOOL enableEndlessLines;
-@property (nonatomic, assign) CGFloat cornerRadius;
 @property (nonatomic, copy) NSString *blurStyle;
+@property (nonatomic, assign) CGFloat cornerRadius;
+@property (nonatomic, assign) BOOL requireAuthentication;
+@property (nonatomic, assign) BOOL noteBackup;
+@property (nonatomic, assign) BOOL hideGesture;
+@property (nonatomic, assign) BOOL feedback;
+@property (nonatomic, assign) NSInteger feedbackStyle;
 @property (nonatomic, assign) BOOL useKalmTintColor;
 @property (nonatomic, assign) BOOL ignoreAdaptiveColors;
 @property (nonatomic, copy) UIColor *customBackgroundColor;
@@ -80,15 +85,11 @@
 @property (nonatomic, copy) UIColor *customTintColor;
 @property (nonatomic, copy) UIColor *borderColor;
 @property (nonatomic, assign) CGFloat borderWidth;
-@property (nonatomic, assign) BOOL requireAuthentication;
-@property (nonatomic, assign) BOOL noteBackup;
-@property (nonatomic, assign) BOOL hideGesture;
-@property (nonatomic, assign) BOOL useEdgeGesture;
+@property (nonatomic, assign) BOOL enableUndoRedo;
+@property (nonatomic, assign) BOOL enableEndlessLines;
 @property (nonatomic, assign) BOOL useSwipeGesture;
-@property (nonatomic, assign) BOOL useTapGesture;
-@property (nonatomic, assign) BOOL feedback;
-@property (nonatomic, assign) NSInteger feedbackStyle;
-+(id)sharedInstance;
+
++(instancetype)sharedInstance;
 -(NSString *)getRecipeForBlurStyle:(NSString *)style;
 -(UIBlurEffectStyle)getBlurEffectForBlurStyle:(NSString *)style;
 -(void)setNumberOfLines;
@@ -98,5 +99,6 @@
 -(void)loadNotes;
 -(void)backupNotes;
 -(void)preferencesChanged;
+-(void)updateViews;
 -(void)toggleLibellum:(UIGestureRecognizer *)gesture;
 @end

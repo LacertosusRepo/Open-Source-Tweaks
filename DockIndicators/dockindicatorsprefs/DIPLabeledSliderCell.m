@@ -1,6 +1,6 @@
-#import "LBMLabeledSliderCell.h"
+#import "DIPLabeledSliderCell.h"
 
-@implementation LBMLabeledSliderCell {
+@implementation DIPLabeledSliderCell {
 	UILabel *_sliderLabel;
 }
 

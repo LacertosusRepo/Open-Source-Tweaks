@@ -11,8 +11,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
-			<key>cellClass</key>
-  		<string>XXXSwitchCell</string>
   		<key>switchColor</key>
   		<string>#76ab79</string>
   		<key>switchColorAlpha</key>
@@ -99,6 +97,8 @@
 			<true/>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>SetLockIconColor</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -118,7 +118,7 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>customTintColor</string>
+			<string>SetTintColor</string>
 		</dict>
 
 		<dict>

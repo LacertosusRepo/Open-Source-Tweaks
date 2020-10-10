@@ -8,29 +8,25 @@
   UIStackView *_stackView;
 }
 
-  -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier specifier:(PSSpecifier *)specifier {
+  -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier specifier:(PSSpecifier *)specifier {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier specifier:specifier];
 
     if(self) {
       NSMutableArray *optionViewArray = [[NSMutableArray alloc] init];
       NSBundle *bundle = [specifier.target bundle];
-      NSDictionary *options = [specifier propertyForKey:@"options"];
+      NSArray *options = [specifier propertyForKey:@"options"];
 
-      for(NSString *key in options) {
-        NSDictionary *optionProperties = [options objectForKey:key];
-
-        LBMStyleOptionView *optionView = [[LBMStyleOptionView alloc] initWithFrame:CGRectZero appearanceOption:[optionProperties objectForKey:@"appearanceOption"]];
+      for(NSDictionary *styleWithProperties in options) {
+        LBMStyleOptionView *optionView = [[LBMStyleOptionView alloc] initWithFrame:CGRectZero appearanceOption:[styleWithProperties objectForKey:@"appearanceOption"]];
         optionView.delegate = self;
-        optionView.label.text = [optionProperties objectForKey:@"label"];
-        optionView.previewImage = [UIImage imageNamed:[optionProperties objectForKey:@"image"] inBundle:bundle compatibleWithTraitCollection:nil];
-        optionView.tag = [[optionProperties objectForKey:@"position"] integerValue];
+        optionView.label.text = [styleWithProperties objectForKey:@"label"];
+        optionView.previewImage = [UIImage imageNamed:[styleWithProperties objectForKey:@"image"] inBundle:bundle compatibleWithTraitCollection:nil];
         optionView.translatesAutoresizingMaskIntoConstraints = NO;
 
         [optionViewArray addObject:optionView];
       }
 
-      NSSortDescriptor *ascendingSort = [[NSSortDescriptor alloc] initWithKey:@"tag" ascending:YES];
-      _stackView = [[UIStackView alloc] initWithArrangedSubviews:[optionViewArray sortedArrayUsingDescriptors:@[ascendingSort]]];
+      _stackView = [[UIStackView alloc] initWithArrangedSubviews:optionViewArray];
       _stackView.alignment = UIStackViewAlignmentCenter;
       _stackView.axis = UILayoutConstraintAxisHorizontal;
       _stackView.distribution = UIStackViewDistributionFillEqually;

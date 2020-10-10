@@ -6,10 +6,11 @@
 		self = [super init];
 		if(self) {
 			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
-			appearanceSettings.tintColor = Pri_Color;
-			appearanceSettings.navigationBarTintColor = Pri_Color;
 			appearanceSettings.navigationBarBackgroundColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Pri_Color;
+			appearanceSettings.showsNavigationBarShadow = NO;
 			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+			appearanceSettings.tintColor = Pri_Color;
 			appearanceSettings.translucentNavigationBar = NO;
 			self.hb_appearanceSettings = appearanceSettings;
 		}
@@ -21,7 +22,7 @@
 		if (!_specifiers) {
 			_specifiers = [self loadSpecifiersFromPlistName:@"Colors" target:self];
 
-			NSArray *chosenIDs = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor"];
+			NSArray *chosenIDs = @[@"IgnoreAdaptivePresetColors", @"SetSolidColor", @"SetTintColor"];
 			self.savedSpecifiers = (self.savedSpecifiers) ?: [[NSMutableDictionary alloc] init];
 			for(PSSpecifier *specifier in _specifiers) {
 				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
@@ -31,6 +32,19 @@
 		}
 
 		return _specifiers;
+	}
+
+	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
+		[super setPreferenceValue:value specifier:specifier];
+
+		NSString *key = [specifier propertyForKey:@"key"];
+		if([key isEqualToString:@"useKalmTintColor"]) {
+			if([value boolValue]) {
+				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetTintColor"]] animated:YES];
+			} else if(![self containsSpecifier:self.savedSpecifiers[@"SetTintColor"]]) {
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"SetTintColor"]] afterSpecifierID:@"SetLockIconColor" animated:YES];
+			}
+		}
 	}
 
 	-(void)reloadSpecifiers {
@@ -43,6 +57,10 @@
 
 		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"colorized"]) {
 			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetSolidColor"]] animated:YES];
+		}
+
+		if([preferences boolForKey:@"useKalmTintColor"]) {
+			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"SetTintColor"]] animated:YES];
 		}
 	}
 

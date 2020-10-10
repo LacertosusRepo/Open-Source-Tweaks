@@ -20,6 +20,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Clauditis | 11 - 13 | v1.2 | arm64 arm64e | ✔ | Double tap homescreen to lock device |
 | ColoredScrollIndicator | 13 | v1.1-1 | arm64 arm64e | | Color the scroll indicator with a gradient |
 | DialerGradient | 12 | v1.0 | arm64 arm64e | | Add gradient to dialer screen in Phone app |
+| Dock Indicators | 13 | v1.0 | arm64 arm64e | | Add a running indicator under dock apps with animations |
 | EinsteinVibes | 10 - 13 | v1.1 | arm64 arm64e | | Vibrate calculator buttons |
 | ExampleCepheiProject | 13 | v1.0 | arm64 arm64e | ✔ | Example project that uses Cephei |
 | FLEX4Me | 11 - 12 | v1.2 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
@@ -38,6 +39,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Return2Sender2 | 11 - 12 | v1.0 | arm64 arm64e | | Return button to send (buggy) |
 | Safi | 10 - 11 | v1.3 | arm64 | ✔ | Simple folder customization |
 | Speculum | 12 - 13 | v1.3.5 | arm64 arm64e | | Customizable lockscreen time, date, and weather information |
+| Spotify AddToFavorites | 13 | |v1.0.7 arm64 arm64e | | Quickly favorite songs to a saved playlist |
 | Stellae | 11 - 12 | v1.2.4 | arm64 arm64e | ✔ | Get random daily wallpaper from a subreddit |
 | Swiper | 12 | v1.0 | arm64 arm64e | | Music control swipes on the dock |
 | ToneItDown | 11 - 12 | v1.0.1 | arm64 arm64e | ✔ | Mute tones when previewing them |

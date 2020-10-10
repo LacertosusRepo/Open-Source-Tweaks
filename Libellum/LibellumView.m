@@ -8,7 +8,7 @@
 #import "LibellumView.h"
 
 @implementation LibellumView
-  +(id)sharedInstance {
+  +(instancetype)sharedInstance {
     static LibellumView *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -18,7 +18,7 @@
     return sharedInstance;
   }
 
-  -(id)init {
+  -(instancetype)init {
     if(self = [super init]) {
       self.alpha = 1.0;
       self.clipsToBounds = YES;
@@ -229,6 +229,8 @@
 
   -(void)textViewDidBeginEditing:(UITextView *)textView {
     _editing = YES;
+
+    [_noteView scrollRectToVisible:[_noteView caretRectForPosition:_noteView.selectedTextRange.start] animated:YES];
   }
 
   -(void)textViewDidEndEditing:(UITextView *)textView {
@@ -337,20 +339,10 @@
 
     _lGesture = [[LGestureRecognizer alloc] initWithTarget:self action:@selector(toggleLibellum:)];
     _lGesture.enabled = NO;
-
-    /*_edgeGesture = [[NSClassFromString(@"SBScreenEdgePanGestureRecognizer") alloc] initWithTarget:self action:@selector(toggleLibellum:) type:SBSystemGestureTypeNone options:nil];
-    _edgeGesture.edges = UIRectEdgeTop;
-    _edgeGesture.maximumNumberOfTouches = 1;
-    [[NSClassFromString(@"FBSystemGestureManager") sharedInstance] addGestureRecognizer:_edgeGesture toDisplay:[NSClassFromString(@"FBDisplayManager") mainDisplay]];
-    [[NSClassFromString(@"SBMainDisplaySystemGestureManager") sharedInstance] addGestureRecognizer:_edgeGesture withType:SBSystemGestureTypeNone];*/
   }
 
   -(void)toggleLibellum:(UIGestureRecognizer *)gesture {
     if(_hideGesture && !_editing) {
-      if([gesture isKindOfClass:[LGestureRecognizer class]] && gesture.state != UIGestureRecognizerStateRecognized) {
-        return;
-      }
-
       HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
 
       if(_feedback) {
@@ -358,16 +350,14 @@
       }
 
       if(self.hidden) {
-        /*self.hidden = NO;
-        [self.superview.superview layoutSubviews];
-        self.transform = CGAffineTransformMakeScale(0.5, 0.5);
-        [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-          self.transform = CGAffineTransformMakeScale(1, 1);
-          self.alpha = 1;
-        } completion:nil];*/
-
         self.hidden = NO;
-        [self.superview.superview layoutSubviews];
+
+        if([self.superview.superview respondsToSelector:@selector(_layoutStackView)]) {
+          [self.superview.superview performSelector:@selector(_layoutStackView)];
+        } else {
+          [self.superview.superview layoutSubviews];
+        }
+
         self.transform = CGAffineTransformMakeScale(0.5, 0.5);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
           [UIView transitionWithView:self duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -385,7 +375,12 @@
           self.alpha = 0;
         } completion:^(BOOL finished) {
           self.hidden = YES;
-          [self.superview.superview layoutSubviews];
+
+          if([self.superview.superview respondsToSelector:@selector(_layoutStackView)]) {
+            [self.superview.superview performSelector:@selector(_layoutStackView)];
+          } else {
+            [self.superview.superview layoutSubviews];
+          }
         }];
 
         [preferences setBool:YES forKey:@"isHidden"];
@@ -397,13 +392,44 @@
 #pragma mark - Preferences Changed/Adaptive Mode
 
   -(void)preferencesChanged {
+    HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+
+    _noteSize = [preferences integerForKey:@"noteSize"];
+    _blurStyle = [preferences objectForKey:@"blurStyle"];
+    _cornerRadius = [preferences integerForKey:@"cornerRadius"];
+
+    _requireAuthentication = [preferences boolForKey:@"requireAuthentication"];
+    _noteBackup = [preferences boolForKey:@"noteBackup"];
+
+    _hideGesture = [preferences boolForKey:@"hideGesture"];
+    _feedback = [preferences boolForKey:@"feedback"];
+    _feedbackStyle = [preferences integerForKey:@"feedbackStyle"];
+
+    _useKalmTintColor = [preferences boolForKey:@"useKalmTintColor"];
+    _ignoreAdaptiveColors = [preferences boolForKey:@"ignoreAdaptiveColors"];
+    _customBackgroundColor = [UIColor PF_colorWithHex:[preferences objectForKey:@"customBackgroundColor"]];
+    _customTextColor = [UIColor PF_colorWithHex:[preferences objectForKey:@"customTextColor"]];
+    _lockColor = [UIColor PF_colorWithHex:[preferences objectForKey:@"lockColor"]];
+    _customTintColor = [UIColor PF_colorWithHex:[preferences objectForKey:@"customTintColor"]];
+
+    _borderColor = [UIColor PF_colorWithHex:[preferences objectForKey:@"borderColor"]];
+    _borderWidth = [preferences integerForKey:@"borderWidth"];
+
+    _enableUndoRedo = [preferences boolForKey:@"enableUndoRedo"];
+    _enableEndlessLines = [preferences boolForKey:@"enableEndlessLines"];
+
+    _useSwipeGesture = [preferences boolForKey:@"useSwipeGesture"];
+
+    [self updateViews];
+  }
+
+  -(void)updateViews {
     if(((_requireAuthentication && _authenticated) || !_requireAuthentication) && self.superview) {
       self.layer.cornerRadius = _cornerRadius;
       self.layer.borderColor = _borderColor.CGColor;
       self.layer.borderWidth = _borderWidth;
       _noteView.tintColor = [self getTintColor];
 
-      _edgeGesture.enabled = _useEdgeGesture;
       _swipeGesture.enabled = _useSwipeGesture;
 
       if([_blurStyle isEqualToString:@"colorized"]) {
@@ -420,6 +446,10 @@
         _noteView.textColor = _customTextColor;
         _lockIcon.tintColor = _lockColor;
       }
+    }
+
+    if(!_hideGesture && self.hidden) {
+      [self toggleLibellum:nil];
     }
   }
 

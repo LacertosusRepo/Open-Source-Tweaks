@@ -4,5 +4,5 @@
 @end
 
 @interface UIImage (PrivateMethod)
-+(id)kitImageNamed:(id)arg1;
++(instancetype)kitImageNamed:(id)arg1;
 @end

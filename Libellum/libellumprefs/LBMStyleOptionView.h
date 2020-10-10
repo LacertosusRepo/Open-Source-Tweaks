@@ -14,6 +14,6 @@
 @property (nonatomic, retain) UIImageView *previewImageView;
 @property (nonatomic, retain) UIImage *previewImage;
 @property (nonatomic, retain) UILabel *label;
--(id)initWithFrame:(CGRect)frame appearanceOption:(id)option;
+-(instancetype)initWithFrame:(CGRect)frame appearanceOption:(id)option;
 -(void)updateViewForStyle:(NSString *)style;
 @end

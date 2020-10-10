@@ -8,7 +8,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 	UIStackView *_stackView;
 }
 
-	-(id)init {
+	-(instancetype)init {
 		self = [super init];
 
 		if(self) {

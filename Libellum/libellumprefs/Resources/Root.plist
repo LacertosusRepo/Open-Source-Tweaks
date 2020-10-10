@@ -86,8 +86,7 @@
 			<key>height</key>
 			<real>210</real>
 			<key>options</key>
-			<dict>
-				<key>lightOption</key>
+			<array>
 				<dict>
 					<key>image</key>
 					<string>lightimage</string>
@@ -95,11 +94,8 @@
 					<string>platters</string>
 					<key>label</key>
 					<string>Light Mode</string>
-					<key>position</key>
-					<integer>1</integer>
 				</dict>
 
-				<key>darkOption</key>
 				<dict>
 					<key>image</key>
 					<string>darkimage</string>
@@ -107,11 +103,8 @@
 					<string>plattersDark</string>
 					<key>label</key>
 					<string>Dark Mode</string>
-					<key>position</key>
-					<integer>2</integer>
 				</dict>
 
-				<key>colorizedOption</key>
 				<dict>
 					<key>image</key>
 					<string>colorizedimage</string>
@@ -119,11 +112,8 @@
 					<string>colorized</string>
 					<key>label</key>
 					<string>Colorized</string>
-					<key>position</key>
-					<integer>3</integer>
 				</dict>
 
-				<key>adaptiveOption</key>
 				<dict>
 					<key>image</key>
 					<string>adaptiveimage</string>
@@ -131,10 +121,8 @@
 					<string>adaptive</string>
 					<key>label</key>
 					<string>Adaptive</string>
-					<key>position</key>
-					<integer>4</integer>
 				</dict>
-			</dict>
+			</array>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -197,7 +185,7 @@
 			<key>label</key>
 			<string>Security &amp; Backup</string>
 			<key>footerText</key>
-			<string>Requiring authentication means the device needs to be unlocked to edit/view notes. Backup of notes occurs once per respring.</string>
+			<string>Require authentication requires the device to be unlocked to edit/view notes. Backup of notes occurs once per respring.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -242,15 +230,13 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Hide/Show Notes</string>
-			<key>footerText</key>
-			<string>Toggle notes by triple tapping the lockscreen or dismiss notes by swiping left on them.</string>
+			<string>Toggle Notes</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
-			<true/>
+			<false/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
@@ -288,9 +274,11 @@
 			<key>key</key>
 			<string>feedback</string>
 			<key>label</key>
-			<string>Haptic Feedback</string>
+			<string>Gesture Feedback</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>GestureFeedback</string>
 		</dict>
 		<dict>
 			<key>cell</key>

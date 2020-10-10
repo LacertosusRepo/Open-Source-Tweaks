@@ -6,10 +6,11 @@
 		self = [super init];
 		if(self) {
 			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
-			appearanceSettings.tintColor = Pri_Color;
-			appearanceSettings.navigationBarTintColor = Pri_Color;
 			appearanceSettings.navigationBarBackgroundColor = Sec_Color;
+			appearanceSettings.navigationBarTintColor = Pri_Color;
+			appearanceSettings.showsNavigationBarShadow = NO;
 			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
+			appearanceSettings.tintColor = Pri_Color;
 			appearanceSettings.translucentNavigationBar = NO;
 			self.hb_appearanceSettings = appearanceSettings;
 		}
@@ -41,7 +42,7 @@
 			if(![value boolValue]) {
 				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
 			} else if(![self containsSpecifier:self.savedSpecifiers[@"FeedbackStyle"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] afterSpecifierID:@"Haptic Feedback" animated:YES];
+				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] afterSpecifierID:@"GestureFeedback" animated:YES];
 			}
 		}
 
@@ -84,6 +85,11 @@
 		header.frame = CGRectMake(0, 0, header.bounds.size.width, 175);
 		UITableView *tableView = [self valueForKey:@"_table"];
 		tableView.tableHeaderView = header;
+
+		UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+		refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Hey how's it going?"];
+		[refreshControl addTarget:self action:@selector(onRefresh) forControlEvents:UIControlEventValueChanged];
+		tableView.refreshControl = refreshControl;
 	}
 
 	-(void)respringApply {
@@ -104,6 +110,13 @@
 				[self respringApply];
 			});
 		}
+	}
+
+	-(void)onRefresh {
+		NSLog(@"big dick energy");
+
+		UITableView *tableView = [self valueForKey:@"_table"];
+		[tableView.refreshControl performSelector:@selector(endRefreshing) withObject:nil afterDelay:5.0];
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {

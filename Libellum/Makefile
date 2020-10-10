@@ -4,7 +4,7 @@ export ARCHS = arm64 arm64e
 # export ARCHS = x86_64
 # TARGET = simulator:clang::12
 
-INSTALL_TARGET_PROCESSES = Preferences #SpringBoard
+INSTALL_TARGET_PROCESSES = SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 

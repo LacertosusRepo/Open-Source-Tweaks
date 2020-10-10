@@ -10,7 +10,6 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = SpotifyAddToFavorites
 SpotifyAddToFavorites_FILES = Tweak.x
-# Add ws.hbang.common (>= 1.13) to depencencies
 SpotifyAddToFavorites_EXTRA_FRAMEWORKS += Cephei
 SpotifyAddToFavorites_CFLAGS = -fobjc-arc
 
