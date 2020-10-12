@@ -110,4 +110,11 @@
 				self.navigationItem.titleView.alpha = 1;
 			}];
 	}
+
+	-(void)clearColorCache {
+		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+		[preferences removeObjectForKey:@"appColorCache"];
+
+		[HBRespringController respring];
+	}
 @end

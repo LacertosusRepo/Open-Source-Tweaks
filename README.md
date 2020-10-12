@@ -20,7 +20,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Clauditis | 11 - 13 | v1.2 | arm64 arm64e | ✔ | Double tap homescreen to lock device |
 | ColoredScrollIndicator | 13 | v1.1-1 | arm64 arm64e | | Color the scroll indicator with a gradient |
 | DialerGradient | 12 | v1.0 | arm64 arm64e | | Add gradient to dialer screen in Phone app |
-| Dock Indicators | 13 | v1.0 | arm64 arm64e | | Add a running indicator under dock apps with animations |
+| Dock Indicators | 13 | v1.0.2 | arm64 arm64e | | Add a running indicator under dock apps with animations |
 | EinsteinVibes | 10 - 13 | v1.1 | arm64 arm64e | | Vibrate calculator buttons |
 | ExampleCepheiProject | 13 | v1.0 | arm64 arm64e | ✔ | Example project that uses Cephei |
 | FLEX4Me | 11 - 12 | v1.2 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |

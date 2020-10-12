@@ -5,7 +5,7 @@ else
 	export ARCHS = arm64 arm64e
 endif
 
-INSTALL_TARGET_PROCESSES = Preferences#SpringBoard
+INSTALL_TARGET_PROCESSES = SpringBoard
 
 include $(THEOS)/makefiles/common.mk
 

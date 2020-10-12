@@ -51,7 +51,7 @@
 			<key>label</key>
 			<string>Shape</string>
 			<key>footerText</key>
-			<string>Tap the indicator preview to preview the notification animation.</string>
+			<string>Tap the indicator preview to test the notification animation.</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -143,6 +143,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Colors</string>
+			<key>footerText</key>
+			<string>Clear the color cache if you have changed themes or a color seems incorrect. This will respring your device.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -180,6 +182,16 @@
 			<key>id</key>
 			<string>SetIndicatorColor</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>cellClass</key>
+			<string>HBTintedTableCell</string>
+			<key>action</key>
+			<string>clearColorCache</string>
+			<key>label</key>
+			<string>Clear Color Cache</string>
+		</dict>
 
 		<dict>
 			<key>cell</key>
@@ -209,6 +221,7 @@
 				<string>Shake X</string>
 				<string>Shake Y</string>
 				<string>Glow</string>
+				<string>Heartbeat</string>
 			</array>
 			<key>validValues</key>
 			<array>
@@ -217,6 +230,7 @@
 				<integer>2</integer>
 				<integer>3</integer>
 				<integer>4</integer>
+				<integer>5</integer>
 			</array>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.dockindicatorsprefs/ReloadPrefs</string>

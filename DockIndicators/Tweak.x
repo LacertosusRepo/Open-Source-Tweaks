@@ -11,19 +11,19 @@
 #import "DockIndicators.h"
 
     //Global Variables
-  static BOOL indicatorsNeedUpdate;
+  static HBPreferences *preferences;
+  static NSMutableDictionary *appColorCache;
 
     //Preference Variables
   static NSInteger indicatorOffset;
-
   static NSInteger indicatorWidth;
   static NSInteger indicatorHeight;
   static CGFloat indicatorCornerRadius;
-
   static BOOL indicatorUseAppColor;
   static NSString *indicatorColor;
-
   static NSInteger indicatorAnimationType;
+
+#pragma mark - Functions
 
   //Function to create notification animation
 CAAnimationGroup* animationForType(DIPNotificationAnimationType type) {
@@ -81,6 +81,17 @@ CAAnimationGroup* animationForType(DIPNotificationAnimationType type) {
       break;
     }
 
+    case DIPNotificationAnimationTypeHeartbeat:
+    {
+      CAKeyframeAnimation *beat = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+      beat.calculationMode = kCAAnimationLinear;
+      beat.duration = .7;
+      beat.removedOnCompletion = NO;
+      beat.values = @[@1, @1.1, @1, @1.2, @1];
+      animationGroup.animations = @[beat];
+      break;
+    }
+
     default:
     break;
   };
@@ -90,9 +101,13 @@ CAAnimationGroup* animationForType(DIPNotificationAnimationType type) {
 
   //https://www.hackingwithswift.com/example-code/media/how-to-read-the-average-color-of-a-uiimage-using-ciareaaverage
   //Function to obtain the average color from the icon
-UIColor* colorFromImage(UIImage *image) {
-  if(!image) {
+UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
+  if(!image || !identifier) {
     return nil;
+  }
+
+  if([appColorCache objectForKey:identifier]) {
+    return [UIColor PF_colorWithHex:[appColorCache objectForKey:identifier]];
   }
 
   CIImage *input = [[CIImage alloc] initWithImage:image];
@@ -104,12 +119,17 @@ UIColor* colorFromImage(UIImage *image) {
   CIContext *context = [CIContext contextWithOptions:@{@"kCIContextWorkingColorSpace" : [NSNull null]}];
   [context render:output toBitmap:&bitmap rowBytes:4 bounds:CGRectMake(0, 0, 1, 1) format:kCIFormatRGBA8 colorSpace:nil];
 
-  return [UIColor colorWithRed:(CGFloat)bitmap[0]/255 green:(CGFloat)bitmap[1]/255 blue:(CGFloat)bitmap[2]/255 alpha:1];
+  UIColor *averagColor = [UIColor colorWithRed:(CGFloat)bitmap[0]/255 green:(CGFloat)bitmap[1]/255 blue:(CGFloat)bitmap[2]/255 alpha:1];
+  [appColorCache setObject:[UIColor PF_hexFromColor:averagColor] forKey:identifier];
+  [preferences setObject:appColorCache forKey:@"appColorCache"];
+
+  return averagColor;
 }
+
+#pragma mark - Hooks
 
 %hook SBIconView
 %property (nonatomic, retain) UIView *runningIndicator;
-
   -(BOOL)isLabelHidden {
     return YES;
   }
@@ -117,26 +137,27 @@ UIColor* colorFromImage(UIImage *image) {
 
 %hook SBDockIconListView
   -(id)initWithModel:(id)arg1 layoutProvider:(id)arg2 iconLocation:(id)arg3 orientation:(long long)arg4 iconViewProvider:(id)arg5 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicators) name:@"SBApplicationProcessStateDidChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicators:) name:@"SBApplicationProcessStateDidChange" object:nil];
+
+    appColorCache = [[NSMutableDictionary alloc] initWithDictionary:[preferences objectForKey:@"appColorCache"]];
 
     return %orig;
   }
 
 %new
-  -(void)updateRunningIndicators {
+  -(void)updateRunningIndicators:(NSNotification *)notification {
     for(SBIconView *iconView in self.subviews) {
-      if(!iconView.runningIndicator || indicatorsNeedUpdate) {
+      if(![iconView isKindOfClass:[%c(SBIconView) class]]) {
+        continue; //Fix for Harbor 3 crash
+      }
 
-        UIColor *averageAppColor;
-        if(indicatorUseAppColor) {
-           averageAppColor = colorFromImage(iconView.iconImageSnapshot);
-        }
+      if(iconView.folderIcon) {
+        continue;  //Get outta here folder icon
+      }
 
-        iconView.runningIndicator = (iconView.runningIndicator) ?: [[UIView alloc] initWithFrame:CGRectZero];
-        iconView.runningIndicator.alpha = (indicatorsNeedUpdate) ? iconView.runningIndicator.alpha : 0;
-        iconView.runningIndicator.backgroundColor = (averageAppColor) ?: [UIColor PF_colorWithHex:indicatorColor];
-        iconView.runningIndicator.layer.cornerRadius = indicatorCornerRadius;
-        iconView.runningIndicator.layer.shadowColor = (averageAppColor.CGColor) ?: [UIColor PF_colorWithHex:indicatorColor].CGColor;
+      if(!iconView.runningIndicator) {
+        iconView.runningIndicator = [[UIView alloc] initWithFrame:CGRectZero];
+        iconView.runningIndicator.alpha = 0;
         iconView.runningIndicator.layer.shadowOffset = CGSizeZero;
         iconView.runningIndicator.layer.shadowOpacity = 0;
         iconView.runningIndicator.layer.shadowRadius = 3;
@@ -151,6 +172,17 @@ UIColor* colorFromImage(UIImage *image) {
         ]];
       }
 
+      UIColor *averageAppColor;
+      if(indicatorUseAppColor && iconView.iconImageSnapshot) {
+         averageAppColor = averageColorFromImage(iconView.iconImageSnapshot, iconView.applicationBundleIdentifierForShortcuts);
+      }
+
+      [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        iconView.runningIndicator.backgroundColor = (averageAppColor) ?: [UIColor PF_colorWithHex:indicatorColor];
+        iconView.runningIndicator.layer.cornerRadius = indicatorCornerRadius;
+        iconView.runningIndicator.layer.shadowColor = (averageAppColor.CGColor) ?: [UIColor PF_colorWithHex:indicatorColor].CGColor;
+      } completion:nil];
+
       SBApplication *application = [(SBApplicationIcon *)iconView.icon valueForKey:@"_application"];
       [UIView transitionWithView:iconView.runningIndicator duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         iconView.runningIndicator.alpha = (application.processState.running) ? 1 : 0;
@@ -163,29 +195,17 @@ UIColor* colorFromImage(UIImage *image) {
         [iconView.runningIndicator.layer removeAnimationForKey:@"indicatorAnimation"];
       }
     }
-
-    if(indicatorsNeedUpdate) {
-      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        indicatorsNeedUpdate = NO;
-      });
-    }
   }
 %end
 
 %ctor {
-  HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+  preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
   [preferences registerInteger:&indicatorOffset default:5 forKey:@"indicatorOffset"];
-
   [preferences registerInteger:&indicatorWidth default:18 forKey:@"indicatorWidth"];
   [preferences registerInteger:&indicatorHeight default:5 forKey:@"indicatorHeight"];
   [preferences registerFloat:&indicatorCornerRadius default:2.5 forKey:@"indicatorCornerRadius"];
-
   [preferences registerBool:&indicatorUseAppColor default:NO forKey:@"indicatorUseAppColor"];
   [preferences registerObject:&indicatorColor default:@"#FFFFFF" forKey:@"indicatorColor"];
 
   [preferences registerInteger:&indicatorAnimationType default:DIPNotificationAnimationTypeBounce forKey:@"indicatorAnimationType"];
-
-  [preferences registerPreferenceChangeBlock:^{
-    indicatorsNeedUpdate = YES;
-  }];
 }
