@@ -17,9 +17,9 @@
       }];
 
       _indicator = [[UIView alloc] initWithFrame:CGRectZero];
-      _indicator.backgroundColor = [UIColor PF_colorWithHex:[_preferences objectForKey:@"indicatorColor"]];
+      _indicator.backgroundColor = ([UIColor PF_colorWithHex:[_preferences objectForKey:@"indicatorColor"]]) ?: [UIColor whiteColor];
       _indicator.layer.cornerRadius = [_preferences floatForKey:@"indicatorCornerRadius"];
-      _indicator.layer.shadowColor = [UIColor PF_colorWithHex:[_preferences objectForKey:@"indicatorColor"]].CGColor;
+      _indicator.layer.shadowColor = ([UIColor PF_colorWithHex:[_preferences objectForKey:@"indicatorColor"]].CGColor) ?: [UIColor whiteColor].CGColor;
       _indicator.layer.shadowOffset = CGSizeZero;
       _indicator.layer.shadowOpacity = 0;
       _indicator.layer.shadowRadius = 3;
@@ -105,6 +105,17 @@
           beat.removedOnCompletion = NO;
           beat.values = @[@1, @1.1, @1, @1.2, @1];
           animationGroup.animations = @[beat];
+          break;
+        }
+
+        case DIPNotificationAnimationTypePulse:
+        {
+          CAKeyframeAnimation *pulse = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+          pulse.calculationMode = kCAAnimationLinear;
+          pulse.duration = 2;
+          pulse.removedOnCompletion = NO;
+          pulse.values = @[@1, @0.1, @1];
+          animationGroup.animations = @[pulse];
           break;
         }
 

@@ -12,7 +12,6 @@
 
     //Global Variables
   static HBPreferences *preferences;
-  static NSMutableDictionary *appColorCache;
 
     //Preference Variables
   static NSInteger indicatorOffset;
@@ -81,14 +80,14 @@ CAAnimationGroup* animationForType(DIPNotificationAnimationType type) {
       break;
     }
 
-    case DIPNotificationAnimationTypeHeartbeat:
+    case DIPNotificationAnimationTypePulse:
     {
-      CAKeyframeAnimation *beat = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-      beat.calculationMode = kCAAnimationLinear;
-      beat.duration = .7;
-      beat.removedOnCompletion = NO;
-      beat.values = @[@1, @1.1, @1, @1.2, @1];
-      animationGroup.animations = @[beat];
+      CAKeyframeAnimation *pulse = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+      pulse.calculationMode = kCAAnimationLinear;
+      pulse.duration = 2;
+      pulse.removedOnCompletion = NO;
+      pulse.values = @[@1, @0.1, @1];
+      animationGroup.animations = @[pulse];
       break;
     }
 
@@ -106,8 +105,9 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
     return nil;
   }
 
-  if([appColorCache objectForKey:identifier]) {
-    return [UIColor PF_colorWithHex:[appColorCache objectForKey:identifier]];
+  NSMutableDictionary *mutableCache = ([[preferences objectForKey:@"appColorCache"] mutableCopy]) ?: [[NSMutableDictionary alloc] init];
+  if([mutableCache objectForKey:identifier]) {
+    return [UIColor PF_colorWithHex:[mutableCache objectForKey:identifier]];
   }
 
   CIImage *input = [[CIImage alloc] initWithImage:image];
@@ -119,27 +119,22 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
   CIContext *context = [CIContext contextWithOptions:@{@"kCIContextWorkingColorSpace" : [NSNull null]}];
   [context render:output toBitmap:&bitmap rowBytes:4 bounds:CGRectMake(0, 0, 1, 1) format:kCIFormatRGBA8 colorSpace:nil];
 
-  UIColor *averagColor = [UIColor colorWithRed:(CGFloat)bitmap[0]/255 green:(CGFloat)bitmap[1]/255 blue:(CGFloat)bitmap[2]/255 alpha:1];
-  [appColorCache setObject:[UIColor PF_hexFromColor:averagColor] forKey:identifier];
-  [preferences setObject:appColorCache forKey:@"appColorCache"];
+  UIColor *averageColor = [UIColor colorWithRed:(CGFloat)bitmap[0]/255 green:(CGFloat)bitmap[1]/255 blue:(CGFloat)bitmap[2]/255 alpha:1];
+  [mutableCache setObject:[UIColor PF_hexFromColor:averageColor] forKey:identifier];
+  [preferences setObject:mutableCache forKey:@"appColorCache"];
 
-  return averagColor;
+  return averageColor;
 }
 
 #pragma mark - Hooks
 
 %hook SBIconView
 %property (nonatomic, retain) UIView *runningIndicator;
-  -(BOOL)isLabelHidden {
-    return YES;
-  }
 %end
 
 %hook SBDockIconListView
   -(id)initWithModel:(id)arg1 layoutProvider:(id)arg2 iconLocation:(id)arg3 orientation:(long long)arg4 iconViewProvider:(id)arg5 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicators:) name:@"SBApplicationProcessStateDidChange" object:nil];
-
-    appColorCache = [[NSMutableDictionary alloc] initWithDictionary:[preferences objectForKey:@"appColorCache"]];
 
     return %orig;
   }
@@ -147,12 +142,8 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
 %new
   -(void)updateRunningIndicators:(NSNotification *)notification {
     for(SBIconView *iconView in self.subviews) {
-      if(![iconView isKindOfClass:[%c(SBIconView) class]]) {
-        continue; //Fix for Harbor 3 crash
-      }
-
-      if(iconView.folderIcon) {
-        continue;  //Get outta here folder icon
+      if(![iconView isKindOfClass:[%c(SBIconView) class]] || iconView.folderIcon || [iconView.icon isKindOfClass:[%c(SBDownloadingIcon) class]]) {
+        continue; //Ignore icon to fix crash for Harbor 3, if the icon is a folder, if the icon is a download/update
       }
 
       if(!iconView.runningIndicator) {
@@ -162,6 +153,19 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
         iconView.runningIndicator.layer.shadowOpacity = 0;
         iconView.runningIndicator.layer.shadowRadius = 3;
         iconView.runningIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+        [iconView addSubview:iconView.runningIndicator];
+
+        [NSLayoutConstraint activateConstraints:@[
+          [iconView.runningIndicator.centerXAnchor constraintEqualToAnchor:iconView.centerXAnchor],
+          [iconView.runningIndicator.topAnchor constraintEqualToAnchor:iconView.bottomAnchor constant:indicatorOffset],
+          [iconView.runningIndicator.widthAnchor constraintEqualToConstant:indicatorWidth],
+          [iconView.runningIndicator.heightAnchor constraintEqualToConstant:indicatorHeight],
+        ]];
+      }
+
+        //if the iPad dock used by FloatingDockPlus13 or Dock Controller the indicator randomly gets moved to another subview, we move it back to the icon view
+      if(![iconView.runningIndicator.superview isKindOfClass:[%c(SBIconView) class]]) {
+        [iconView.runningIndicator removeFromSuperview];
         [iconView addSubview:iconView.runningIndicator];
 
         [NSLayoutConstraint activateConstraints:@[
@@ -206,6 +210,5 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
   [preferences registerFloat:&indicatorCornerRadius default:2.5 forKey:@"indicatorCornerRadius"];
   [preferences registerBool:&indicatorUseAppColor default:NO forKey:@"indicatorUseAppColor"];
   [preferences registerObject:&indicatorColor default:@"#FFFFFF" forKey:@"indicatorColor"];
-
   [preferences registerInteger:&indicatorAnimationType default:DIPNotificationAnimationTypeBounce forKey:@"indicatorAnimationType"];
 }

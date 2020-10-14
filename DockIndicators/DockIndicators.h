@@ -5,6 +5,7 @@ typedef NS_ENUM(NSInteger, DIPNotificationAnimationType) {
   DIPNotificationAnimationTypeShakeY,
   DIPNotificationAnimationTypeGlow,
   DIPNotificationAnimationTypeHeartbeat,
+  DIPNotificationAnimationTypePulse,
 };
 
 @interface SBIcon : NSObject
@@ -36,4 +37,7 @@ typedef NS_ENUM(NSInteger, DIPNotificationAnimationType) {
 @end
 
 @interface SBDockIconListView : SBIconListView
+
+  //DockIndicators
+-(void)updateRunningIndicators:(NSNotification *)notification;
 @end

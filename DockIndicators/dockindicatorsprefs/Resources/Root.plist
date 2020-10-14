@@ -27,8 +27,6 @@
 			<string>-50</string>
 			<key>max</key>
 			<string>50</string>
-			<key>showValue</key>
-			<true/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.dockindicatorsprefs</string>
 			<key>key</key>
@@ -41,8 +39,6 @@
 			<string>Y Offset</string>
 			<key>cellClass</key>
 			<string>DIPLabeledSliderCell</string>
-			<key>height</key>
-			<real>56</real>
 		</dict>
 
 		<dict>
@@ -70,8 +66,6 @@
 			<string>1</string>
 			<key>max</key>
 			<string>60</string>
-			<key>showValue</key>
-			<true/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.dockindicatorsprefs</string>
 			<key>key</key>
@@ -84,8 +78,6 @@
 			<string>Width</string>
 			<key>cellClass</key>
 			<string>DIPLabeledSliderCell</string>
-			<key>height</key>
-			<real>56</real>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -96,8 +88,6 @@
 			<string>1</string>
 			<key>max</key>
 			<string>40</string>
-			<key>showValue</key>
-			<true/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.dockindicatorsprefs</string>
 			<key>key</key>
@@ -110,8 +100,6 @@
 			<string>Height</string>
 			<key>cellClass</key>
 			<string>DIPLabeledSliderCell</string>
-			<key>height</key>
-			<real>56</real>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -122,8 +110,6 @@
 			<string>0</string>
 			<key>max</key>
 			<string>30</string>
-			<key>showValue</key>
-			<true/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.dockindicatorsprefs</string>
 			<key>key</key>
@@ -134,8 +120,6 @@
 			<string>Corner Radius</string>
 			<key>cellClass</key>
 			<string>DIPLabeledSliderCell</string>
-			<key>height</key>
-			<real>56</real>
 		</dict>
 
 		<dict>
@@ -184,6 +168,18 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBTintedTableCell</string>
+			<key>detail</key>
+			<string>DIPModifyCachedAppColorsController</string>
+			<key>isController</key>
+			<true/>
+			<key>label</key>
+			<string>Modify Cached App Colors</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
 			<string>HBTintedTableCell</string>
@@ -222,6 +218,7 @@
 				<string>Shake Y</string>
 				<string>Glow</string>
 				<string>Heartbeat</string>
+				<string>Pulse</string>
 			</array>
 			<key>validValues</key>
 			<array>
@@ -231,6 +228,7 @@
 				<integer>3</integer>
 				<integer>4</integer>
 				<integer>5</integer>
+				<integer>6</integer>
 			</array>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.dockindicatorsprefs/ReloadPrefs</string>
