@@ -29,7 +29,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Imperium | 11 - 12 | v2.0.2 | arm64 arm64e | ✔ | Music gestures in the now playing widget |
 | Improvify | 11 - 12 | v1.4.6 | arm64 arm64e | ✔ | Improved Spotify features |
 | KeywordReplace | 13 | v1.0.1 | arm64 arm64e | | Replace keywords system wide |
-| Libellum | 12 - 13 | v1.4.8 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
+| Libellum | 12 - 13 | v1.5.3 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
 | LuxSit | 11 - 12 | v1.0 | arm64 arm64e | | URL shortcuts in the spotlight search |
 | Mea | 10 - 11 | v1.0 | arm64 | | Hide security codes on the lockscreen |
 | Navale | 10 - 13 | v2.2.6 | arm64 arm64e | | Gradient dock background |

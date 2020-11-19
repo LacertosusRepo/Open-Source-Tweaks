@@ -1,5 +1,4 @@
 #import "LBMStyleCheckView.h"
-#import "PreferencesColorDefinitions.h"
 
 @class LBMStyleOptionView;
 @protocol LBMStyleOptionViewDelegate <NSObject>

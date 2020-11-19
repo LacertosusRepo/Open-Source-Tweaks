@@ -64,13 +64,30 @@
    * Add hide/show gesture to lockscreen
    */
 %hook CSScrollView
-  -(id)initWithFrame:(CGRect)ag1 {
+  -(instancetype)initWithFrame:(CGRect)ag1 {
     UITapGestureRecognizer *toggleGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumView sharedInstance] action:@selector(toggleLibellum:)];
     toggleGesture.enabled = [preferences boolForKey:@"useTapGesture"];
     toggleGesture.numberOfTapsRequired = 3;
     [self addGestureRecognizer:toggleGesture];
 
     return scrollViewCS = %orig;
+  }
+%end
+
+  /*
+   * Hide buttons when in portrait
+   */
+%hook CSQuickActionsViewController
+  -(BOOL)isPortrait {
+    if([preferences boolForKey:@"hideQuickActions"]) {
+      if(%orig) {
+        self.view.hidden = YES;
+      } else {
+        self.view.hidden = NO;
+      }
+    }
+
+    return %orig;
   }
 %end
 %end
@@ -117,17 +134,34 @@
   }
 %end
 
-    /*
-     * Add hide/show gesture to lockscreen
-     */
+  /*
+   * Add hide/show gesture to lockscreen
+   */
 %hook SBPagedScrollView
-  -(id)initWithFrame:(CGRect)ag1 {
+  -(instancetype)initWithFrame:(CGRect)ag1 {
     UITapGestureRecognizer *toggleGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumView sharedInstance] action:@selector(toggleLibellum:)];
     toggleGesture.enabled = [preferences boolForKey:@"useTapGesture"];
     toggleGesture.numberOfTapsRequired = 3;
     [self addGestureRecognizer:toggleGesture];
 
     return scrollViewSB = %orig;
+  }
+%end
+
+  /*
+   * Hide buttons when in portrait
+   */
+%hook SBDashBoardQuickActionsViewController
+  -(BOOL)isPortrait {
+    if([preferences boolForKey:@"hideQuickActions"]) {
+      if(%orig) {
+        self.view.hidden = YES;
+      } else {
+        self.view.hidden = NO;
+      }
+    }
+
+    return %orig;
   }
 %end
 %end
@@ -203,6 +237,7 @@
     @"enableEndlessLines" : @NO,
     @"hideNoOlderNotifications" : @YES,
     @"enableAutoUnlockXBlock" : @NO,
+    @"hideQuickActions" : @NO,
 
       //Gesture Options
     @"useSwipeGesture" : @YES,

@@ -61,6 +61,7 @@
 @property (nonatomic, retain) UIImageView *lockIcon;
 @property (nonatomic, retain) UITextView *noteView;
 @property (nonatomic, retain) UIView *blurView;
+@property (nonatomic, retain) NSLayoutConstraint *heightConstraint;
 @property (nonatomic, readonly) UISwipeGestureRecognizer *swipeGesture;
 @property (nonatomic, readonly) LGestureRecognizer *lGesture;
 @property (nonatomic, readonly) UIScreenEdgePanGestureRecognizer *edgeGesture;

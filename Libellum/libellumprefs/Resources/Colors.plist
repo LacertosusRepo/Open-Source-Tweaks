@@ -154,8 +154,6 @@
 			<string>0</string>
 			<key>max</key>
 			<string>10</string>
-			<key>showValue</key>
-			<true/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
@@ -168,8 +166,6 @@
 			<string>Border Width</string>
 			<key>cellClass</key>
 			<string>LBMLabeledSliderCell</string>
-			<key>height</key>
-			<real>56</real>
 		</dict>
 	</array>
 	<key>title</key>

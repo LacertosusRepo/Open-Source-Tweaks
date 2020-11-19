@@ -66,6 +66,20 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>hideQuickActions</string>
+			<key>label</key>
+			<string>Hide Quick Actions in Portrait</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string></string>

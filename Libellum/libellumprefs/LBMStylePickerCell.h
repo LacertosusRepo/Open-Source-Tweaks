@@ -10,3 +10,7 @@
 -(void)performSetterWithValue:(id)value;
 -(id)performGetter;
 @end
+
+@interface UIView (PrivateMethods)
+-(UIViewController *)_viewControllerForAncestor;
+@end

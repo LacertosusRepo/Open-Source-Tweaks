@@ -15,12 +15,14 @@
 			<string>Lacertosus</string>
 			<key>user</key>
 			<string>LacertosusDeus</string>
-			<key>avatarURL</key>
+			<key>iconURL</key>
 			<string>https://avatars2.githubusercontent.com/u/14306024?v=4</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSegmentCell</string>
+			<key>cellClass</key>
+			<string>LBMSegmentTableWithInputCell</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
@@ -133,8 +135,6 @@
 			<string>0.0</string>
 			<key>max</key>
 			<string>50</string>
-			<key>showValue</key>
-			<true/>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
@@ -147,8 +147,6 @@
 			<string>Corner Radius</string>
 			<key>cellClass</key>
 			<string>LBMLabeledSliderCell</string>
-			<key>height</key>
-			<real>56</real>
 		</dict>
 		<dict>
 			<key>cell</key>

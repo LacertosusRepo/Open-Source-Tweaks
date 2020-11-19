@@ -16,7 +16,7 @@
       _previewImageView.clipsToBounds = YES;
       _previewImageView.contentMode = UIViewContentModeScaleAspectFit;
       _previewImageView.layer.cornerRadius = 8;
-      _previewImageView.layer.borderColor = Pri_Color.CGColor;
+      _previewImageView.layer.borderColor = self.tintColor.CGColor;
       _previewImageView.translatesAutoresizingMaskIntoConstraints = NO;
 
       _label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -99,5 +99,11 @@
 
   -(BOOL)gestureRecognizer:(id)gesture shouldRecognizeSimultaneouslyWithGestureRecognizer:(id)otherGesture {
     return YES;
+  }
+
+  -(void)tintColorDidChange {
+    [super tintColorDidChange];
+
+    _previewImageView.layer.borderColor = self.tintColor.CGColor;
   }
 @end

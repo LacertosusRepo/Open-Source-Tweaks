@@ -16,11 +16,11 @@
       NSBundle *bundle = [specifier.target bundle];
       NSArray *options = [specifier propertyForKey:@"options"];
 
-      for(NSDictionary *styleWithProperties in options) {
-        LBMStyleOptionView *optionView = [[LBMStyleOptionView alloc] initWithFrame:CGRectZero appearanceOption:[styleWithProperties objectForKey:@"appearanceOption"]];
+      for(NSDictionary *stylesWithProperties in options) {
+        LBMStyleOptionView *optionView = [[LBMStyleOptionView alloc] initWithFrame:CGRectZero appearanceOption:[stylesWithProperties objectForKey:@"appearanceOption"]];
         optionView.delegate = self;
-        optionView.label.text = [styleWithProperties objectForKey:@"label"];
-        optionView.previewImage = [UIImage imageNamed:[styleWithProperties objectForKey:@"image"] inBundle:bundle compatibleWithTraitCollection:nil];
+        optionView.label.text = [stylesWithProperties objectForKey:@"label"];
+        optionView.previewImage = [UIImage imageNamed:[stylesWithProperties objectForKey:@"image"] inBundle:bundle compatibleWithTraitCollection:nil];
         optionView.translatesAutoresizingMaskIntoConstraints = NO;
 
         [optionViewArray addObject:optionView];
@@ -40,10 +40,10 @@
       }
 
       [NSLayoutConstraint activateConstraints:@[
-        [_stackView.topAnchor constraintEqualToAnchor:self.topAnchor],
-        [_stackView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
-        [_stackView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-        [_stackView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [_stackView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+        [_stackView.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor],
+        [_stackView.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor],
+        [_stackView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
       ]];
     }
 

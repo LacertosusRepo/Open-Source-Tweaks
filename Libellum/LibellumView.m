@@ -72,7 +72,7 @@
 
       if([_blurStyle isEqualToString:@"colorized"]) {
         _blurView.alpha = 0;
-        _noteView.backgroundColor = _customBackgroundColor;
+        self.backgroundColor = _customBackgroundColor;
         _noteView.textColor = _customTextColor;
       }
 
@@ -95,10 +95,11 @@
         [_lockIcon.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
         [_lockIcon.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
 
-        [self.heightAnchor constraintEqualToConstant:_noteSize],
+        _heightConstraint = [self.heightAnchor constraintEqualToConstant:_noteSize],
       ]];
 
       [self setupGestures];
+      [self tintColorDidChange];
 
       if(_noteBackup) {
         [self backupNotes];
@@ -352,11 +353,7 @@
       if(self.hidden) {
         self.hidden = NO;
 
-        if([self.superview.superview respondsToSelector:@selector(_layoutStackView)]) {
-          [self.superview.superview performSelector:@selector(_layoutStackView)];
-        } else {
-          [self.superview.superview layoutSubviews];
-        }
+        [self forceLockscreenStackViewLayout];
 
         self.transform = CGAffineTransformMakeScale(0.5, 0.5);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -376,16 +373,20 @@
         } completion:^(BOOL finished) {
           self.hidden = YES;
 
-          if([self.superview.superview respondsToSelector:@selector(_layoutStackView)]) {
-            [self.superview.superview performSelector:@selector(_layoutStackView)];
-          } else {
-            [self.superview.superview layoutSubviews];
-          }
+          [self forceLockscreenStackViewLayout];
         }];
 
         [preferences setBool:YES forKey:@"isHidden"];
         return;
       }
+    }
+  }
+
+  -(void)forceLockscreenStackViewLayout {
+    if([self.superview.superview respondsToSelector:@selector(_layoutStackView)]) {
+      [self.superview.superview performSelector:@selector(_layoutStackView)];
+    } else {
+      [self.superview.superview layoutSubviews];
     }
   }
 
@@ -424,6 +425,9 @@
   }
 
   -(void)updateViews {
+    _heightConstraint.constant = _noteSize;
+    [self forceLockscreenStackViewLayout];
+
     if(((_requireAuthentication && _authenticated) || !_requireAuthentication) && self.superview) {
       self.layer.cornerRadius = _cornerRadius;
       self.layer.borderColor = _borderColor.CGColor;
@@ -434,10 +438,10 @@
 
       if([_blurStyle isEqualToString:@"colorized"]) {
         _blurView.alpha = 0;
-        _noteView.backgroundColor = _customBackgroundColor;
+        self.backgroundColor = _customBackgroundColor;
       } else {
         _blurView.alpha = 1;
-        _noteView.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor clearColor];
       }
 
       if([_blurStyle isEqualToString:@"adaptive"] && !_ignoreAdaptiveColors) {
