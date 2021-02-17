@@ -7,7 +7,6 @@
 	UIStackView *_stackView;
 }
 
-
 	-(id)init {
 		self = [super init];
 

@@ -48,7 +48,6 @@ struct SBIconImageInfo {
 @interface BBAction : NSObject
 @property(nonatomic, copy) NSString *identifier;
 +(instancetype)actionWithIdentifier:(NSString *)arg1;
-//-(void)setAppearance:(BBAppearance *)arg1;
 @end
 
 @interface BBSectionIconVariant : NSObject

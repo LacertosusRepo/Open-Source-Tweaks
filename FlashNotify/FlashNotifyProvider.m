@@ -5,13 +5,18 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 7/30/2020.
  * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
-#import "FlashNotifyProvider.h"
+#import <UIKit/UIKit.h>
+#import <os/log.h>
 #import <Cephei/HBPreferences.h>
+#import "FlashNotifyProvider.h"
 
   extern dispatch_queue_t __BBServerQueue;
   extern void BBDataProviderAddBulletin(id<BBDataProvider> dataProvider, BBBulletinRequest *bulletinRequest);
 
-@implementation FlashNotifyProvider
+@implementation FlashNotifyProvider {
+  HBPreferences *_preferences;
+}
+
   +(instancetype)sharedInstance {
     static FlashNotifyProvider *sharedInstance = nil;
     static dispatch_once_t onceToken;
@@ -24,6 +29,8 @@
 
   -(instancetype)init {
     if(self = [super init]) {
+      _preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.flashnotifyprefs"];
+
       BBDataProviderIdentity *identity = [BBDataProviderIdentity identityForDataProvider:self];
       identity.sectionIdentifier = kFlashNotifyBulletinID;
       identity.sectionDisplayName = @"FlashNotify";
@@ -144,7 +151,7 @@
     //https://github.com/hbang/TypeStatus-Plus/blob/422e9c940f1b1aa595cfa8f69c93df25703cb644/springboard/HBTSPlusBulletinProvider.x
   -(void)sendFlashlightNotification {
     [self addDataProviderIfNeccessary];
-    
+
     if(!_bulletinRequest) {
       _bulletinRequest = [[BBBulletinRequest alloc] init];
       _bulletinRequest.header = @"FLASHNOTIFY";
@@ -192,8 +199,7 @@
   -(void)createMotionManager {
     _motionManager = [[CMMotionManager alloc] init];
 
-    HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.flashnotifyprefs"];
-    [preferences setBool:_motionManager.accelerometerAvailable forKey:@"hasAccelerometer"];
+    [_preferences setBool:_motionManager.accelerometerAvailable forKey:@"hasAccelerometer"];
   }
 
   -(void)startMonitoringAccelerometer {
@@ -242,19 +248,18 @@
 #pragma mark - Preferences
 
   -(void)updatePreferences {
-    HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.flashnotifyprefs"];
-    _unpluggedNotificationDelay = [preferences integerForKey:@"unpluggedNotificationDelay"];
-    _notifyWhileCharging = [preferences integerForKey:@"notifyWhileCharging"];
-    _chargingNotificationDelay = [preferences integerForKey:@"chargingNotificationDelay"];
+    _unpluggedNotificationDelay = [_preferences integerForKey:@"unpluggedNotificationDelay"];
+    _notifyWhileCharging = [_preferences integerForKey:@"notifyWhileCharging"];
+    _chargingNotificationDelay = [_preferences integerForKey:@"chargingNotificationDelay"];
 
-    _useAccelerometerType = [preferences integerForKey:@"useAccelerometerType"];
-    _faceUpDelay = [preferences integerForKey:@"faceUpDelay"];
-    _faceDownDelay = [preferences integerForKey:@"faceDownDelay"];
+    _useAccelerometerType = [_preferences integerForKey:@"useAccelerometerType"];
+    _faceUpDelay = [_preferences integerForKey:@"faceUpDelay"];
+    _faceDownDelay = [_preferences integerForKey:@"faceDownDelay"];
 
-    _autoDisableFlashlight = [preferences boolForKey:@"autoDisableFlashlight"];
-    _maxFlashlightDuration = [preferences integerForKey:@"maxFlashlightDuration"];
+    _autoDisableFlashlight = [_preferences boolForKey:@"autoDisableFlashlight"];
+    _maxFlashlightDuration = [_preferences integerForKey:@"maxFlashlightDuration"];
 
-    _notificationIconStyle = [preferences objectForKey:@"notificationIconStyle"];
+    _notificationIconStyle = [_preferences objectForKey:@"notificationIconStyle"];
   }
 
 @end

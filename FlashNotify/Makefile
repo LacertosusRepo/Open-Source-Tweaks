@@ -10,7 +10,7 @@ INSTALL_TARGET_PROCESSES = SpringBoard
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = FlashNotify
-FlashNotify_FILES = Tweak.x FlashNotifyProvider.m
+FlashNotify_FILES = $(wildcard *.m) $(wildcard *.x)
 FlashNotify_FRAMEWORKS = CoreMotion
 FlashNotify_PRIVATE_FRAMEWORKS = BulletinBoard
 FlashNotify_EXTRA_FRAMEWORKS += Cephei

@@ -10,7 +10,12 @@
 #import "FNPHeaderView.h"
 #import "PreferencesColorDefinitions.h"
 
+@interface PSListController (Private)
+-(BOOL)containsSpecifier:(PSSpecifier *)arg1;
+@end
+
 @interface FNPRootListController : HBRootListController
+@property (nonatomic, retain) NSMutableDictionary *savedSpecifiers;
 @property (nonatomic, retain) UIBarButtonItem *respringApplyButton;
 @property (nonatomic, retain) UIBarButtonItem *respringConfirmButton;
 @end

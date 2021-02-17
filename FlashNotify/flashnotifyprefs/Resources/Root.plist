@@ -7,8 +7,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Change the notifcation delay while the device is charging. If this is disabled the normal delay will be used.</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
@@ -39,6 +37,12 @@
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>FNPSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>This option allows for an alternative notifcation delay for when the device is charging. When disabled the normal notifcation deley will be used.</string>
 			<key>default</key>
 			<true/>
 			<key>defaults</key>
@@ -49,6 +53,8 @@
 			<string>Charging Notifcation Delay</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>ChargingNotificationDelaySwitch</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -65,15 +71,17 @@
 			<string>Set Charging Notification Delay</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>chargingNotificationDelay</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Accelerometer Flashlight Detection</string>
+			<string>Device Orientation</string>
 			<key>id</key>
-			<string>AccelerometerFlashlightDetection</string>
+			<string>DeviceOrientation</string>
 			<key>footerText</key>
 			<string>Disabled flashlight after sitting face down/up for a specified amount of time. Requires a respring.</string>
 		</dict>
@@ -105,7 +113,7 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>AccelerometerType</string>
+			<string>useAccelerometerType</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -149,12 +157,16 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Flashlight Max Time Limit</string>
-			<key>footerText</key>
-			<string>Disable flashlight automatically after a specified amount of time.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>FNPSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>This option disables the flashlight automatically after a specified amount of time.</string>
 			<key>default</key>
 			<true/>
 			<key>defaults</key>
@@ -162,9 +174,11 @@
 			<key>key</key>
 			<string>autoDisableFlashlight</string>
 			<key>label</key>
-			<string>Auto Disable Flashlight</string>
+			<string>Auto-Disable Flashlight</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>Auto-DisableFlashlight</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -178,9 +192,11 @@
 			<key>key</key>
 			<string>maxFlashlightDuration</string>
 			<key>label</key>
-			<string>Set Auto Disable Delay</string>
+			<string>Set Auto-Disable Delay</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>maxFlashlightDuration</string>
 		</dict>
 
 		<dict>
@@ -206,8 +222,8 @@
 			<string>darkIcon</string>
 			<key>validTitles</key>
 			<array>
-				<string>/Library/PreferenceBundles/flashnotifyprefs.bundle/icon~dark.png</string>
-				<string>/Library/PreferenceBundles/flashnotifyprefs.bundle/icon.png</string>
+				<string>icon~dark.png</string>
+				<string>icon.png</string>
 			</array>
 			<key>validValues</key>
 			<array>
@@ -216,8 +232,6 @@
 			</array>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.flashnotifyprefs/ReloadPrefs</string>
-			<key>height</key>
-			<real>60</real>
 		</dict>
 		<dict>
 			<key>cell</key>

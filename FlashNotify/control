@@ -1,10 +1,10 @@
 Package: com.lacertosusrepo.flashnotify
 Name: FlashNotify
 Depends: mobilesubstrate, ws.hbang.common (>= 1.13)
-Version: 1.0
+Version: 1.0.2
 Architecture: iphoneos-arm
-Description: If you're seeing this, I forgot to add a description...
+Description: Don't forget your flashlight is on...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
 Author: LacertosusDeus <LacertosusThemes@gmail.com>
 Section: Tweaks
-Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.beta/
+Depiction: https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.flashnotify/

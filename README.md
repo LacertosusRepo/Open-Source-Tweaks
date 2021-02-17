@@ -24,7 +24,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | EinsteinVibes | 10 - 14 | v1.1 | arm64 arm64e | | Vibrate calculator buttons |
 | ExampleCepheiProject | 13 | v1.0 | arm64 arm64e | ✔ | Example project that uses Cephei |
 | FLEX4Me | 11 - 12 | v1.2 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
-| FlashNotify | 13 - 14 | v1.0 | arm64 arm64e | | Notify user when flashlight has been on for too long |
+| FlashNotify | 13 - 14 | v1.0.1 | arm64 arm64e | | Notify user when flashlight has been on for too long |
 | Free Market | 13 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
 | Imperium | 11 - 12 | v2.0.2 | arm64 arm64e | ✔ | Music gestures in the now playing widget |
 | Improvify | 11 - 12 | v1.4.6 | arm64 arm64e | ✔ | Improved Spotify features |

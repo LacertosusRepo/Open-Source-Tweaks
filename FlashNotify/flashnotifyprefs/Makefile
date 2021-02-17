@@ -1,12 +1,12 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = flashnotifyprefs
-flashnotifyprefs_FILES = FNPRootListController.m FNPTimeIntervalPickerCell.m FNPSegmentTableImageCell.m FNPHeaderView.m
+flashnotifyprefs_FILES = $(wildcard *.m)
 flashnotifyprefs_INSTALL_PATH = /Library/PreferenceBundles
 flashnotifyprefs_FRAMEWORKS = UIKit
 flashnotifyprefs_PRIVATE_FRAMEWORKS = Preferences
 flashnotifyprefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
-flashnotifyprefs_CFLAGS = -fobjc-arc
+flashnotifyprefs_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 
