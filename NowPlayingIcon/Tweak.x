@@ -5,6 +5,9 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 5/8/2020.
  * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
+#import <UIKit/UIKit.h>
+#import <os/log.h>
+#import "MediaRemote.h"
 #import "NowPlayingIcon.h"
 
   SBApplicationIcon *appIcon;
@@ -35,7 +38,7 @@ void nowPlayingInfoDidChange() {
 }
 
 %hook SBIconController
-  -(id)initWithApplicationController:(id)arg1 applicationPlaceholderController:(id)arg2 userInterfaceController:(id)arg3 policyAggregator:(id)arg4 alertItemsController:(id)arg5 assistantController:(id)arg6 {
+  -(instancetype)initWithApplicationController:(id)arg1 applicationPlaceholderController:(id)arg2 userInterfaceController:(id)arg3 policyAggregator:(id)arg4 alertItemsController:(id)arg5 assistantController:(id)arg6 {
       //the-casle ♥ Straw
       //https://github.com/the-casle/straw/blob/master/TCMediaNotificationController.mm#L214-L220
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, nowPlayingInfoDidChange, (__bridge CFStringRef)@"com.apple.springboard.nowPlayingAppChanged", NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
@@ -102,7 +105,18 @@ void nowPlayingInfoDidChange() {
 %end
 
 %hook SBIconImageCrossfadeView
-  -(id)initWithImageView:(SBIconImageView *)arg1 crossfadeView:(UIView *)arg2 {
+  //iOS 13
+  -(instancetype)initWithImageView:(SBIconImageView *)arg1 crossfadeView:(UIView *)arg2 {
+    SBIcon *icon = [arg1 icon];
+    if([[icon applicationBundleID] isEqualToString:nowPlayingApp.bundleIdentifier] && maskedArtwork) {
+      arg1.layer.contents = (id)maskedArtwork.CGImage;
+    }
+
+    return %orig;
+  }
+
+  //iOS 14
+  -(instancetype)initWithSource:(SBIconImageView *)arg1 crossfadeView:(UIView *)arg2 {
     SBIcon *icon = [arg1 icon];
     if([[icon applicationBundleID] isEqualToString:nowPlayingApp.bundleIdentifier] && maskedArtwork) {
       arg1.layer.contents = (id)maskedArtwork.CGImage;

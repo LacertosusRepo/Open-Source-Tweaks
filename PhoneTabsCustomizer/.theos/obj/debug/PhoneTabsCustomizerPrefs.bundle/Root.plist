@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
+			<key>iconURL</key>
+			<string>https://avatars2.githubusercontent.com/u/14306024?v=4</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs</string>
+			<key>key</key>
+			<string>showFavorites</string>
+			<key>label</key>
+			<string>Show Favorites Tab</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs</string>
+			<key>key</key>
+			<string>showRecents</string>
+			<key>label</key>
+			<string>Show Recents Tab</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs</string>
+			<key>key</key>
+			<string>showContacts</string>
+			<key>label</key>
+			<string>Show Contacts Tab</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs</string>
+			<key>key</key>
+			<string>showKeypad</string>
+			<key>label</key>
+			<string>Show Keypad Tab</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs</string>
+			<key>key</key>
+			<string>showVoicemail</string>
+			<key>label</key>
+			<string>Show Voicemail Tab</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.phonetabscustomizerprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Support</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Github</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
+			<key>icon</key>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Donate</string>
+			<key>subtitle</key>
+			<string>Fund my next ski trip!</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerAlignment</key>
+			<integer>1</integer>
+			<key>footerText</key>
+			<string>PhoneTabsCustomizer
+LacertosusDeus</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
