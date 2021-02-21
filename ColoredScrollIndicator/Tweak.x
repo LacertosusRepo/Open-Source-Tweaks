@@ -5,13 +5,16 @@
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 5/5/2020.
  * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
+#import <UIKit/UIKit.h>
 @import Alderis;
 #import "AlderisColorPicker.h"
 #import <Cephei/HBPreferences.h>
+#import <os/log.h>
 #define LD_DEBUG NO
 
 @interface _UIScrollViewScrollIndicator : UIView
 @property (nonatomic, retain) UIView *roundedFillView;
+@property (nonatomic, retain) CAGradientLayer *gradient;
 @end
 
 @interface UIView (iOS13)
@@ -32,44 +35,46 @@
   static NSString *gradientBorderColor;
 
 %hook _UIScrollViewScrollIndicator
+%property (nonatomic, retain) CAGradientLayer *gradient;
   -(UIView *)roundedFillView {
-    UIView *scroller = %orig;
-    scroller.backgroundColor = [UIColor clearColor];
+    %orig.backgroundColor = [UIColor clearColor];
 
     one = [UIColor PF_colorWithHex:gradientColorOne];
     two = [UIColor PF_colorWithHex:gradientColorTwo];
     border = [UIColor PF_colorWithHex:gradientBorderColor];
 
-    if([scroller.layer.sublayers count] == 0) {
-      CAGradientLayer *gradient = [CAGradientLayer layer];
-      gradient.startPoint = CGPointMake(0.5, 0.0);
-      gradient.endPoint = CGPointMake(0.5, 1.0);
-      gradient.colors = @[(id)one.CGColor, (id)two.CGColor];
-      gradient.opacity = gradientAlpha;
-      gradient.cornerRadius = gradientCornerRadius;
-      gradient.borderColor = border.CGColor;
-      gradient.borderWidth = gradientBorderWidth;
-      [scroller.layer addSublayer:gradient];
+    if(!self.gradient) {
+      self.gradient = [CAGradientLayer layer];
+      self.gradient.startPoint = CGPointMake(0.5, 0.0);
+      self.gradient.endPoint = CGPointMake(0.5, 1.0);
+      self.gradient.colors = @[(id)one.CGColor, (id)two.CGColor];
+      self.gradient.opacity = gradientAlpha;
+      self.gradient.cornerRadius = gradientCornerRadius;
+      self.gradient.borderColor = border.CGColor;
+      self.gradient.borderWidth = gradientBorderWidth;
+      [%orig.layer addSublayer:self.gradient];
     }
 
-    return scroller;
+    return %orig;
   }
 
   -(void)layoutSubviews {
     %orig;
 
-    for(CAGradientLayer *gradient in self.roundedFillView.layer.sublayers) {
-      gradient.frame = self.roundedFillView.bounds;
-    }
+    self.gradient.frame = self.roundedFillView.bounds;
   }
 %end
 
 %ctor {
-  HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.coloredscrollindicatorprefs"];
-  [preferences registerObject:&gradientColorOne default:@"#8693AB" forKey:@"gradientColorOne"];
-  [preferences registerObject:&gradientColorTwo default:@"#BDD4E7" forKey:@"gradientColorTwo"];
-  [preferences registerFloat:&gradientAlpha default:0.5 forKey:@"gradientAlpha"];
-  [preferences registerFloat:&gradientCornerRadius default:1.5 forKey:@"gradientCornerRadius"];
-  [preferences registerFloat:&gradientBorderWidth default:0 forKey:@"gradientBorderWidth"];
-  [preferences registerObject:&gradientBorderColor default:@"#FFFFFF" forKey:@"gradientBorderColor"];
+  os_log(OS_LOG_DEFAULT, "%@", [[[NSProcessInfo processInfo] arguments] objectAtIndex:0]);
+  if([[[[NSProcessInfo processInfo] arguments] objectAtIndex:0] containsString:@".app"]) {
+    HBPreferences *preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.coloredscrollindicatorprefs"];
+    [preferences registerObject:&gradientColorOne default:@"#8693AB" forKey:@"gradientColorOne"];
+    [preferences registerObject:&gradientColorTwo default:@"#BDD4E7" forKey:@"gradientColorTwo"];
+    [preferences registerFloat:&gradientAlpha default:0.5 forKey:@"gradientAlpha"];
+    [preferences registerFloat:&gradientCornerRadius default:1.5 forKey:@"gradientCornerRadius"];
+    [preferences registerFloat:&gradientBorderWidth default:0 forKey:@"gradientBorderWidth"];
+    [preferences registerObject:&gradientBorderColor default:@"#FFFFFF" forKey:@"gradientBorderColor"];
+    %init;
+  }
 }

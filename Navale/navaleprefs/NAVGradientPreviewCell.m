@@ -15,7 +15,6 @@
       _gradient = [CAGradientLayer layer];
       _gradient.startPoint = CGPointMake(0.0, 0.5);
       _gradient.endPoint = CGPointMake(1.0, 0.5);
-      //_gradient.colors = @[(id)[UIColor clearColor].CGColor, (id)[UIColor clearColor].CGColor];
       _gradient.opacity = 1.0;
       _gradient.cornerRadius = 5;
       _gradient.borderColor = ([UIColor respondsToSelector:@selector(labelColor)]) ? [UIColor opaqueSeparatorColor].CGColor : [UIColor systemGrayColor].CGColor;
@@ -42,8 +41,8 @@
 
   -(void)updatePreviewGradient {
     if(_preferences) {
-      _one = [UIColor PF_colorWithHex:[_preferences objectForKey:@"colorOneString"]];
-      _two = [UIColor PF_colorWithHex:[_preferences objectForKey:@"colorTwoString"]];
+      _one = ([UIColor PF_colorWithHex:[_preferences objectForKey:@"colorOneString"]]) ? [UIColor PF_colorWithHex:[_preferences objectForKey:@"colorOneString"]] : [UIColor clearColor];
+      _two = ([UIColor PF_colorWithHex:[_preferences objectForKey:@"colorTwoString"]]) ? [UIColor PF_colorWithHex:[_preferences objectForKey:@"colorTwoString"]] : [UIColor clearColor];
       _border = [UIColor PF_colorWithHex:[_preferences objectForKey:@"borderColorString"]];
       _gradient.colors = @[(id)_one.CGColor, (id)_two.CGColor];
       _gradient.opacity = [_preferences floatForKey:@"dockAlpha"];

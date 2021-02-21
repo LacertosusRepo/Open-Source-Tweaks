@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.dockindicators
 Name: Dock Indicators
 Depends: mobilesubstrate, ws.hbang.common (>= 1.16), ws.hbang.alderis (>= 1.1)
-Version: 1.0.4
+Version: 1.0.6
 Architecture: iphoneos-arm
 Description: Running indicators under apps in the dock...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

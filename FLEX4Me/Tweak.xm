@@ -34,7 +34,7 @@
 %end
 
 %ctor {
-  NSString *flexPath = @"/Library/Application Support/FLEXible/FLEX.dylib";
+  NSString *flexPath = @"/usr/lib/FLEXible/FLEX.dylib";
 
   /*
    * Check for the FLEX dylib, then load it

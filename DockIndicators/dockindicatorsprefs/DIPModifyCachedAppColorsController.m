@@ -32,8 +32,7 @@
 				PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:nil target:self set:nil get:nil detail:nil cell:PSStaticTextCell edit:nil];
 				[specifier setProperty:@YES forKey:@"enabled"];
 				[specifier setProperty:@44 forKey:@"height"];
-				[specifier setProperty:[DIPAppColorCell class] forKey:@"cellClass"];
-				[specifier setProperty:self forKey:@"delegate"];
+        [specifier setProperty:[DIPAppColorCell class] forKey:@"cellClass"];
 				[specifier setProperty:bundleID forKey:@"bundleID"];
 				[specifier setProperty:_cachedAppColors[bundleID] forKey:@"hexColor"];
 				[appColorSpecifiers addObject:specifier];

@@ -1,13 +1,13 @@
-#import "CIPHeaderCell.h"
+#import "IMPHeaderCell.h"
 
-@implementation CIPHeaderCell
+@implementation IMPHeaderCell
 
 	-(id)init {
 		self = [super initWithFrame:CGRectZero];
 
 		if(self) {
 			//Add icon over labels (150x150)
-			UIImageView *tweakIcon = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/coloredscrollindicatorprefs.bundle/iconlarge.png"]];
+			UIImageView *tweakIcon = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/imperiumprefs.bundle/iconlarge.png"]];
 			self.iconView = tweakIcon;
 			self.iconView.alpha = 0;
 			self.iconView.center = CGPointMake(self.bounds.size.width/2, 0);
@@ -16,8 +16,8 @@
 			self.titleLabel = tweakTitle;
 			self.titleLabel.alpha = 0;
       [self.titleLabel setNumberOfLines:1];
-      [self.titleLabel setFont:[UIFont systemFontOfSize:35 weight:UIFontWeightSemibold]];
-      [self.titleLabel setText:@"ColoredScrollIndicator"];
+      [self.titleLabel setFont:[UIFont systemFontOfSize:40 weight:UIFontWeightSemibold]];
+      [self.titleLabel setText:@"Imperium"];
       [self.titleLabel setBackgroundColor:[UIColor clearColor]];
       [self.titleLabel setTextColor:Pri_Color];
       [self.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -58,28 +58,11 @@
 			]];
 		}
 
-		[self addInterpolatingMotion];
-
 		return self;
 	}
 
-	-(void)addInterpolatingMotion {
-		UIInterpolatingMotionEffect *horizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-		horizontal.minimumRelativeValue = @-5;
-		horizontal.maximumRelativeValue = @5;
-
-		UIInterpolatingMotionEffect *vertical = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-		vertical.minimumRelativeValue = @-5;
-		vertical.maximumRelativeValue = @5;
-
-		UIMotionEffectGroup *effectsGroup = [[UIMotionEffectGroup alloc] init];
-		effectsGroup.motionEffects = @[horizontal, vertical];
-
-		[self addMotionEffect:effectsGroup];
-	}
-
 	-(NSArray *)randomLabels {
-		return @[@"X Æ A-12", @"😷", @"When you"];
+		return @[@"Slide to the left", @"HONK", @"Open source on GitHub!"];
 	}
 
 	-(void)didMoveToSuperview {

@@ -16,7 +16,7 @@
     if(self) {
       _hexColor = [specifier propertyForKey:@"hexColor"];
       _bundleID = [specifier propertyForKey:@"bundleID"];
-      _delegate = [specifier propertyForKey:@"delegate"];
+      _delegate = specifier.target;
 
       self.contentView.backgroundColor = [UIColor PF_colorWithHex:_hexColor];
 

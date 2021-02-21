@@ -35,8 +35,7 @@
 		}
 
 		//Adds respring button in top right of preference pane
-		UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respring)];
-		self.navigationItem.rightBarButtonItem = respringButton;
+		[self respringApply];
 
 		//Adds header to table
 		UIView *CIPHeaderView = [[CIPHeaderCell alloc] init];
@@ -58,12 +57,24 @@
 		[super viewDidAppear:animated];
 	}
 
-	-(void)respring {
-		[HBRespringController respring];
+	-(void)respringApply {
+		_respringApplyButton = (_respringApplyButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+		_respringApplyButton.tintColor = Sec_Color;
+		[self.navigationItem setRightBarButtonItem:_respringApplyButton animated:YES];
 	}
 
-	-(IBAction)webButtonAction {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString: @"https://github.com/LacertosusRepo"] options:@{} completionHandler:nil];
+	-(void)respringConfirm {
+		if([self.navigationItem.rightBarButtonItem isEqual:_respringConfirmButton]) {
+			[HBRespringController respring];
+		} else {
+			_respringConfirmButton = (_respringConfirmButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
+			_respringConfirmButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
+			[self.navigationItem setRightBarButtonItem:_respringConfirmButton animated:YES];
+
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+				[self respringApply];
+			});
+		}
 	}
 
 	//https://github.com/Nepeta/Axon/blob/master/Prefs/Preferences.m

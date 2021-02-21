@@ -7,44 +7,40 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>headerCellClass</key>
-			<string>ImperiumCustomHeaderCell</string>
-			<key>footerText</key>
-			<string>Applications must be restarted after enabling.</string>
+			<key>label</key>
+			<string>Feedback</string>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSLinkCell</string>
-			<key>detail</key>
-			<string>ImperiumHideItemsListController</string>
-			<key>isController</key>
-			<true/>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>feedbackForce</string>
 			<key>label</key>
-			<string>Hide Items</string>
-			<key>icon</key>
-			<string>hideitems.png</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkCell</string>
-			<key>detail</key>
-			<string>ImperiumApplicationsListController</string>
-			<key>isController</key>
-			<true/>
-			<key>label</key>
-			<string>Enable in Applications</string>
-			<key>icon</key>
-			<string>applist.png</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>killApplications</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>ImperiumButtonCell</string>
-			<key>label</key>
-			<string>Restart Apps</string>
+			<string>Feedback</string>
+			<key>default</key>
+			<string>0</string>
+			<key>validTitles</key>
+			<array>
+				<string>Non-Haptic</string>
+				<string>None</string>
+				<string>Light</string>
+				<string>Medium</string>
+				<string>Heavy</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>5</string>
+				<string>4</string>
+				<string>0</string>
+				<string>1</string>
+				<string>2</string>
+			</array>
+			<key>id</key>
+			<string>ModeCell</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
@@ -59,89 +55,13 @@
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>default</key>
-			<string>1</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.imperiumprefs</string>
-			<key>key</key>
-			<string>doubleTap</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
-			<key>label</key>
-			<string>Double Tap Action</string>
-			<key>validTitles</key>
-				<array>
-					<string>None</string>
-					<string>Play/Pause</string>
-					<string>Skip Forward</string>
-					<string>Skip Back</string>
-					<string>Open Now Playing</string>
-					<string>Increase Volume</string>
-					<string>Decrease Volume</string>
-					<string>Toggle Mute</string>
-				</array>
-			<key>validValues</key>
-				<array>
-					<string>0</string>
-					<string>1</string>
-					<string>2</string>
-					<string>3</string>
-					<string>4</string>
-					<string>5</string>
-					<string>6</string>
-					<string>7</string>
-				</array>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>default</key>
-			<string>2</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.imperiumprefs</string>
-			<key>key</key>
-			<string>rightSwipe</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
-			<key>label</key>
-			<string>Right Swipe Action</string>
-			<key>validTitles</key>
-				<array>
-					<string>None</string>
-					<string>Play/Pause</string>
-					<string>Skip Forward</string>
-					<string>Skip Back</string>
-					<string>Open Now Playing</string>
-					<string>Increase Volume</string>
-					<string>Decrease Volume</string>
-					<string>Toggle Mute</string>
-				</array>
-			<key>validValues</key>
-				<array>
-					<string>0</string>
-					<string>1</string>
-					<string>2</string>
-					<string>3</string>
-					<string>4</string>
-					<string>5</string>
-					<string>6</string>
-					<string>7</string>
-				</array>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>default</key>
 			<string>3</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.imperiumprefs</string>
 			<key>key</key>
-			<string>leftSwipe</string>
+			<string>leftSwipeCommand</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
 			<key>label</key>
 			<string>Left Swipe Action</string>
 			<key>validTitles</key>
@@ -173,245 +93,257 @@
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>default</key>
-			<string>0</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.imperiumprefs</string>
-			<key>key</key>
-			<string>upSwipe</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
-			<key>label</key>
-			<string>Up Swipe Action</string>
-			<key>validTitles</key>
-			<array>
-				<string>None</string>
-				<string>Play/Pause</string>
-				<string>Skip Forward</string>
-				<string>Skip Back</string>
-				<string>Open Now Playing</string>
-				<string>Increase Volume</string>
-				<string>Decrease Volume</string>
-				<string>Toggle Mute</string>
-			</array>
-		<key>validValues</key>
-			<array>
-				<string>0</string>
-				<string>1</string>
-				<string>2</string>
-				<string>3</string>
-				<string>4</string>
-				<string>5</string>
-				<string>6</string>
-				<string>7</string>
-			</array>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>default</key>
-			<string>0</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.imperiumprefs</string>
-			<key>key</key>
-			<string>downSwipe</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
-			<key>label</key>
-			<string>Down Swipe Action</string>
-			<key>validTitles</key>
-			<array>
-				<string>None</string>
-				<string>Play/Pause</string>
-				<string>Skip Forward</string>
-				<string>Skip Back</string>
-				<string>Open Now Playing</string>
-				<string>Increase Volume</string>
-				<string>Decrease Volume</string>
-				<string>Toggle Mute</string>
-			</array>
-		<key>validValues</key>
-			<array>
-				<string>0</string>
-				<string>1</string>
-				<string>2</string>
-				<string>3</string>
-				<string>4</string>
-				<string>5</string>
-				<string>6</string>
-				<string>7</string>
-			</array>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>default</key>
 			<string>4</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.imperiumprefs</string>
 			<key>key</key>
-			<string>longPress</string>
+			<string>rightSwipeCommand</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Right Swipe Action</string>
+			<key>validTitles</key>
+				<array>
+					<string>None</string>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>0</string>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
+				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>0</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>upSwipeCommand</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Up Swipe Action</string>
+			<key>validTitles</key>
+				<array>
+					<string>None</string>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>0</string>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
+				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>0</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>downSwipeCommand</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Down Swipe Action</string>
+			<key>validTitles</key>
+				<array>
+					<string>None</string>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>0</string>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
+				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>1</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>tapGestureCommand</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
+			<key>label</key>
+			<string>Double Tap Action</string>
+			<key>validTitles</key>
+				<array>
+					<string>None</string>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>0</string>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
+				</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>default</key>
+			<string>0</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>key</key>
+			<string>longPressGesture</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
 			<key>label</key>
 			<string>Long Press Action</string>
 			<key>validTitles</key>
-			<array>
-				<string>None</string>
-				<string>Play/Pause</string>
-				<string>Skip Forward</string>
-				<string>Skip Back</string>
-				<string>Open Now Playing</string>
-				<string>Increase Volume</string>
-				<string>Decrease Volume</string>
-				<string>Toggle Mute</string>
-			</array>
-		<key>validValues</key>
-			<array>
-				<string>0</string>
-				<string>1</string>
-				<string>2</string>
-				<string>3</string>
-				<string>4</string>
-				<string>5</string>
-				<string>6</string>
-				<string>7</string>
-			</array>
+				<array>
+					<string>None</string>
+					<string>Play/Pause</string>
+					<string>Skip Forward</string>
+					<string>Skip Back</string>
+					<string>Open Now Playing</string>
+					<string>Increase Volume</string>
+					<string>Decrease Volume</string>
+					<string>Toggle Mute</string>
+				</array>
+			<key>validValues</key>
+				<array>
+					<string>0</string>
+					<string>1</string>
+					<string>2</string>
+					<string>3</string>
+					<string>4</string>
+					<string>5</string>
+					<string>6</string>
+					<string>7</string>
+				</array>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Long Press Time (s)</string>
-			<key>footerText</key>
-			<string>This value changes how long you need to hold to activate long press.</string>
+			<string>Long Press Duration</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSliderCell</string>
 			<key>default</key>
-			<string>2.0</string>
+			<string>0.75</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.imperiumprefs</string>
+			<key>label</key>
+			<string>Duration</string>
 			<key>min</key>
 			<string>0.5</string>
 			<key>max</key>
-			<string>2.5</string>
+			<string>3.0</string>
+			<key>isSegmented</key>
+			<true/>
 			<key>showValue</key>
 			<true/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.imperiumprefs</string>
 			<key>key</key>
-			<string>longPressTime</string>
-			<key>label</key>
-			<string>Long Press Time</string>
-			<key>leftImage</key>
-			<string>slidericon.png</string>
+			<string>longPressDuration</string>
 			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
-		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Vibration</string>
-			<key>footerText</key>
-			<string>There's little diference in these, but thought I would give you the option anyway.</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSegmentCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.imperiumprefs</string>
-			<key>key</key>
-			<string>feedbackOption</string>
-			<key>label</key>
-			<string>Vibration</string>
-			<key>default</key>
-			<string>0</string>
-			<key>validTitles</key>
-			<array>
-				<string>None</string>
-				<string>Light</string>
-				<string>Medium</string>
-				<string>Heavy</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<string>3</string>
-				<string>0</string>
-				<string>1</string>
-				<string>2</string>
-			</array>
-			<key>id</key>
-			<string>ModeCell</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.imperiumprefs/preferences.changed</string>
+			<string>com.lacertosusrepo.imperiumprefs/ReloadPrefs</string>
 		</dict>
 
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Problems with Imperium? Resetting preferences may fix the problem.</string>
+			<string>Made with all natural ingredients by LacertosusDeus</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>resetSettings</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>ImperiumButtonCell</string>
+			<string>HBTwitterCell</string>
 			<key>label</key>
-			<string>Reset Settings</string>
-		</dict>
-
-		<dict>
-			<key>label</key>
-			<string>Points of Contact</string>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Created by LacertosusDeus</string>
+			<string>Lacertosus</string>
+			<key>user</key>
+			<string>LacertosusDeus</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>github</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>ImperiumButtonCell</string>
-			<key>icon</key>
-			<string>github.png</string>
+			<string>HBLinkTableCell</string>
 			<key>label</key>
 			<string>Github</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>twitter</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>ImperiumButtonCell</string>
+			<key>subtitle</key>
+			<string>Find the source code here!</string>
 			<key>icon</key>
-			<string>twitter.png</string>
-			<key>label</key>
-			<string>Twitter</string>
+			<string>github.png</string>
+			<key>url</key>
+			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>paypal</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>ImperiumButtonCell</string>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>PayPal</string>
+			<key>subtitle</key>
+			<string>Feed my Steam sale addiction!</string>
 			<key>icon</key>
 			<string>paypal.png</string>
-			<key>label</key>
-			<string>Donate</string>
+			<key>url</key>
+			<string>https://paypal.me/Lacertosus</string>
 		</dict>
 	</array>
 	<key>title</key>

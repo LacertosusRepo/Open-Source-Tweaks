@@ -1,0 +1,9 @@
+Package: com.lacertosusrepo.skipbtforgetconfirmation
+Name: SkipBTForgetConfirmation
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Skip the forget this device confirmation...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks

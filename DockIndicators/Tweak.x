@@ -3,11 +3,12 @@
  * DockIndicators
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 10/9/2020.
- * Copyright © 2019 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2021 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
+#import <os/log.h>
+#import <Cephei/HBPreferences.h>
 @import Alderis;
 #import "AlderisColorPicker.h"
-#import <Cephei/HBPreferences.h>
 #import "DockIndicators.h"
 
     //Global Variables
@@ -130,10 +131,30 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
 
 %hook SBIconView
 %property (nonatomic, retain) UIView *runningIndicator;
+
+  -(instancetype)initWithFrame:(CGRect)arg1 {
+    os_log(OS_LOG_DEFAULT, "DockIndicators - 1");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicator:) name:@"SBApplicationProcessStateDidChange" object:nil];
+
+    return %orig;
+  }
+
+  -(void)_updateLabelAccessoryView {
+    %orig;
+
+    if(self.runningIndicator) {
+      if(self.icon.badgeValue > 0 && ![self.runningIndicator.layer animationForKey:@"indicatorAnimation"] && indicatorAnimationType != DIPNotificationAnimationTypeNone) {
+        [self.runningIndicator.layer addAnimation:animationForType(indicatorAnimationType) forKey:@"indicatorAnimation"];
+
+      } else if(self.icon.badgeValue == 0 && [self.runningIndicator.layer animationForKey:@"indicatorAnimation"]) {
+        [self.runningIndicator.layer removeAnimationForKey:@"indicatorAnimation"];
+      }
+    }
+  }
 %end
 
 %hook SBDockIconListView
-  -(id)initWithModel:(id)arg1 layoutProvider:(id)arg2 iconLocation:(id)arg3 orientation:(long long)arg4 iconViewProvider:(id)arg5 {
+  -(instancetype)initWithModel:(id)arg1 layoutProvider:(id)arg2 iconLocation:(id)arg3 orientation:(long long)arg4 iconViewProvider:(id)arg5 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicators:) name:@"SBApplicationProcessStateDidChange" object:nil];
 
     return %orig;
@@ -142,30 +163,22 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
 %new
   -(void)updateRunningIndicators:(NSNotification *)notification {
     for(SBIconView *iconView in self.subviews) {
-      if(![iconView isKindOfClass:[%c(SBIconView) class]] || iconView.folderIcon || [iconView.icon isKindOfClass:[%c(SBDownloadingIcon) class]]) {
+      if(![iconView isKindOfClass:[%c(SBIconView) class]] || iconView.folderIcon || ![iconView.icon isKindOfClass:[%c(SBApplicationIcon) class]]) {
         continue; //Ignore icon to fix crash for Harbor 3, if the icon is a folder, if the icon is a download/update
       }
 
-      if(!iconView.runningIndicator) {
-        iconView.runningIndicator = [[UIView alloc] initWithFrame:CGRectZero];
+      if(!iconView.runningIndicator || ![iconView.runningIndicator.superview isKindOfClass:[%c(SBIconView) class]]) {
+          //if the iPad dock used by FloatingDockPlus13 or Dock Controller the indicator randomly gets moved to another subview, we move it back to the icon view
+        if(![iconView.runningIndicator.superview isKindOfClass:[%c(SBIconView) class]]) {
+          [iconView.runningIndicator removeFromSuperview];
+        }
+
+        iconView.runningIndicator = iconView.runningIndicator ?: [[UIView alloc] init];
         iconView.runningIndicator.alpha = 0;
         iconView.runningIndicator.layer.shadowOffset = CGSizeZero;
         iconView.runningIndicator.layer.shadowOpacity = 0;
         iconView.runningIndicator.layer.shadowRadius = 3;
         iconView.runningIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-        [iconView addSubview:iconView.runningIndicator];
-
-        [NSLayoutConstraint activateConstraints:@[
-          [iconView.runningIndicator.centerXAnchor constraintEqualToAnchor:iconView.centerXAnchor],
-          [iconView.runningIndicator.topAnchor constraintEqualToAnchor:iconView.bottomAnchor constant:indicatorOffset],
-          [iconView.runningIndicator.widthAnchor constraintEqualToConstant:indicatorWidth],
-          [iconView.runningIndicator.heightAnchor constraintEqualToConstant:indicatorHeight],
-        ]];
-      }
-
-        //if the iPad dock used by FloatingDockPlus13 or Dock Controller the indicator randomly gets moved to another subview, we move it back to the icon view
-      if(![iconView.runningIndicator.superview isKindOfClass:[%c(SBIconView) class]]) {
-        [iconView.runningIndicator removeFromSuperview];
         [iconView addSubview:iconView.runningIndicator];
 
         [NSLayoutConstraint activateConstraints:@[

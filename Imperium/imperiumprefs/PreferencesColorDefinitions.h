@@ -1,5 +1,8 @@
-#define Main_Color [UIColor colorWithRed:39.0f/255.0f green:50.0f/255.0f blue:81.0f/255.0f alpha:1.0f]
-#define Sec_Color [UIColor colorWithRed:255.0f/255.0f green:82.0f/255.0f blue:82.0f/255.0f alpha:1.0f]
-#define Title_Color [UIColor  colorWithRed:25.0f/255.0f green:42.0f/255.0f blue:86.0f/255.0f alpha:1.0f]
-#define Switch_Color [UIColor colorWithRed:255.0f/255.0f green:82.0f/255.0f blue:82.0f/255.0f alpha:1.0f]
-#define Button_Color [UIColor colorWithRed:255.0f/255.0f green:82.0f/255.0f blue:82.0f/255.0f alpha:1.0f]
+  //Primary Color (Navigation BG, Title)
+#define Pri_Color [UIColor colorWithRed:0.15 green:0.20 blue:0.32 alpha:1.0]
+
+  //Secondary Color (Interactables, Status Bar)
+#define Sec_Color [UIColor colorWithRed:1.0 green:0.32 blue:0.32 alpha:1.0]
+
+  //Alternate Color
+#define Alt_Color [UIColor colorWithRed:0.50 green:0.55 blue:0.55 alpha:1.0]

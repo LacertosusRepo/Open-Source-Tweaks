@@ -1,17 +1,12 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSSpecifier.h>
+#import <CepheiPrefs/HBRootListController.h>
+#import <CepheiPrefs/HBAppearanceSettings.h>
+#import <Cephei/HBPreferences.h>
 
-@interface IMPRootListController : PSListController
-@end
+#import "IMPHeaderCell.h"
+#import "PreferencesColorDefinitions.h"
 
-@interface ImperiumApplicationsListController : PSListController
-@end
-
-@interface ImperiumHideItemsListController : PSListController
-@end
-
-@interface ImperiumCustomHeaderCell : UIView
-@property (nonatomic,assign) UILabel *headerLabel;
-@property (nonatomic,assign) UILabel *subHeaderLabel;
+@interface IMPRootListController : HBRootListController
 @end

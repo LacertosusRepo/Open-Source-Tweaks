@@ -31,6 +31,10 @@
 		[super layoutSubviews];
 
 		[self.control setFrame:CGRectOffset(self.control.frame, 0, ((((self.control.frame.size.height + _sliderLabel.frame.size.height) / 2) - (self.contentView.frame.size.height / 2)) + self.control.frame.origin.y))];
+
+		for(UILabel *label in self.control.subviews) {
+			[label sizeToFit];
+		}
 	}
 
 @end

@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.navale
 Name: Navale
-Depends: mobilesubstrate, ws.hbang.common (>= 1.11). ws.hbang.alderis
-Version: 2.2.6
+Depends: mobilesubstrate, ws.hbang.common (>= 1.11), ws.hbang.alderis (>= 1.0)
+Version: 2.2.7
 Architecture: iphoneos-arm
 Description: Add a gradient to your dock...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
