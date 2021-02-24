@@ -35,7 +35,7 @@ These tweaks show how (horrifically) new at programming I am, but some people mi
 | Mea | 10 - 11 | v1.0 | arm64 | | Hide security codes on the lockscreen |
 | Navale | 10 - 14 | v2.2.7 | arm64 arm64e | | Gradient dock background |
 | NoNut | 10 - 11 | v1.1 | arm64 | ✔ | Popup notification when opening incognito tab |
-| NowPlayingIcon | 13 - 14 | v1.2.1 | arm64 arm64e | | Replace now playing app icon with album art |
+| NowPlayingIcon | 13 - 14 | v1.3 | arm64 arm64e | | Replace now playing app icon with album art |
 | PhoneTabsCustomizer | 10 - 14 | v1.0 | arm64 arm64e | | Toggle tabs in the phone app |
 | RecentsHue | 13 | v1.0 | arm64 arm64e | ✔ | Color indicators on recent call list based on type of call |
 | Return2Sender2 | 11 - 12 | v1.0 | arm64 arm64e | | Return button to send (buggy) |

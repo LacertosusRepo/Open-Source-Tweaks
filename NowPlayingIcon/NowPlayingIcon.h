@@ -1,18 +1,4 @@
-/*
- * NowPlayingIcon.h
- * NowPlayingIcon
- *
- * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 5/8/2020.
- * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
- */
-//#import <Cephei/HBPreferences.h>
-#import "MediaRemote.h"
-
-struct SBIconImageInfo {
-    CGSize size;
-    CGFloat scale;
-    CGFloat continuousCornerRadius;
-};
+#import <UIKit/UIKit.h>
 
 @interface __NSSingleObjectArrayI : NSArray
 @end
@@ -50,7 +36,6 @@ struct SBIconImageInfo {
 @end
 
 @interface SBHIconImageCache : NSObject
-@property (nonatomic, readonly) struct SBIconImageInfo iconImageInfo;
 @property (nonatomic, readonly) UIImage *overlayImage;
 -(void)cacheImage:(UIImage *)arg1 forIcon:(SBApplicationIcon *)arg2;
 -(void)notifyObserversOfUpdateForIcon:(SBApplicationIcon *)arg1;
@@ -76,5 +61,5 @@ struct SBIconImageInfo {
 +(instancetype)sharedInstance;
 
   //NowPlayingIcon
--(void)setNowPlayingArtworkForApp:(SBApplication *)app;
+-(void)setNowPlayingArtworkForApp:(SBApplicationIcon *)appIcon withArtwork:(UIImage *)artwork;
 @end
