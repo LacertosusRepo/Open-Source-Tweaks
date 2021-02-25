@@ -8,32 +8,31 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 	UIStackView *_stackView;
 }
 
-	-(instancetype)init {
+	-(instancetype)initWithTitle:(NSString *)title subtitles:(NSArray *)subtitles bundle:(NSBundle *)bundle {
 		self = [super init];
 
 		if(self) {
-				//Add icon above labels (150x150)
-			_iconView = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/iconlarge.png"]];
+				//Add icon over labels (225x225)
+			_iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconlarge.png" inBundle:bundle compatibleWithTraitCollection:nil]];
 			_iconView.alpha = 0;
-			_iconView.center = CGPointMake(self.bounds.size.width/2, 0);
 
 				//Main label
 			_title = [[UILabel alloc] initWithFrame:CGRectZero];
+			_title.numberOfLines = 1;
+			_title.font = [UIFont systemFontOfSize:40 weight:UIFontWeightSemibold];
+			_title.text = title;
+			_title.backgroundColor = [UIColor clearColor];
+			_title.textAlignment = NSTextAlignmentCenter;
 			_title.alpha = 0;
-			[_title setNumberOfLines:1];
-			[_title setFont:[UIFont systemFontOfSize:40 weight:UIFontWeightSemibold]];
-			[_title setText:@"Libellum"];
-			[_title setBackgroundColor:[UIColor clearColor]];
-			[_title setTextAlignment:NSTextAlignmentCenter];
 
 				//Subtitle label
 			_subtitle = [[UILabel alloc] initWithFrame:CGRectZero];
+			_subtitle.numberOfLines = 1;
+			_subtitle.font = [UIFont systemFontOfSize:13 weight:UIFontWeightLight];
+			_subtitle.text = subtitles[arc4random_uniform(subtitles.count)];
+			_subtitle.backgroundColor = [UIColor clearColor];
+			_subtitle.textAlignment = NSTextAlignmentCenter;
 			_subtitle.alpha = 0;
-			[_subtitle setNumberOfLines:1];
-			[_subtitle setFont:[UIFont systemFontOfSize:13 weight:UIFontWeightLight]];
-			[_subtitle setText:self.randomLabels[arc4random_uniform(self.randomLabels.count)]];
-			[_subtitle setBackgroundColor:[UIColor clearColor]];
-			[_subtitle setTextAlignment:NSTextAlignmentCenter];
 
 				//Create stack view
 			_stackView = [[UIStackView alloc] initWithArrangedSubviews:@[_iconView, _title, _subtitle]];
@@ -48,8 +47,10 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 			[NSLayoutConstraint activateConstraints:@[
 				[_iconView.heightAnchor constraintEqualToConstant:75],
 				[_iconView.widthAnchor constraintEqualToConstant:75],
+
 				[_title.heightAnchor constraintEqualToConstant:47],
 				[_subtitle.heightAnchor constraintEqualToConstant:15],
+
 				[_stackView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
 				[_stackView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
 			]];
@@ -71,14 +72,14 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 			[self addSubview:wallpaperView];
 
 				//Create blur
-			UIView *blurView;
+			MTMaterialView *blurView;
 			if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
-				MTMaterialView *materialView = [NSClassFromString(@"MTMaterialView") materialViewWithRecipeNamed:@"plattersDark" inBundle:nil configuration:1 initialWeighting:1 scaleAdjustment:nil];
-				materialView.recipe = 1;
-				materialView.recipeDynamic = YES;
-				blurView = materialView;
+				blurView = [NSClassFromString(@"MTMaterialView") materialViewWithRecipeNamed:@"plattersDark" inBundle:nil configuration:1 initialWeighting:1 scaleAdjustment:nil];
+				blurView.recipe = 1;
+				blurView.recipeDynamic = YES;
 			} else {
-				blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular]];
+				blurView = [NSClassFromString(@"MTMaterialView") materialViewWithRecipe:MTMaterialRecipeNotifications options:MTMaterialOptionsBlur];
+				blurView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
 			}
 			blurView.clipsToBounds = YES;
 			blurView.layer.cornerRadius = 10;
@@ -101,7 +102,6 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 				[wallpaperView.heightAnchor constraintEqualToAnchor:blurView.heightAnchor],
 			]];
 
-				//Add parallax effect
 			[self addInterpolatingMotion];
 		}
 
@@ -110,12 +110,12 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 
 	-(void)addInterpolatingMotion {
 		UIInterpolatingMotionEffect *horizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-		horizontal.minimumRelativeValue = @-10;
-		horizontal.maximumRelativeValue = @10;
+		horizontal.minimumRelativeValue = @-5;
+		horizontal.maximumRelativeValue = @5;
 
 		UIInterpolatingMotionEffect *vertical = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-		vertical.minimumRelativeValue = @-10;
-		vertical.maximumRelativeValue = @10;
+		vertical.minimumRelativeValue = @-5;
+		vertical.maximumRelativeValue = @5;
 
 		UIMotionEffectGroup *effectsGroup = [[UIMotionEffectGroup alloc] init];
 		effectsGroup.motionEffects = @[horizontal, vertical];
@@ -123,30 +123,14 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 		[self addMotionEffect:effectsGroup];
 	}
 
-	-(NSArray *)randomLabels {
-		return @[@"Check out the source code on github!", @"Customizable notepad on your lockscreen", @"Customizable notepad in your notification center", @"Why did the bike fall over? It was too tired."];
-	}
-
 	-(void)didMoveToSuperview {
 		[super didMoveToSuperview];
-		[self fadeInIconImage];
-		[self fadeInHeaderLabel];
-		[self fadeInSubLabel];
-	}
 
-	-(void)fadeInIconImage {
 		[UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
 			_iconView.alpha = 1;
-		} completion:nil];
-	}
-
-	-(void)fadeInHeaderLabel {
-		[UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
 			_title.alpha = 1;
 		} completion:nil];
-	}
 
-	-(void)fadeInSubLabel {
 		[UIView animateWithDuration:1.0 delay:0.5 options:UIViewAnimationOptionCurveEaseIn animations:^{
 			_subtitle.alpha = 1;
 		} completion:nil];

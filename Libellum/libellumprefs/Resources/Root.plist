@@ -50,30 +50,6 @@
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSSegmentCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.libellumprefs</string>
-			<key>key</key>
-			<string>notePosition</string>
-			<key>label</key>
-			<string>Position</string>
-			<key>default</key>
-			<string>1</string>
-			<key>validTitles</key>
-			<array>
-				<string>Above Media Controls</string>
-				<string>Below Media Controls</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<integer>1</integer>
-				<integer>2</integer>
-			</array>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
-		</dict>
-		<dict>
-			<key>cell</key>
 			<string>PSTableCell</string>
 			<key>cellClass</key>
 			<string>LBMStylePickerCell</string>
@@ -85,8 +61,6 @@
 			<string>adaptive</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
-			<key>height</key>
-			<real>210</real>
 			<key>options</key>
 			<array>
 				<dict>
@@ -132,9 +106,9 @@
 			<key>default</key>
 			<string>15</string>
 			<key>min</key>
-			<string>0.0</string>
+			<string>0</string>
 			<key>max</key>
-			<string>50</string>
+			<string>30</string>
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
@@ -182,12 +156,16 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Security &amp; Backup</string>
-			<key>footerText</key>
-			<string>Require authentication requires the device to be unlocked to edit/view notes. Backup of notes occurs once per respring.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>LBMSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>This option will prevent viewing or editing notes until the device is unlocked with Face ID, Touch ID, or the passcode.</string>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -202,6 +180,12 @@
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>LBMSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>This option will backup your notes once per respring.</string>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -217,7 +201,7 @@
 			<key>action</key>
 			<string>manageBackup:</string>
 			<key>cell</key>
-			<string>PSLinkCell</string>
+			<string>PSButtonCell</string>
 			<key>cellClass</key>
     	<string>HBSpinnerTableCell</string>
 			<key>label</key>
@@ -228,7 +212,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Toggle Notes</string>
+			<string>Note Visibility Gestures</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -244,7 +228,7 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>EnableGestures</string>
+			<string>ENABLE_GESTURES</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -260,51 +244,7 @@
 			<key>icon</key>
 			<string>gestures.png</string>
 			<key>id</key>
-			<string>GestureOptions</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.libellumprefs</string>
-			<key>key</key>
-			<string>feedback</string>
-			<key>label</key>
-			<string>Gesture Feedback</string>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
-			<key>id</key>
-			<string>GestureFeedback</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSegmentCell</string>
-			<key>defaults</key>
-			<string>com.lacertosusrepo.libellumprefs</string>
-			<key>key</key>
-			<string>feedbackStyle</string>
-			<key>label</key>
-			<string>Feedback Style</string>
-			<key>default</key>
-			<string>1520</string>
-			<key>validTitles</key>
-			<array>
-				<string>Light</string>
-				<string>Heavy</string>
-				<string>Triple</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<integer>1519</integer>
-				<integer>1520</integer>
-				<integer>1521</integer>
-			</array>
-			<key>PostNotification</key>
-			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
-			<key>id</key>
-			<string>FeedbackStyle</string>
+			<string>GESTURE_OPTIONS</string>
 		</dict>
 
 		<dict>
@@ -312,6 +252,22 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Support</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBTintedTableCell</string>
+			<key>detail</key>
+			<string>LBMCreditsListController</string>
+			<key>isController</key>
+			<true/>
+			<key>label</key>
+			<string>Credits</string>
+			<key>icon</key>
+			<string>credits.png</string>
+			<key>height</key>
+			<integer>57</integer>
 		</dict>
 		<dict>
 			<key>cellClass</key>

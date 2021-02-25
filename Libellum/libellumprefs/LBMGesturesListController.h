@@ -8,7 +8,12 @@
 
 #import "PreferencesColorDefinitions.h"
 
+@interface PSListController (iOS12Methods)
+-(BOOL)containsSpecifier:(id)arg1;
+@end
+
 @interface LBMGesturesListController : HBRootListController
+@property (nonatomic, retain) NSMutableDictionary *savedSpecifiers;
 @property (nonatomic, retain) UIBarButtonItem *respringApplyButton;
 @property (nonatomic, retain) UIBarButtonItem *respringConfirmButton;
 @end

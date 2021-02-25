@@ -7,8 +7,106 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>WARNING: If your notes lapse the size of the noteview, disabling endless lines will not allow you to type afterwards.</string>
+			<key>label</key>
+			<string>Note Position</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>notePosition</string>
+			<key>label</key>
+			<string>Position</string>
+			<key>default</key>
+			<string>1</string>
+			<key>validTitles</key>
+			<array>
+				<string>Above Media Controls</string>
+				<string>Below Media Controls</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Text Alignment</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>textAlignment</string>
+			<key>label</key>
+			<string>Text Alignment</string>
+			<key>default</key>
+			<string>0</string>
+			<key>validTitles</key>
+			<array>
+				<string>Left</string>
+				<string>Center</string>
+				<string>Right</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>ToolBar Options</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>LBMSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>This option will invert the order of the toolbar buttons to allow left-handed users to reach the the buttons easier.</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>invertToolBarButtons</string>
+			<key>label</key>
+			<string>Left Handed Mode</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>enablePageManagement</string>
+			<key>label</key>
+			<string>Show Page Managment Buttons</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -20,13 +118,24 @@
 			<key>key</key>
 			<string>enableUndoRedo</string>
 			<key>label</key>
-			<string>Enable Undo/Redo Buttons</string>
+			<string>Show Undo/Redo Buttons</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>LBMSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>If your notes lapse the size of the notepad and you disable this option, you will no longer be able to edit your note. To fix this increase the size of the note or reduce the notes to fit the size.</string>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -60,9 +169,9 @@
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
-			<string>enableAutoUnlockXBlock</string>
+			<string>hideQuickActions</string>
 			<key>label</key>
-			<string>Prevent AutoUnlockX While Visible</string>
+			<string>Hide Quick Actions in Portrait</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
@@ -74,9 +183,9 @@
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
-			<string>hideQuickActions</string>
+			<string>enableAutoUnlockXBlock</string>
 			<key>label</key>
-			<string>Hide Quick Actions in Portrait</string>
+			<string>Block AutoUnlockX While Visible</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>

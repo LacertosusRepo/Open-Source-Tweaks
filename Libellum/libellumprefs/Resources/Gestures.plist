@@ -7,8 +7,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>The tap gesture is the only way to show Libellum once it has been hidden, more gestures will come in the future.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -18,13 +16,66 @@
 			<key>defaults</key>
 			<string>com.lacertosusrepo.libellumprefs</string>
 			<key>key</key>
-			<string>useSwipeGesture</string>
+			<string>feedback</string>
 			<key>label</key>
-			<string>Swipe Left on Notes</string>
+			<string>Gesture Feedback</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>SwipeLeftOnNotes</string>
+			<string>GESTURE_FEEDBACK</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>feedbackStyle</string>
+			<key>label</key>
+			<string>Feedback Style</string>
+			<key>default</key>
+			<string>1520</string>
+			<key>validTitles</key>
+			<array>
+				<string>Light</string>
+				<string>Heavy</string>
+				<string>Triple</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>1519</integer>
+				<integer>1520</integer>
+				<integer>1521</integer>
+			</array>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
+			<key>id</key>
+			<string>FEEDBACK_STYLE</string>
+		</dict>
+
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>LBMSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>If there is more than one page of notes this gesture will not work.</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useSwipeGesture</string>
+			<key>label</key>
+			<string>Left Swipe on Notes</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -39,8 +90,20 @@
 			<string>Triple Tap LockScreen</string>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
-			<key>id</key>
-			<string>TripleTapLockScreen</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.lacertosusrepo.libellumprefs</string>
+			<key>key</key>
+			<string>useEdgeGesture</string>
+			<key>label</key>
+			<string>Top Left Edge Swipe Down</string>
+			<key>PostNotification</key>
+			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 		</dict>
 	</array>
 	<key>title</key>

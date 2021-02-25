@@ -3,43 +3,36 @@
  * Libellum
  *
  * Created by Zachary Thomas Paul <LacertosusThemes@gmail.com> on 7/16/2019.
- * Copyright © 2020 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
+ * Copyright © 2021 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
-#import <Cephei/HBPreferences.h>
-#import "LibellumView.h"
+#import "LibellumManager.h"
 #import "LibellumClasses.h"
 #define LD_DEBUG NO
 
-    /*
-     * Variables
-     */
-  static CSScrollView *scrollViewCS;
-  static SBPagedScrollView *scrollViewSB;
-  static HBPreferences *preferences;
-
-#pragma mark - iOS 13/14
-
   /*
-   * Add Libellum to the Lockscreen
-   * Axon - Nepeta & BawApple https://github.com/Baw-Appie/Axon/blob/master/Tweak/Tweak.xm
+   * Variables
    */
+  static HBPreferences *preferences;
+  static id scrollView;
+
+#pragma mark - iOS 13/14 Hooks
+
+    /*
+     * Add Libellum to the Lockscreen
+     * Axon - Nepeta & BawApple https://github.com/Baw-Appie/Axon/blob/master/Tweak/Tweak.xm
+     */
 %group iOS13Plus
 %hook CSNotificationAdjunctListViewController
-%property (nonatomic, retain) LibellumView *libellum;
   -(void)viewDidLoad {
     %orig;
 
-    if(!self.libellum) {
-      self.libellum = [[LibellumView sharedInstance] init];
-      [self.libellum setSizeToMimic:self.sizeToMimic];
-      [self.stackView insertArrangedSubview:self.libellum atIndex:0];
+    [[LibellumManager sharedManager] createPages];
+    [self.stackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:0];
 
-      [scrollViewCS addGestureRecognizer:self.libellum.lGesture];
-      [scrollViewCS.panGestureRecognizer requireGestureRecognizerToFail:self.libellum.swipeGesture];
+    [((UIScrollView *)scrollView).panGestureRecognizer requireGestureRecognizerToFail:[LibellumManager sharedManager].swipeGesture];
 
-      if([preferences boolForKey:@"isHidden"] && [preferences boolForKey:@"hideGesture"]) {
-        [self.libellum toggleLibellum:nil];
-      }
+    if([preferences boolForKey:@"isHidden"] && [preferences boolForKey:@"hideGesture"]) {
+      [[LibellumManager sharedManager] toggleLibellum:nil];
     }
   }
 
@@ -47,30 +40,27 @@
     %orig;
 
     if([preferences integerForKey:@"notePosition"] == 2) {
-      [self.stackView insertArrangedSubview:self.libellum atIndex:[self.stackView.arrangedSubviews count]];
+      [self.stackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:[self.stackView.arrangedSubviews count]];
     }
   }
 
   -(BOOL)isPresentingContent {
-    if(!self.libellum.hidden) {
-      return YES;
-    }
-
-    return %orig;
+    return (![LibellumManager sharedManager].pageController.view.hidden) ?: %orig;
   }
 %end
 
   /*
-   * Add hide/show gesture to lockscreen
+   * Add tap gesture to lockscreen
    */
 %hook CSScrollView
-  -(instancetype)initWithFrame:(CGRect)ag1 {
-    UITapGestureRecognizer *toggleGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumView sharedInstance] action:@selector(toggleLibellum:)];
-    toggleGesture.enabled = [preferences boolForKey:@"useTapGesture"];
-    toggleGesture.numberOfTapsRequired = 3;
-    [self addGestureRecognizer:toggleGesture];
+  -(instancetype)initWithFrame:(CGRect)arg1 {
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumManager sharedManager] action:@selector(toggleLibellum:)];
+    tapGesture.enabled = [preferences boolForKey:@"useTapGesture"];
+    tapGesture.numberOfTapsRequired = 3;
+    [LibellumManager sharedManager].tapGesture = tapGesture;
+    [self addGestureRecognizer:tapGesture];
 
-    return scrollViewCS = %orig;
+    return scrollView = %orig;
   }
 %end
 
@@ -90,9 +80,22 @@
     return %orig;
   }
 %end
+
+  /*
+   * Send interface updates to Libellum
+   */
+%hook UIUserInterfaceStyleArbiter
+  -(void)userInterfaceStyleModeDidChange:(UISUserInterfaceStyleMode *)arg1 {
+    %orig;
+
+    if([[preferences objectForKey:@"blurStyle"] isEqualToString:@"adaptive"]) {
+      [[LibellumManager sharedManager] notifyViewControllersOfInterfaceChange:arg1.modeValue];
+    }
+  }
+%end
 %end
 
-#pragma mark - iOS 12
+#pragma mark - iOS 12 Hooks
 
   /*
    * Add Libellum to the Lockscreen
@@ -100,20 +103,16 @@
    */
 %group iOS12
 %hook SBDashBoardNotificationAdjunctListViewController
-%property (nonatomic, retain) LibellumView *libellum;
   -(void)viewDidLoad {
     %orig;
 
-    if(!self.libellum) {
-      self.libellum = [[LibellumView sharedInstance] init];
-      [self.libellum setSizeToMimic:self.sizeToMimic];
-      [self.stackView insertArrangedSubview:self.libellum atIndex:0];
+    [[LibellumManager sharedManager] createPages];
+    [self.stackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:0];
 
-      [scrollViewSB.panGestureRecognizer requireGestureRecognizerToFail:self.libellum.swipeGesture];
+    [((UIScrollView *)scrollView).panGestureRecognizer requireGestureRecognizerToFail:[LibellumManager sharedManager].swipeGesture];
 
-      if([preferences boolForKey:@"isHidden"] && [preferences boolForKey:@"hideGesture"]) {
-        [self.libellum toggleLibellum:nil];
-      }
+    if([preferences boolForKey:@"isHidden"] && [preferences boolForKey:@"hideGesture"]) {
+      [[LibellumManager sharedManager] toggleLibellum:nil];
     }
   }
 
@@ -121,30 +120,27 @@
     %orig;
 
     if([preferences integerForKey:@"notePosition"] == 2) {
-      [self.stackView insertArrangedSubview:self.libellum atIndex:[self.stackView.arrangedSubviews count]];
+      [self.stackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:[self.stackView.arrangedSubviews count]];
     }
   }
 
   -(BOOL)isPresentingContent {
-    if(!self.libellum.hidden) {
-      return YES;
-    }
-
-    return %orig;
+    return (![LibellumManager sharedManager].pageController.view.hidden) ?: %orig;
   }
 %end
 
   /*
-   * Add hide/show gesture to lockscreen
+   * Add tap gesture to lockscreen
    */
 %hook SBPagedScrollView
-  -(instancetype)initWithFrame:(CGRect)ag1 {
-    UITapGestureRecognizer *toggleGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumView sharedInstance] action:@selector(toggleLibellum:)];
-    toggleGesture.enabled = [preferences boolForKey:@"useTapGesture"];
-    toggleGesture.numberOfTapsRequired = 3;
-    [self addGestureRecognizer:toggleGesture];
+  -(instancetype)initWithFrame:(CGRect)arg1 {
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:[LibellumManager sharedManager] action:@selector(toggleLibellum:)];
+    tapGesture.enabled = [preferences boolForKey:@"useTapGesture"];
+    tapGesture.numberOfTapsRequired = 3;
+    [LibellumManager sharedManager].tapGesture = tapGesture;
+    [self addGestureRecognizer:tapGesture];
 
-    return scrollViewSB = %orig;
+    return scrollView = %orig;
   }
 %end
 
@@ -166,18 +162,24 @@
 %end
 %end
 
-#pragma mark - iOS 12 & 13 & 14
+#pragma mark - Universal Hooks
+
+  /*
+   * Fix sizeToMimic crash by adding property to UIPageViewController subview
+   */
+%hook _UIPageViewControllerContentView
+%property (nonatomic, assign) CGSize sizeToMimic;
+%end
 
   /*
    * Get lock state and pass instance to libellum
-   * iOS 12/13
    */
 %hook SBLockStateAggregator
   -(void)_updateLockState {
     %orig;
 
     if([preferences boolForKey:@"requireAuthentication"]) {
-      [[LibellumView sharedInstance] authenticationStatusFromAggregator:self];
+      [[LibellumManager sharedManager] authenticationStatusFromAggregator:self];
     }
   }
 %end
@@ -187,8 +189,8 @@
    */
 %hook SparkAutoUnlockX
   -(BOOL)externalBlocksUnlock {
-    if([LibellumView sharedInstance] && [preferences boolForKey:@"requireAuthentication"]) {
-      return ![LibellumView sharedInstance].hidden;
+    if([LibellumManager sharedManager] && [preferences boolForKey:@"requireAuthentication"]) {
+      return ![LibellumManager sharedManager].pageController.view.hidden;
     }
 
     return %orig;
@@ -210,16 +212,13 @@
   [preferences registerDefaults:@{
       //Main Preferences
     @"noteSize" : @121,
-    @"notePosition" : @1,
-    @"blurStyle" : @"platters",
-    @"cornerRadius" : @10,
+    @"blurStyle" : @"adaptive",
+    @"cornerRadius" : @15,
 
     @"requireAuthentication" : @NO,
     @"noteBackup" : @NO,
 
     @"hideGesture" : @NO,
-    @"feedback" : @YES,
-    @"feedbackStyle" : @1520,
 
       //Color Options
     @"useKalmTintColor" : @NO,
@@ -233,50 +232,32 @@
     @"borderWidth" : @0,
 
       //General Options
+    @"notePosition" : @1,
+    @"textAlignment" : @0,
+    @"invertToolBarButtons" : @NO,
+    @"enablePageManagement" : @YES,
     @"enableUndoRedo" : @NO,
     @"enableEndlessLines" : @NO,
     @"hideNoOlderNotifications" : @YES,
-    @"enableAutoUnlockXBlock" : @NO,
     @"hideQuickActions" : @NO,
+    @"enableAutoUnlockXBlock" : @NO,
 
       //Gesture Options
+    @"feedback" : @YES,
+    @"feedbackStyle" : @1520,
     @"useSwipeGesture" : @YES,
     @"useTapGesture" : @YES,
+    @"useEdgeGesture" : @YES,
 
       //Saved Variables
     @"isHidden" : @NO,
   }];
-
-  [preferences registerPreferenceChangeBlock:^{
-    [[LibellumView sharedInstance] preferencesChanged];
-  }];
-
-    //Fix crash caused by preference value previosuly being an integer
-  if([[preferences objectForKey:@"blurStyle"] intValue] > 0) {
-    [preferences setObject:@"adaptive" forKey:@"blurStyle"];
-  }
-
-    //convert old notes data to rtf
-  if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/LibellumNotes.txt"]) {
-    NSString *contents = [NSString stringWithContentsOfFile:@"/User/Library/Preferences/LibellumNotes.txt" encoding:NSUTF8StringEncoding error:nil];
-    NSAttributedString *newContents = [[NSAttributedString alloc] initWithString:contents attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]}];
-    NSData *data = [newContents dataFromRange:(NSRange){0, newContents.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:nil];
-    [data writeToFile:filePath atomically:YES];
-    [[NSFileManager defaultManager] removeItemAtPath:@"/User/Library/Preferences/LibellumNotes.txt" error:nil];
-  }
-
-  if([[NSFileManager defaultManager] fileExistsAtPath:@"/User/Library/Preferences/LibellumNotes.bk"]) {
-    NSString *contents = [NSString stringWithContentsOfFile:@"/User/Library/Preferences/LibellumNotes.bk" encoding:NSUTF8StringEncoding error:nil];
-    NSAttributedString *newContents = [[NSAttributedString alloc] initWithString:contents attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:14]}];
-    NSData *data = [newContents dataFromRange:(NSRange){0, newContents.length} documentAttributes:@{NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} error:nil];
-    [data writeToFile:filePathBK atomically:YES];
-    [[NSFileManager defaultManager] removeItemAtPath:@"/User/Library/Preferences/LibellumNotes.bk" error:nil];
-  }
 
   if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
     %init(iOS13Plus);
   } else {
     %init(iOS12);
   }
+
   %init;
 }

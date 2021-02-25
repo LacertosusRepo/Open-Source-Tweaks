@@ -1,9 +1,8 @@
 #import <Cephei/HBRespringController.h>
+#import <Cephei/HBPreferences.h>
+#import <UIKit/UIKit.h>
+#import <os/log.h>
 #import "PreferencesColorDefinitions.h"
-#import "../MTMaterialView.h"
-
-#define filePath @"/User/Library/Preferences/LibellumNotes.rtf"
-#define filePathBK @"/User/Library/Preferences/LibellumNotes.rtf.bk"
 
 @interface UIColor (iOS13)
 +(UIColor *)labelColor;

@@ -14,6 +14,4 @@
 
 @interface LBMColorsListController : HBRootListController
 @property (nonatomic, retain) NSMutableDictionary *savedSpecifiers;
-@property (nonatomic, retain) UIBarButtonItem *respringApplyButton;
-@property (nonatomic, retain) UIBarButtonItem *respringConfirmButton;
 @end

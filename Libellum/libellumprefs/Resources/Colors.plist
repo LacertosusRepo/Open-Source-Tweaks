@@ -11,10 +11,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
-  		<key>switchColor</key>
-  		<string>#76ab79</string>
-  		<key>switchColorAlpha</key>
-  		<real>0</real>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -29,6 +25,12 @@
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>LBMSwitchWithInfoCell</string>
+			<key>infoTitle</key>
+			<string></string>
+			<key>infoMessage</key>
+			<string>This option will ignore the default colors used by the adaptive style. Instead, Libellum will use the custom colors you have set for the font and lock icon.</string>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -40,7 +42,7 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>IgnoreAdaptivePresetColors</string>
+			<string>IGNORE_ADAPTIVE_PRESET_COLORS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -54,13 +56,13 @@
 			<key>key</key>
 			<string>customBackgroundColor</string>
 			<key>label</key>
-			<string>Set Solid Color</string>
+			<string>Set Background Color</string>
 			<key>showAlphaSlider</key>
 			<true/>
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>SetSolidColor</string>
+			<string>SET_BACKGROUND_COLOR</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -98,7 +100,7 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>SetLockIconColor</string>
+			<string>SET_LOCK_ICON_COLOR</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -118,7 +120,7 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.libellumprefs/ReloadPrefs</string>
 			<key>id</key>
-			<string>SetTintColor</string>
+			<string>SET_TINT_COLOR</string>
 		</dict>
 
 		<dict>

@@ -1,8 +1,7 @@
-#include "LBMRootListController.h"
+#import "LBMRootListController.h"
 
 @implementation LBMRootListController
-
-	-(id)init {
+	-(instancetype)init {
 		self = [super init];
 		if(self) {
 			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
@@ -22,7 +21,7 @@
 		if (!_specifiers) {
 			_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 
-			NSArray *chosenIDs = @[@"FeedbackStyle", @"GestureOptions"];
+			NSArray *chosenIDs = @[@"GESTURE_OPTIONS"];
 			self.savedSpecifiers = (self.savedSpecifiers) ?: [[NSMutableDictionary alloc] init];
 			for(PSSpecifier *specifier in _specifiers) {
 				if([chosenIDs containsObject:[specifier propertyForKey:@"id"]]) {
@@ -37,104 +36,87 @@
 	-(void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
 		[super setPreferenceValue:value specifier:specifier];
 
-		NSString *key = [specifier propertyForKey:@"key"];
-		if([key isEqualToString:@"feedback"]) {
-			if(![value boolValue]) {
-				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
-			} else if(![self containsSpecifier:self.savedSpecifiers[@"FeedbackStyle"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] afterSpecifierID:@"GestureFeedback" animated:YES];
-			}
-		}
-
-		if([key isEqualToString:@"hideGesture"]) {
-			if(![value boolValue]) {
-				[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"GestureOptions"]] animated:YES];
-			} else if(![self containsSpecifier:self.savedSpecifiers[@"GestureOptions"]]) {
-				[self insertContiguousSpecifiers:@[self.savedSpecifiers[@"GestureOptions"]] afterSpecifierID:@"EnableGestures" animated:YES];
-			}
-		}
+		[self toggleSpecifiersVisibility:YES];
 	}
 
 	-(void)reloadSpecifiers {
 		[super reloadSpecifiers];
 
+		[self toggleSpecifiersVisibility:NO];
+	}
+
+	-(void)toggleSpecifiersVisibility:(BOOL)animated {
 		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-		if(![preferences boolForKey:@"feedback"]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"FeedbackStyle"]] animated:YES];
-		}
 
 		if(![preferences boolForKey:@"hideGesture"]) {
-			[self removeContiguousSpecifiers:@[self.savedSpecifiers[@"GestureOptions"]] animated:YES];
+			[self removeSpecifier:self.savedSpecifiers[@"GESTURE_OPTIONS"] animated:animated];
+		} else if(![self containsSpecifier:self.savedSpecifiers[@"GESTURE_OPTIONS"]]) {
+			[self insertSpecifier:self.savedSpecifiers[@"GESTURE_OPTIONS"] afterSpecifierID:@"ENABLE_GESTURES" animated:animated];
 		}
 	}
 
 	-(void)viewDidLoad {
 		[super viewDidLoad];
 
-		if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){11, 0, 0}]) {
-			self.navigationController.navigationBar.prefersLargeTitles = NO;
-			self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-		}
+		self.navigationController.navigationBar.prefersLargeTitles = NO;
+		self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 
 		//Adds respring button in top right of preference pane and hide any specifiers
-		[self respringApply];
-		[self reloadSpecifiers];
+		[self respringStateFromButton:nil];
+		[self toggleSpecifiersVisibility:NO];
 
 		//Adds header to table
-		UIView *header = [[LBMHeaderView alloc] init];
+		NSArray *subtitles = @[@"Check out the source code on github!", @"Customizable notepad on your lockscreen", @"Customizable notepad in your notification center", @"Why did the bike fall over? It was too tired.", @"What do you call a clever duck? A wise quacker."];
+		LBMHeaderView *header = [[LBMHeaderView alloc] initWithTitle:@"Libellum" subtitles:subtitles bundle:[self bundle]];
 		header.frame = CGRectMake(0, 0, header.bounds.size.width, 175);
 		UITableView *tableView = [self valueForKey:@"_table"];
 		tableView.tableHeaderView = header;
-
-		UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-		refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Hey how's it going?"];
-		[refreshControl addTarget:self action:@selector(onRefresh) forControlEvents:UIControlEventValueChanged];
-		tableView.refreshControl = refreshControl;
 	}
 
-	-(void)respringApply {
-		_respringApplyButton = (_respringApplyButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
-		_respringApplyButton.tintColor = Pri_Color;
-		[self.navigationItem setRightBarButtonItem:_respringApplyButton animated:YES];
+	-(void)viewWillDisappear:(BOOL)animated {
+		[super viewWillDisappear:animated];
+
+		self.title = @"Libellum";
 	}
 
-	-(void)respringConfirm {
-		if([self.navigationItem.rightBarButtonItem isEqual:_respringConfirmButton]) {
-			[HBRespringController respring];
-		} else {
-			_respringConfirmButton = (_respringConfirmButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
-			_respringConfirmButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
-			[self.navigationItem setRightBarButtonItem:_respringConfirmButton animated:YES];
+	-(void)respringStateFromButton:(UIBarButtonItem *)button {
+		switch (button.tag) {
+			case 0: //Apply
+			{
+				UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringStateFromButton:)];
+				applyButton.tintColor = Pri_Color;
+				applyButton.tag = 1;
+				[self.navigationItem setRightBarButtonItem:applyButton animated:YES];
+			}
+			break;
 
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				[self respringApply];
-			});
+			case 1:	//Are you sure?
+			{
+				UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:[HBRespringController class] action:@selector(respring)];
+				respringButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
+				respringButton.tag = 0;
+				[self.navigationItem setRightBarButtonItem:respringButton animated:YES];
+
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+					[self respringStateFromButton:respringButton];
+				});
+			}
+			break;
 		}
-	}
-
-	-(void)onRefresh {
-		NSLog(@"big dick energy");
-
-		UITableView *tableView = [self valueForKey:@"_table"];
-		[tableView.refreshControl performSelector:@selector(endRefreshing) withObject:nil afterDelay:5.0];
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
 		[super viewDidAppear:animated];
 
-		//Adds label to center of preferences
 		if(!self.navigationItem.titleView) {
-			UILabel *title = [[UILabel alloc] initWithFrame:CGRectZero];
-			title.text = @"Libellum";
-			title.textAlignment = NSTextAlignmentCenter;
-			title.textColor = Pri_Color;
-			title.font = [UIFont systemFontOfSize:17 weight:UIFontWeightHeavy];
-			self.navigationItem.titleView = title;
-			self.navigationItem.titleView.alpha = 0;
+			LBMAnimatedTitleView *titleView = [[LBMAnimatedTitleView alloc] initWithTitle:@"Libellum" minimumScrollOffsetRequired:90];
+			self.navigationItem.titleView = titleView;
+		}
+	}
 
-			[UIView animateWithDuration:0.2 animations:^{
-				self.navigationItem.titleView.alpha = 1;
-			}];
+	-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+		if([self.navigationItem.titleView respondsToSelector:@selector(adjustLabelPositionToScrollOffset:)]) {
+			[(LBMAnimatedTitleView *)self.navigationItem.titleView adjustLabelPositionToScrollOffset:scrollView.contentOffset.y];
 		}
 	}
 
@@ -142,10 +124,13 @@
 		PSTableCell *cell = [self cachedCellForSpecifier:specifier];
     cell.cellEnabled = NO;
 
-		LBMNoteBackupViewController *backupViewController = [[NSClassFromString(@"LBMNoteBackupViewController") alloc] init];
+		LBMNoteBackupViewController *backupViewController = [[LBMNoteBackupViewController alloc] init];
 		[self presentViewController:backupViewController animated:YES completion:^{
 			cell.cellEnabled = YES;
 		}];
 	}
 
+	-(UIUserInterfaceStyle)overrideUserInterfaceStyle {
+		return UIUserInterfaceStyleDark;
+	}
 @end

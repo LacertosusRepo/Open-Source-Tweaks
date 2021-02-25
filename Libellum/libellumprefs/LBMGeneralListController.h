@@ -9,6 +9,4 @@
 #import "PreferencesColorDefinitions.h"
 
 @interface LBMGeneralListController : HBRootListController
-@property (nonatomic, retain) UIBarButtonItem *respringApplyButton;
-@property (nonatomic, retain) UIBarButtonItem *respringConfirmButton;
 @end

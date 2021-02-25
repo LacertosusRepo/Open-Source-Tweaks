@@ -11,12 +11,14 @@
 		self = [super initWithStyle:style reuseIdentifier:identifier specifier:specifier];
 
 		if(self) {
-			_sliderLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+			[specifier setProperty:@56 forKey:@"height"];
+
+			_sliderLabel = [[UILabel alloc] init];
 			_sliderLabel.font = [UIFont systemFontOfSize:15 weight:UIFontWeightBold];
 			_sliderLabel.text = [specifier propertyForKey:@"label"];
 			_sliderLabel.translatesAutoresizingMaskIntoConstraints = NO;
 
-			_valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+			_valueLabel = [[UILabel alloc] init];
 			_valueLabel.font = [UIFont monospacedDigitSystemFontOfSize:10 weight:UIFontWeightBold];
 			_valueLabel.text = [NSString stringWithFormat:@"%.01f", [[specifier performGetter] floatValue]];
 			_valueLabel.userInteractionEnabled = YES;
@@ -45,10 +47,13 @@
 				[_stackView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant:-4],
 
 				[_sliderStackView.widthAnchor constraintEqualToAnchor:_stackView.widthAnchor],
+
+				[_valueLabel.heightAnchor constraintEqualToAnchor:_sliderStackView.heightAnchor],
 			]];
 
 			[self.control addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventTouchDragInside];
 			[self.control addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventTouchDragOutside];
+			[self.control addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
 
 			UITapGestureRecognizer *enterCustomValueTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setCustomSliderValue)];
 			enterCustomValueTap.numberOfTapsRequired = 1;
@@ -59,7 +64,8 @@
 	}
 
 	-(void)setCustomSliderValue {
-		NSString *currentValue = [NSString stringWithFormat:@"%.02f", ((UISlider *)self.control).value];
+		UISlider *slider = (UISlider *)self.control;
+		NSString *currentValue = [NSString stringWithFormat:@"%.02f", slider.value];
 
 		UIAlertController *enterValueAlert = [UIAlertController alertControllerWithTitle:@"Enter Value" message:nil preferredStyle:UIAlertControllerStyleAlert];
 		[enterValueAlert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -72,15 +78,15 @@
 			UITextField *textField = enterValueAlert.textFields[0];
 
 			CGFloat newValue = [textField.text floatValue];
-			if(newValue > ((UISlider *)self.control).maximumValue) {
-				newValue = ((UISlider *)self.control).maximumValue;
-			} else if (newValue < ((UISlider *)self.control).minimumValue) {
-				newValue = ((UISlider *)self.control).minimumValue;
+			if(newValue > slider.maximumValue) {
+				newValue = slider.maximumValue;
+			} else if (newValue < slider.minimumValue) {
+				newValue = slider.minimumValue;
 			}
 
 			[self.specifier performSetterWithValue:[NSNumber numberWithFloat:newValue]];
-			[(UISlider *)self.control setValue:newValue animated:YES];
-			[self sliderValueChanged:(UISlider *)self.control];
+			[slider setValue:newValue animated:YES];
+			[self sliderValueChanged:slider];
 		}];
 
 		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
@@ -111,9 +117,4 @@
 			_valueLabel.textColor = self.tintColor;
 		}
 	}
-
-	-(CGFloat)preferredHeightForWidth:(CGFloat)width {
-		return 56;
-	}
-
 @end

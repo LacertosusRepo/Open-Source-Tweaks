@@ -1,9 +1,6 @@
-#import "LibellumView.h"
-
 @interface CSNotificationAdjunctListViewController : UIViewController
 @property (nonatomic, retain) UIStackView *stackView;
 @property (nonatomic, assign) CGSize sizeToMimic;
-@property (nonatomic, retain) LibellumView *libellum;
 @end
 
 @interface CSQuickActionsViewController : UIViewController
@@ -15,7 +12,6 @@
 @interface SBDashBoardNotificationAdjunctListViewController : UIViewController
 @property (nonatomic, retain) UIStackView *stackView;
 @property (nonatomic, assign) CGSize sizeToMimic;
-@property (nonatomic, retain) LibellumView *libellum;
 @end
 
 @interface SBDashBoardQuickActionsViewController : UIViewController
@@ -25,4 +21,8 @@
 @end
 
 @interface NCNotificationListSectionRevealHintView : UIView
+@end
+
+@interface UISUserInterfaceStyleMode : NSObject
+@property (nonatomic, assign) long long modeValue;
 @end

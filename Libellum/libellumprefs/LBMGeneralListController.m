@@ -19,7 +19,7 @@
 	}
 
 	-(NSArray *)specifiers {
-		if (!_specifiers) {
+		if(!_specifiers) {
 			_specifiers = [self loadSpecifiersFromPlistName:@"General" target:self];
 		}
 
@@ -29,46 +29,56 @@
 	-(void)viewDidLoad {
 		[super viewDidLoad];
 
-		if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){11, 0, 0}]) {
-			self.navigationController.navigationBar.prefersLargeTitles = NO;
-			self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
-		}
+		self.navigationController.navigationBar.prefersLargeTitles = NO;
+		self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
 
 		//Adds respring button in top right of preference pane
-		[self respringApply];
+		[self respringStateFromButton:nil];
 	}
 
-	-(void)respringApply {
-		_respringApplyButton = (_respringApplyButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
-		_respringApplyButton.tintColor = Pri_Color;
-		[self.navigationItem setRightBarButtonItem:_respringApplyButton animated:YES];
-	}
+	-(void)respringStateFromButton:(UIBarButtonItem *)button {
+		switch (button.tag) {
+			case 0: //Apply
+			{
+				UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(respringStateFromButton:)];
+				applyButton.tintColor = Pri_Color;
+				applyButton.tag = 1;
+				[self.navigationItem setRightBarButtonItem:applyButton animated:YES];
+			}
+			break;
 
-	-(void)respringConfirm {
-		if([self.navigationItem.rightBarButtonItem isEqual:_respringConfirmButton]) {
-			[HBRespringController respring];
-		} else {
-			_respringConfirmButton = (_respringConfirmButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
-			_respringConfirmButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
-			[self.navigationItem setRightBarButtonItem:_respringConfirmButton animated:YES];
+			case 1:	//Are you sure?
+			{
+				UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:[HBRespringController class] action:@selector(respring)];
+				respringButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
+				respringButton.tag = 0;
+				[self.navigationItem setRightBarButtonItem:respringButton animated:YES];
 
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				[self respringApply];
-			});
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+					[self respringStateFromButton:respringButton];
+				});
+			}
+			break;
 		}
 	}
 
 	-(void)viewDidAppear:(BOOL)animated {
-		//Adds icon to center of preferences
-		UIImageView *iconView = [[UIImageView alloc] initWithImage:[[UIImage alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/LibellumPrefs.bundle/general.png"]];
-		self.navigationItem.titleView = iconView;
-		self.navigationItem.titleView.alpha = 0;
-
 		[super viewDidAppear:animated];
 
-		[UIView animateWithDuration:0.2 animations:^{
-			self.navigationItem.titleView.alpha = 1;
-		}];
+		//Adds icon to center of preferences
+		if(!self.navigationItem.titleView) {
+			UIImageView *iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"general.png" inBundle:[self bundle] compatibleWithTraitCollection:nil]];
+			self.navigationItem.titleView = iconView;
+			self.navigationItem.titleView.alpha = 0;
+
+			[UIView animateWithDuration:0.2 animations:^{
+				self.navigationItem.titleView.alpha = 1;
+			}];
+		}
+	}
+
+	-(UIUserInterfaceStyle)overrideUserInterfaceStyle {
+		return UIUserInterfaceStyleDark;
 	}
 
 @end

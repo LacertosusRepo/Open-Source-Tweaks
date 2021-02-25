@@ -1,8 +1,6 @@
 #import <Preferences/PSSliderTableCell.h>
 #import <Preferences/PSSpecifier.h>
-
-@interface LBMLabeledSliderCell : PSSliderTableCell
-@end
+#import <objc/runtime.h>
 
 @interface PSSpecifier (PrivateMethods)
 -(id)performGetter;
@@ -11,4 +9,7 @@
 
 @interface UIView (PrivateMethods)
 -(UIViewController *)_viewControllerForAncestor;
+@end
+
+@interface LBMLabeledSliderCell : PSSliderTableCell
 @end

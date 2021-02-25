@@ -15,8 +15,8 @@
       _inputButton.contentEdgeInsets = UIEdgeInsetsMake(4, 4, 4, 4);
       _inputButton.layer.cornerRadius = 15;
       [_inputButton addTarget:self action:@selector(inputButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-      [_inputButton setImage:[[UIImage imageNamed:@"input" inBundle:[specifier.target bundle] compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-      [_inputButton setImage:[[UIImage kitImageNamed:@"UITintedCircularButtonCheckmark.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
+      [_inputButton setImage:[[UIImage kitImageNamed:@"UIRemoveControlPlus"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+      [_inputButton setImage:[[UIImage kitImageNamed:@"UITintedCircularButtonCheckmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateSelected];
       self.accessoryView = _inputButton;
 
       [self.control addTarget:self action:@selector(valueChangedWithControl) forControlEvents:UIControlEventValueChanged];
@@ -88,6 +88,7 @@
       _inputButton.layer.borderWidth = 2;
       [_inputButton.layer addAnimation:showBorder forKey:@"Show Border"];
     } else {
+      
       [UIView animateWithDuration:0.1 animations:^{
         _inputButton.backgroundColor = [UIColor clearColor];
       }];

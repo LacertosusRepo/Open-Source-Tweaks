@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>big</key>
+			<true/>
+			<key>height</key>
+			<integer>64</integer>
+			<key>label</key>
+			<string>Noun Project</string>
+			<key>subtitle</key>
+			<string>Origin of sub-settings icons.</string>
+			<key>icon</key>
+			<string>nounproject.png</string>
+			<key>url</key>
+			<string>https://thenounproject.com/</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Color (Colors) Symbol</string>
+			<key>subtitle</key>
+			<string>by Flatart from the Noun Project</string>
+			<key>url</key>
+			<string>https://thenounproject.com/term/color/2607267/</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Settings (General) Symbol</string>
+			<key>subtitle</key>
+			<string>by jenya from the Noun Project</string>
+			<key>url</key>
+			<string>https://thenounproject.com/term/settings/3393782/</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Up Down (Gesture) Symbol</string>
+			<key>subtitle</key>
+			<string>by Ian Rahmadi Kurniawan from the Noun Project</string>
+			<key>url</key>
+			<string>https://thenounproject.com/term/up-down/3365718/</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Link (Credits) Symbol</string>
+			<key>subtitle</key>
+			<string>by Viktor Vorobyev from the Noun Project</string>
+			<key>url</key>
+			<string>https://thenounproject.com/term/links/534665/</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string></string>
+</dict>
+</plist>
