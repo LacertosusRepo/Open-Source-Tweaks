@@ -1,0 +1,9 @@
+Package: com.lacertosusrepo.nickoftime
+Name: NickOfTime
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Control your alarms as quick as possible...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
