@@ -1,16 +1,15 @@
 # Open Source Tweaks by LacertosusDeus
 
-These tweaks show how (horrifically) new at programming I am, but some people might be able to learn from or be able to correct my projects.
+These tweaks show how (horrifically) new at programming I am, but hey some people might be able to learn from them or fix parts of my projects.
 
-**This is *NOT* the place to report issues, head over to [LacertosusRepo/LacertosusRepo.github.io](https://github.com/LacertosusRepo/LacertosusRepo.github.io) and create an issue there.** *If you're going to copy-paste a project and release it, I'd ask that you email or message me just to let me know out of courtesy. If you link it who cares!*
-
+**This is *NOT* the place to report issues, head over to [LacertosusRepo/LacertosusRepo.github.io](https://github.com/LacertosusRepo/LacertosusRepo.github.io) and create an issue there.**
 
 ## Repo Info
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)
 [![GitHub stars](https://img.shields.io/github/stars/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/network)
-[![GitHub forks](https://img.shields.io/github/license/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/license)
+[![GitHub forks](https://img.shields.io/github/license/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/blob/master/LICENSE)
 
 
 ## Projects Info
