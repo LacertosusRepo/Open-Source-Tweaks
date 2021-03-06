@@ -1,0 +1,9 @@
+Package: com.lacertosusrepo.spotlightappdelete
+Name: SpotlightAppDelete
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Remove apps from your spotlight...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
