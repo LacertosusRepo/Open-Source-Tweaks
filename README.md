@@ -4,8 +4,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/network)
 [![GitHub forks](https://img.shields.io/github/license/LacertosusRepo/Open-Source-Tweaks.svg?style=for-the-badge)](https://github.com/LacertosusRepo/Open-Source-Tweaks/blob/master/LICENSE)
 
-
-These tweaks show how (horrifically) new at programming I am, but hey some people might be able to learn from them or fix parts of my projects.
+Tweaks showing how *(horrifically)* new I am to programming, but hey someone might benefit from deciphering my code.
 
 **This is *NOT* the place to report issues, head over to [LacertosusRepo/LacertosusRepo.github.io](https://github.com/LacertosusRepo/LacertosusRepo.github.io) and create an issue there.**
 
@@ -20,6 +19,7 @@ These tweaks show how (horrifically) new at programming I am, but hey some peopl
 | Dock Indicators | 13 - 14 | v1.0.6 | arm64 arm64e | | Add a running indicator under dock apps with animations |
 | EinsteinVibes | 10 - 14 | v1.1 | arm64 arm64e | | Vibrate calculator buttons |
 | ExampleCepheiProject | 13 | v1.0 | arm64 arm64e | ✔ | Example project that uses Cephei |
+| Flashlight Indicator | 14 | v1.0 | arm64 arm64e | | iOS camera/microphone indicator for the flashlight |
 | FlashNotify | 13 - 14 | v1.0.2 | arm64 arm64e | | Notify user when flashlight has been on for too long |
 | FLEX4Me | 11 - 12 | v1.3 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
 | Free Market | 13 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
