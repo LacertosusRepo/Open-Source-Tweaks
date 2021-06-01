@@ -19,7 +19,7 @@ Tweaks showing how *(horrifically)* new I am to programming, but hey someone mig
 | Dock Indicators | 13 - 14 | v1.0.6 | arm64 arm64e | | Add a running indicator under dock apps with animations |
 | EinsteinVibes | 10 - 14 | v1.1 | arm64 arm64e | | Vibrate calculator buttons |
 | ExampleCepheiProject | 13 | v1.0 | arm64 arm64e | ✔ | Example project that uses Cephei |
-| Flashlight Indicator | 14 | v1.0 | arm64 arm64e | | iOS camera/microphone indicator for the flashlight |
+| Flashlight Indicator | 14 | v1.0 | arm64 arm64e | | iOS 14 camera/microphone indicator for the flashlight |
 | FlashNotify | 13 - 14 | v1.0.2 | arm64 arm64e | | Notify user when flashlight has been on for too long |
 | FLEX4Me | 11 - 12 | v1.3 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
 | Free Market | 13 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
