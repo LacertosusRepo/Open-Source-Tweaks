@@ -1,0 +1,10 @@
+Package: com.lacertosusrepo.flashlightindicator
+Name: Indicators
+Depends: mobilesubstrate, preferenceloader, ws.hbang.common (>= 1.16), ws.hbang.alderis (>= 1.0), com.lacertosusrepo.libdeusprefs (>= 1.0)
+Version: 1.2
+Architecture: iphoneos-arm
+Description: More indicators similar to the camera/microphone...
+Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>
+Author: LacertosusDeus <LacertosusThemes@gmail.com>
+Section: Tweaks
+Depiction:

@@ -5,13 +5,14 @@ else
 	export ARCHS = arm64 arm64e
 endif
 
-INSTALL_TARGET_PROCESSES = SpringBoard
+INSTALL_TARGET_PROCESSES = Preferences
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = FlashlightIndicator
-FlashlightIndicator_FILES = $(wildcard *.x)
-FlashlightIndicator_CFLAGS = -fobjc-arc
+TWEAK_NAME = zzzTweakCount
+zzzTweakCount_FILES = $(wildcard *.x) $(wildcard *.m)
+zzzTweakCount_PRIVATE_FRAMEWORKS = Preferences
+zzzTweakCount_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

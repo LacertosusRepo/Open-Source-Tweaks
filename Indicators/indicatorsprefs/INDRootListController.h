@@ -1,0 +1,2 @@
+@interface INDRootListController : HBRootListController
+@end

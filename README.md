@@ -19,12 +19,12 @@ Tweaks showing how *(horrifically)* new I am to programming, but hey someone mig
 | Dock Indicators | 13 - 14 | v1.0.6 | arm64 arm64e | | Add a running indicator under dock apps with animations |
 | EinsteinVibes | 10 - 14 | v1.1 | arm64 arm64e | | Vibrate calculator buttons |
 | ExampleCepheiProject | 13 | v1.0 | arm64 arm64e | ✔ | Example project that uses Cephei |
-| Flashlight Indicator | 14 | v1.0 | arm64 arm64e | | iOS 14 camera/microphone indicator for the flashlight |
 | FlashNotify | 13 - 14 | v1.0.2 | arm64 arm64e | | Notify user when flashlight has been on for too long |
 | FLEX4Me | 11 - 12 | v1.3 | arm64 arm64e | ✔ | Force touch status bar to show/hide flex |
 | Free Market | 13 | v1.0 | arm64 arm64e | | Change "Get" to "Free" in the Appstore |
 | Imperium | 11 - 14 | v3.0 | arm64 arm64e | ✔ | Music gestures in the now playing widget |
 | Improvify | 11 - 12 | v1.4.6 | arm64 arm64e | ✔ | Improved Spotify features |
+| Indicators | 14 | v1.2 | arm64 arm64e | ✔ | iOS 14 camera/microphone indicator for the flashlight, DND, and VPN |
 | KeywordReplace | 13 | v1.0.1 | arm64 arm64e | | Replace keywords system wide |
 | Libellum | 12 - 14 | v1.6 | arm64 arm64e | ✔ | Notepad on lockscreen/notifications view |
 | LuxSit | 11 - 12 | v1.0 | arm64 arm64e | | URL shortcuts in the spotlight search |
@@ -43,6 +43,7 @@ Tweaks showing how *(horrifically)* new I am to programming, but hey someone mig
 | Stellae | 11 - 12 | v1.2.4 | arm64 arm64e | ✔ | Get random daily wallpaper from a subreddit |
 | Swiper | 12 | v1.0 | arm64 arm64e | | Music control swipes on the dock |
 | ToneItDown | 11 - 12 | v1.0.1 | arm64 arm64e | ✔ | Mute tones when previewing them |
+| TweakCount | ?? - 14 | v1.0 | arm64 arm64e | | Show a count of your installed packages in preferences |
 | TweakSearch | 13 | v1.0.4 | arm64 arm64e | | Search through apps & tweak sections of PO2 or shuffle |
 | Vitrum | 11 | v1.2 | arm64 | | Control center customization |
 | VolbrateXI | 10 - 12 | v1.3 | arm64 arm64e | ✔ | Vibrate volume button interactions |
