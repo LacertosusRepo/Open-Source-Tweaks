@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.tweakcount
 Name: TweakCount
 Depends: mobilesubstrate
-Version: 1.0
+Version: 1.0.1
 Architecture: iphoneos-arm
 Description: See how many tweaks you have install in your preferences...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

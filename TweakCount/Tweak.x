@@ -37,9 +37,9 @@
        * If the instance of PSListController is the main PSUIPrefsListController page & TweakSpecifiersController doesnt exist, insert specifiers.
        * Alternatively if no preference bundles are present, insert the count specifier beneath the apple account specifier.
        *
-       * Otherwise if the instance of PSListController is TweakSpecifiersController, insert count specifier at the top of the page.
+       * Otherwise if the instance of PSListController is a organization tweak's custom controller, then insert the count specifier at the top of the page.
        */
-    if([self isMemberOfClass:[%c(PSUIPrefsListController) class]] && !%c(TweakSpecifiersController)) {
+    if([self isMemberOfClass:[%c(PSUIPrefsListController) class]] && ![self preferenceOrganizationTweakIsInstalled]) {
       BOOL specifiersInserted = NO;
       for(PSSpecifier *specifier in self.specifiers) {
         if([specifier.properties count] == 1) {
@@ -58,7 +58,7 @@
         [self insertContiguousSpecifiers:@[groupSpecifier, tweakCountSpecifier] afterSpecifier:[self specifierForID:@"APPLE_ACCOUNT"]];
       }
 
-    } else if([self isMemberOfClass:[%c(TweakSpecifiersController) class]]) {
+    } else if([self isMemberOfClass:[%c(TweakSpecifiersController) class]] || [self isMemberOfClass:[%c(TweakPreferencesListController) class]]) {
       [self insertContiguousSpecifiers:@[groupSpecifier, tweakCountSpecifier] atIndex:0];
     }
   }
@@ -120,5 +120,10 @@
         }];
       }
     }
+  }
+
+%new
+  -(BOOL)preferenceOrganizationTweakIsInstalled {
+    return (%c(TweakSpecifiersController) || %c(TweakPreferencesListController));
   }
 %end

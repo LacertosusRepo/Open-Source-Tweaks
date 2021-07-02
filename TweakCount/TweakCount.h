@@ -4,6 +4,7 @@
 -(void)hideDetailedCount:(PSSpecifier *)specifier;
 -(void)showDetailedCount:(PSSpecifier *)specifier;
 -(void)loadStatusFile;
+-(BOOL)preferenceOrganizationTweakIsInstalled;
 @end
 
 @interface TweakSpecifiersController : PSListController
