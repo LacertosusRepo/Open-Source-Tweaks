@@ -38,7 +38,7 @@ Tweaks showing how *(horrifically)* new I am to programming, but hey someone mig
 | Safi | 10 - 11 | v1.3 | arm64 | ✔ | Simple folder customization |
 | SkipBTForgetConfirmation | 10 - 14 | v1.0 | arm64 arm64e | | Remove forget confirmation for bluetooth devices |
 | Speculum | 12 - 13 | v1.3.5 | arm64 arm64e | | Customizable lockscreen time, date, and weather information |
-| Spotify AddToFavorites | [Check Depiction](https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.spotifyaddtofavorites/) | v1.0.7 | arm64 arm64e | | Quickly favorite songs to a saved playlist |
+| Spotify AddToFavorites | [Check Depiction](https://lacertosusrepo.github.io/depictions/com.lacertosusrepo.spotifyaddtofavorites/) | v1.1.0 | arm64 arm64e | | Quickly favorite songs to a saved playlist |
 | SpotlightAppDelete | 13 - 14 | v1.0 | arm64 arm64e | | Delete apps from the spotlighT search |
 | Stellae | 11 - 12 | v1.2.4 | arm64 arm64e | ✔ | Get random daily wallpaper from a subreddit |
 | Swiper | 12 | v1.0 | arm64 arm64e | | Music control swipes on the dock |

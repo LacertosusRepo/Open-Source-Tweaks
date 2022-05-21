@@ -1,7 +1,7 @@
 Package: com.lacertosusrepo.spotifyaddtofavorites
 Name: Spotify AddToFavorites
-Depends: mobilesubstrate, ws.hbang.common (>= 1.13)
-Version: 1.0.7
+Depends: mobilesubstrate
+Version: 1.1.0
 Architecture: iphoneos-arm
 Description: Favorite songs easier in Spotify...
 Maintainer: LacertosusDeus <LacertosusThemes@gmail.com>

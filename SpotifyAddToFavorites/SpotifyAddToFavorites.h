@@ -1,29 +1,8 @@
-#import <Cephei/HBPreferences.h>
-
-typedef enum UIImageSymbolScale : NSInteger {
-  UIImageSymbolScaleDefault = -1,
-  UIImageSymbolScaleUnspecified,
-  UIImageSymbolScaleSmall,
-  UIImageSymbolScaleMedium,
-  UIImageSymbolScaleLarge,
-} UIImageSymbolScale;
-
-@interface UIImageConfiguration : NSObject
-@end
-
-@interface UIImage (iOS13)
-+(UIImage *)systemImageNamed:(NSString *)arg1 withConfiguration:(UIImageConfiguration *)arg2;
-@end
-
-@interface UIImageSymbolConfiguration : UIImageConfiguration
-+(UIImageSymbolConfiguration *)configurationWithScale:(UIImageSymbolScale)scale;
-@end
-
 @interface SPTPlayerTrack : NSObject
 @property(copy, nonatomic) NSURL *URI;
 @end
 
-@interface SPTStatefulPlayer : NSObject
+@interface SPTStatefulPlayerImplementation : NSObject
 -(SPTPlayerTrack *)currentTrack;
 @end
 
@@ -56,37 +35,19 @@ typedef enum UIImageSymbolScale : NSInteger {
 @end
 
 @interface GLUEButton : UIButton
--(void)bounce;
 @end
 
 @interface VISREFArtworkContentView : UIView
 @property (nonatomic, strong, readwrite) UIImageView *imageView;
 @end
 
-@interface SPTNowPlayingBarContentView : UIView
-@property (nonatomic, retain) UIView *connectButtonView;
-@end
-
 @interface SPTContextMenuViewController : UIViewController
 -(NSURL *)spt_pageURI;
 -(NSURL *)trackURL;
--(UIView *)headerView;
-
-//SpotifyAddToFavorites
-@property (retain, nonatomic) GLUEButton *favoritePlaylistButton;
 @end
 
 @interface SPTNowPlayingFooterUnitViewController : UIViewController
 @property (nonatomic, strong, readwrite) UIViewController *rightButtonViewController;
-
-  //SpotifyAddToFavorites
-@property (retain, nonatomic) SPTNowPlayingButton *addToPlaylistButton;
--(void)handleButtonPressed:(UIGestureRecognizer *)gesture;
--(void)updateButtonColor;
-@end
-
-@interface SPTNowPlayingBarViewController : UIViewController
-@property (nonatomic, strong, readwrite) SPTNowPlayingBarContentView *contentView;
 
   //SpotifyAddToFavorites
 @property (retain, nonatomic) SPTNowPlayingButton *addToPlaylistButton;
