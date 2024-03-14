@@ -1,5 +1,4 @@
 #import <UIKit/UIKit.h>
-#import "HBLog.h"
 #import "PreferencesColorDefinitions.h"
 
 @interface LBMAnimatedTitleView : UIView

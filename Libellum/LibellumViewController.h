@@ -16,7 +16,7 @@
 @end
 
 @interface LibellumViewController : CSCoverSheetViewControllerBase <UITextViewDelegate>
-@property (nonatomic, retain) HBPreferences *preferences;
+@property (nonatomic, retain) NSUserDefaults *preferences;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, retain) NSAttributedString *text;
 @property (nonatomic, retain) MTMaterialView *blurView;

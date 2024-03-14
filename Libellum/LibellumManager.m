@@ -24,27 +24,30 @@
     return sharedManager;
   }
 
-  -(instancetype)init {
-    if(self = [super init]) {
-      _preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
-      [_preferences registerPreferenceChangeBlock:^{
-        [self preferencesChanged];
-      }];
+- (instancetype)init {
+    if (self = [super init]) {
+        _preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.libellumprefs"];
 
-      if(![self.preferences boolForKey:@"checkedForOldNotes"]) {
-        [self convertNotesFromPreviousVersions];
-      }
+        // Observe changes to user defaults
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(preferencesChanged:)
+                                                     name:NSUserDefaultsDidChangeNotification
+                                                   object:nil];
 
-      if([self.preferences boolForKey:@"noteBackup"]) {
-        [self backupNotes];
-      }
+        if (![self.preferences boolForKey:@"checkedForOldNotes"]) {
+            [self convertNotesFromPreviousVersions];
+        }
 
-      _isDarkMode = ([[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle] == 2) ?: NO;
-      _atLeastiOS13 = [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}];
+        if ([self.preferences boolForKey:@"noteBackup"]) {
+            [self backupNotes];
+        }
+
+        _isDarkMode = ([[NSClassFromString(@"UIUserInterfaceStyleArbiter") sharedInstance] currentStyle] == 2) ?: NO;
+        _atLeastiOS13 = [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}];
     }
 
     return self;
-  }
+}
 
 #pragma mark - Page Management
 
@@ -56,7 +59,14 @@
     self.heightConstraint = [self.pageController.view.heightAnchor constraintEqualToConstant:[self.preferences integerForKey:@"noteSize"]],
   ]];
 
-  _notesByIndex = ([NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithObjects:[NSMutableDictionary class], [NSAttributedString class], nil] fromData:[self.preferences objectForKey:@"notes"] error:nil]) ?: [[NSMutableDictionary alloc] init];
+  NSError *unarchiveError = nil;
+  NSSet *allowedClasses = [NSSet setWithObjects:[NSMutableDictionary class], [NSAttributedString class], [NSNumber class], nil]; // Include NSNumber class
+  _notesByIndex = [NSKeyedUnarchiver unarchivedObjectOfClasses:allowedClasses fromData:[self.preferences objectForKey:@"notes"] error:&unarchiveError];
+  if (unarchiveError) {
+      LOGS(@"Error unarchiving notes: %@", unarchiveError);
+  } else {
+      LOGS(@"Unarchived notes successfully. Total notes: %lu", (unsigned long)_notesByIndex.count);
+  }
   _pages = [[NSMutableArray alloc] init];
 
   for(NSNumber *key in self.notesByIndex) {
@@ -138,29 +148,37 @@
 
 #pragma mark - UIPageViewController Delegate Methods
 
-  -(UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
-    [[NSClassFromString(@"SBIdleTimerGlobalCoordinator") sharedInstance] resetIdleTimer];
+-(UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
+    if (![viewController isKindOfClass:[LibellumViewController class]]) {
+        return nil;
+    }
 
     NSInteger index = [(LibellumViewController *)viewController index];
-    if(index == 0 || index == NSNotFound) {
-      index = self.pages.count;
+    if (index == 0 || index == NSNotFound) {
+        index = self.pages.count;
     }
     index--;
 
     return [self childViewControllerAtIndex:index];
-  }
+}
 
-  -(UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
-    [[NSClassFromString(@"SBIdleTimerGlobalCoordinator") sharedInstance] resetIdleTimer];
+-(UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
+    if (![viewController isKindOfClass:[LibellumViewController class]]) {
+        return nil;
+    }
 
     NSInteger index = [(LibellumViewController *)viewController index];
+    if (index == NSNotFound) {
+        return nil;
+    }
     index++;
-    if(index == self.pages.count) {
-      index = 0;
+    if (index == self.pages.count) {
+        index = 0;
     }
 
     return [self childViewControllerAtIndex:index];
-  }
+}
+
 
   -(LibellumViewController *)childViewControllerAtIndex:(NSInteger)index {
     for(LibellumViewController *viewController in self.pages) {
@@ -531,44 +549,85 @@
 
 #pragma mark - Saving\Backing-up Note Data
 
-  -(void)saveNotes {
-    [self.notesByIndex removeAllObjects];
-    for(LibellumViewController *viewController in self.pages) {
-      [self.notesByIndex setObject:viewController.noteTextView.attributedText forKey:[NSNumber numberWithInt:viewController.index]];
+- (void)saveNotes {
+    LOGS(@"Starting to save notes...");
 
-      if(viewController.index >= (self.pages.count - 1)) {
-        [self.preferences setObject:[NSKeyedArchiver archivedDataWithRootObject:self.notesByIndex requiringSecureCoding:NO error:nil] forKey:@"notes"];
-      }
+    // Check if notesByIndex is not nil
+    if (!self.notesByIndex) {
+        LOGS(@"notesByIndex is nil. Initializing...");
+        self.notesByIndex = [NSMutableDictionary dictionary];
     }
-  }
 
-  -(void)backupNotes {
-    /*NSDate *date = [NSDate date];
-    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-    [timeFormatter setDateFormat:@"h:mm a zzz"];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"MMMM d, yyyy"];*/
+    [self.notesByIndex removeAllObjects];
+    LOGS(@"Cleared notesByIndex dictionary.");
 
-    [self.preferences setObject:[self.preferences objectForKey:@"notes"] forKey:@"backupNotes"];
-  }
+    for (LibellumViewController *viewController in self.pages) {
+        LOGS(@"Processing viewController with index: %ld", (long)viewController.index);
+
+        // Check if noteTextView or its attributedText is nil
+        if (!viewController.noteTextView || !viewController.noteTextView.attributedText) {
+            LOGS(@"noteTextView or its attributedText is nil for viewController with index: %ld", (long)viewController.index);
+            continue; // Skip this iteration if noteTextView or attributedText is nil
+        }
+
+        [self.notesByIndex setObject:viewController.noteTextView.attributedText forKey:@(viewController.index)];
+        LOGS(@"Added note for index: %ld", (long)viewController.index);
+
+        if (viewController.index >= (self.pages.count - 1)) {
+            NSError *error = nil;
+            NSData *archivedData = [NSKeyedArchiver archivedDataWithRootObject:self.notesByIndex requiringSecureCoding:NO error:&error];
+            if (!archivedData) {
+                LOGS(@"Archiving failed with error: %@", error);
+            } else {
+                [self.preferences setObject:archivedData forKey:@"notes"];
+                LOGS(@"Archived and saved notes to preferences.");
+            }
+        }
+    }
+    LOGS(@"Finished saving notes.");
+}
+
+- (void)backupNotes {
+    LOGS(@"Starting to backup notes...");
+
+    NSData *currentNotesData = [self.preferences objectForKey:@"notes"];
+    if (currentNotesData) {
+        LOGS(@"Current notes found, proceeding with backup. Data size: %lu bytes", (unsigned long)currentNotesData.length);
+
+        // Perform the backup
+        [self.preferences setObject:currentNotesData forKey:@"backupNotes"];
+        BOOL syncSuccess = [self.preferences synchronize];
+
+        if (syncSuccess) {
+            LOGS(@"Backup completed successfully.");
+        } else {
+            LOGS(@"Failed to synchronize user defaults after backup.");
+        }
+    } else {
+        LOGS(@"No current notes found, skipping backup.");
+    }
+}
 
 #pragma mark - Preferences Changed
 
-  -(void)preferencesChanged {
-    self.swipeGesture.enabled = [self.preferences boolForKey:@"useSwipeGesture"];
-    self.tapGesture.enabled = [self.preferences boolForKey:@"useTapGesture"];
-    self.edgeGesture.enabled = [self.preferences boolForKey:@"useEdgeGesture"];
-    self.heightConstraint.constant = [self.preferences integerForKey:@"noteSize"];
-    [self forceLockScreenStackViewLayout];
+- (void)preferencesChanged:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.swipeGesture.enabled = [self.preferences boolForKey:@"useSwipeGesture"];
+        self.tapGesture.enabled = [self.preferences boolForKey:@"useTapGesture"];
+        self.edgeGesture.enabled = [self.preferences boolForKey:@"useEdgeGesture"];
+        self.heightConstraint.constant = [self.preferences integerForKey:@"noteSize"];
+        [self forceLockScreenStackViewLayout];
 
-    for(LibellumViewController *libellumViewController in self.pages) {
-      [libellumViewController updatePreferences];
-    }
+        for(LibellumViewController *libellumViewController in self.pages) {
+            [libellumViewController updatePreferences];
+        }
 
-    if(![self.preferences boolForKey:@"hideGesture"] && self.pageController.view.hidden) {
-      [self toggleLibellum:nil];
-    }
-  }
+        if(![self.preferences boolForKey:@"hideGesture"] && self.pageController.view.hidden) {
+            [self toggleLibellum:nil];
+        }
+    });
+}
+
 
   -(void)notifyViewControllersOfInterfaceChange:(NSInteger)style {
     self.isDarkMode = (style == 2) ?: NO;
@@ -623,4 +682,8 @@
   -(UIView *)viewForSystemGestureRecognizer:(UIGestureRecognizer *)gesture {
     return nil;
   }
+
+  - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end

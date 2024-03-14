@@ -1,5 +1,4 @@
 #import "LBMHeaderView.h"
-extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, void*);
 
 @implementation LBMHeaderView {
 	UIImageView *_iconView;
@@ -9,9 +8,11 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 }
 
 	-(instancetype)initWithTitle:(NSString *)title subtitles:(NSArray *)subtitles bundle:(NSBundle *)bundle {
+		//LOGS(@"LBMHeaderView - initWithTitle: starting initialization");
 		self = [super init];
 
 		if(self) {
+			//LOGS(@"LBMHeaderView - initWithTitle: super init successful");
 				//Add icon over labels (225x225)
 			_iconView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconlarge.png" inBundle:bundle compatibleWithTraitCollection:nil]];
 			_iconView.alpha = 0;
@@ -20,7 +21,7 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 			_title = [[UILabel alloc] initWithFrame:CGRectZero];
 			_title.numberOfLines = 1;
 			_title.font = [UIFont systemFontOfSize:40 weight:UIFontWeightSemibold];
-			_title.text = title;
+			_title.text = [NSString stringWithFormat:@"%@ • %@", title, PACKAGE_VERSION];
 			_title.backgroundColor = [UIColor clearColor];
 			_title.textAlignment = NSTextAlignmentCenter;
 			_title.alpha = 0;
@@ -55,22 +56,6 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 				[_stackView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
 			]];
 
-				//Get user wallpaper
-			NSData *wallpaperData = [NSData dataWithContentsOfFile:@"/User/Library/SpringBoard/OriginalLockBackground.cpbitmap"];
-			CFArrayRef wallpaperArrayRef = CPBitmapCreateImagesFromData((__bridge CFDataRef)wallpaperData, NULL, 1, NULL);
-			NSArray *wallpaperArray = (__bridge NSArray *)wallpaperArrayRef;
-			UIImage *wallpaper = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)(wallpaperArray[0])];
-			CFRelease(wallpaperArrayRef);
-
-			UIImageView *wallpaperView = [[UIImageView alloc] initWithImage:wallpaper];
-			wallpaperView.clipsToBounds = YES;
-			wallpaperView.contentMode = UIViewContentModeScaleAspectFill;
-			wallpaperView.layer.cornerRadius = 10;
-			wallpaperView.translatesAutoresizingMaskIntoConstraints = NO;
-			[wallpaperView setContentCompressionResistancePriority:0 forAxis:UILayoutConstraintAxisHorizontal];
-			[wallpaperView setContentCompressionResistancePriority:0 forAxis:UILayoutConstraintAxisVertical];
-			[self addSubview:wallpaperView];
-
 				//Create blur
 			MTMaterialView *blurView;
 			if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
@@ -87,7 +72,6 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 
 			[self addSubview:blurView];
 			[self sendSubviewToBack:blurView];
-			[self sendSubviewToBack:wallpaperView];
 
 				//Add more constraints
 			[NSLayoutConstraint activateConstraints:@[
@@ -96,13 +80,12 @@ extern CFArrayRef CPBitmapCreateImagesFromData(CFDataRef cpbitmap, void*, int, v
 				[blurView.widthAnchor constraintEqualToAnchor:_stackView.widthAnchor constant:50],
 				[blurView.heightAnchor constraintEqualToAnchor:_stackView.heightAnchor constant:20],
 
-				[wallpaperView.centerXAnchor constraintEqualToAnchor:blurView.centerXAnchor],
-				[wallpaperView.centerYAnchor constraintEqualToAnchor:blurView.centerYAnchor],
-				[wallpaperView.widthAnchor constraintEqualToAnchor:blurView.widthAnchor],
-				[wallpaperView.heightAnchor constraintEqualToAnchor:blurView.heightAnchor],
 			]];
 
 			[self addInterpolatingMotion];
+			//LOGS(@"LBMHeaderView - initWithTitle: initialization complete");
+		} else {
+			//LOGS(@"LBMHeaderView - initWithTitle: super init failed");
 		}
 
 		return self;

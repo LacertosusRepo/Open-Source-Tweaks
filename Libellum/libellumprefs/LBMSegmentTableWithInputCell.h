@@ -1,4 +1,5 @@
 #import <Preferences/PSSpecifier.h>
+#import <Preferences/PSControlTableCell.h>
 
 @interface UIView (PrivateMethods)
 -(UIViewController *)_viewControllerForAncestor;
@@ -17,9 +18,6 @@
 @property (nonatomic) NSInteger selectedSegmentIndex;
 @end
 
-@interface PSControlTableCell : PSTableCell
--(UIControl *)control;
-@end
 
 @interface PSSegmentTableCell : PSControlTableCell
 @end
