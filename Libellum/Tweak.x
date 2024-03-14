@@ -41,11 +41,12 @@
         [self.view addSubview:customStackView];
 
         // Define constraints for customStackView
+        CGFloat padding = 10; // padding
         [NSLayoutConstraint activateConstraints:@[
-            [customStackView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-            [customStackView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
-            [customStackView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-            [customStackView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+            [customStackView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:padding],
+            [customStackView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-padding],
+            [customStackView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:padding],
+            [customStackView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-padding],
         ]];
     }
 
