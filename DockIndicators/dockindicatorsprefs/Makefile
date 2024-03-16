@@ -6,7 +6,7 @@ dockindicatorsprefs_INSTALL_PATH = /Library/PreferenceBundles
 dockindicatorsprefs_LIBRARIES = colorpicker
 dockindicatorsprefs_FRAMEWORKS = UIKit
 dockindicatorsprefs_PRIVATE_FRAMEWORKS = Preferences
-dockindicatorsprefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs Alderis
+dockindicatorsprefs_EXTRA_FRAMEWORKS = Alderis
 dockindicatorsprefs_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
 
 include $(THEOS_MAKE_PATH)/bundle.mk

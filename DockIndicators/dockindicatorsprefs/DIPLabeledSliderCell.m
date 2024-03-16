@@ -22,18 +22,18 @@
 			[specifier setProperty:@56 forKey:@"height"];
 
       _sliderLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-			_sliderLabel.font = [UIFont systemFontOfSize:15 weight:UIFontWeightBold];
-			_sliderLabel.text = [specifier propertyForKey:@"label"];
-			_sliderLabel.translatesAutoresizingMaskIntoConstraints = NO;
+		_sliderLabel.font = [UIFont systemFontOfSize:15 weight:UIFontWeightBold];
+		_sliderLabel.text = [specifier propertyForKey:@"label"];
+		_sliderLabel.translatesAutoresizingMaskIntoConstraints = NO;
 
-			_valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-			_valueLabel.font = [UIFont monospacedDigitSystemFontOfSize:10 weight:UIFontWeightBold];
-			_valueLabel.text = [NSString stringWithFormat:@"%.01f", [[specifier performGetter] floatValue]];
-			_valueLabel.userInteractionEnabled = YES;
-			_valueLabel.translatesAutoresizingMaskIntoConstraints = NO;
-			[_valueLabel sizeToFit];
+		_valueLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+		_valueLabel.font = [UIFont monospacedDigitSystemFontOfSize:10 weight:UIFontWeightBold];
+		_valueLabel.text = [NSString stringWithFormat:@"%.01f", [[specifier performGetter] floatValue]];
+		_valueLabel.userInteractionEnabled = YES;
+		_valueLabel.translatesAutoresizingMaskIntoConstraints = NO;
+		[_valueLabel sizeToFit];
 
-			_sliderStackView = [[UIStackView alloc] initWithArrangedSubviews:@[self.control, _valueLabel]];
+		_sliderStackView = [[UIStackView alloc] initWithArrangedSubviews:@[self.control, _valueLabel]];
       _sliderStackView.alignment = UIStackViewAlignmentCenter;
       _sliderStackView.axis = UILayoutConstraintAxisHorizontal;
       _sliderStackView.distribution = UIStackViewDistributionFill;

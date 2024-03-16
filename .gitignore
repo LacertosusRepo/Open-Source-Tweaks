@@ -1,3 +1,4 @@
 
 /Libellum/.theos
 *.deb
+/DockIndicators/.theos

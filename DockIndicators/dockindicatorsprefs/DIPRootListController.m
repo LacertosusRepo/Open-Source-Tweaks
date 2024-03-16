@@ -5,14 +5,6 @@
 	-(id)init {
 		self = [super init];
 		if(self) {
-			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
-			appearanceSettings.navigationBarBackgroundColor = Sec_Color;
-			appearanceSettings.navigationBarTintColor = Pri_Color;
-			appearanceSettings.showsNavigationBarShadow = NO;
-			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
-			appearanceSettings.tintColor = Pri_Color;
-			appearanceSettings.translucentNavigationBar = NO;
-			self.hb_appearanceSettings = appearanceSettings;
 		}
 
 		return self;
@@ -50,7 +42,7 @@
 	-(void)reloadSpecifiers {
 		[super reloadSpecifiers];
 
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+		NSUserDefaults *preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.dockindicatorsprefs"];
 		if([[preferences objectForKey:@"indicatorUseAppColor"] boolValue]) {
 			[self removeSpecifier:self.savedSpecifiers[@"SetIndicatorColor"] animated:YES];
 		}
@@ -82,7 +74,7 @@
 
 	-(void)respringConfirm {
 		if([self.navigationItem.rightBarButtonItem isEqual:_respringConfirmButton]) {
-			[HBRespringController respring];
+			[self respring];
 		} else {
 			_respringConfirmButton = (_respringConfirmButton) ?: [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respringConfirm)];
 			_respringConfirmButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
@@ -112,9 +104,31 @@
 	}
 
 	-(void)clearColorCache {
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+		NSUserDefaults *preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.dockindicatorsprefs"];
 		[preferences removeObjectForKey:@"appColorCache"];
 
-		[HBRespringController respring];
+		[self respring];
 	}
+
+	- (void)minimizeSettings {
+		UIApplication *app = [UIApplication sharedApplication];
+		[app performSelector:@selector(suspend)];
+	}
+
+	- (void)terminateSettingsUsingBKS {
+		pid_t pid;
+		const char* args[] = {"sbreload", NULL};
+		posix_spawn(&pid, ROOT_PATH("/usr/bin/sbreload"), NULL, NULL, (char* const*)args, NULL);
+	}
+
+	- (void)terminateSettingsAfterDelay:(NSTimeInterval)delay {
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			[self terminateSettingsUsingBKS];
+		});
+	}
+	- (void)respring {
+		[self minimizeSettings];
+		[self terminateSettingsAfterDelay:0.5];
+	}
+
 @end

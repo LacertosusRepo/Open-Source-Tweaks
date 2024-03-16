@@ -4,14 +4,6 @@
 	-(id)init {
 		self = [super init];
 		if(self) {
-      HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
-			appearanceSettings.navigationBarBackgroundColor = Sec_Color;
-			appearanceSettings.navigationBarTintColor = Pri_Color;
-			appearanceSettings.showsNavigationBarShadow = NO;
-			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
-			appearanceSettings.tintColor = Pri_Color;
-			appearanceSettings.translucentNavigationBar = NO;
-			self.hb_appearanceSettings = appearanceSettings;
 			self.title = @"";
 		}
 
@@ -20,7 +12,7 @@
 
 	-(NSArray *)specifiers {
 		if (!_specifiers) {
-			HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+			NSUserDefaults *preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.dockindicatorsprefs"];
 			_cachedAppColors = ([[preferences objectForKey:@"appColorCache"] mutableCopy]);
 
 			NSMutableArray *appColorSpecifiers = [[NSMutableArray alloc] init];
@@ -55,7 +47,7 @@
 
 			[_cachedAppColors removeObjectForKey:[specifierToBeRemoved propertyForKey:@"bundleID"]];
 
-			HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+			NSUserDefaults *preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.dockindicatorsprefs"];
 			[preferences setObject:_cachedAppColors forKey:@"appColorCache"];
 		}
 	}
@@ -64,7 +56,7 @@
 		if(![hex isEqualToString:_cachedAppColors[bundle]]) {
 			[_cachedAppColors setObject:hex forKey:bundle];
 
-			HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
+			NSUserDefaults *preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.dockindicatorsprefs"];
 			[preferences setObject:_cachedAppColors forKey:@"appColorCache"];
 		}
 	}

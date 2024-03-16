@@ -9,10 +9,11 @@ typedef NS_ENUM(NSInteger, DIPNotificationAnimationType) {
 };
 
 @interface SBIcon : NSObject
-@property (nonatomic, readonly) NSInteger badgeValue;
+@property (readonly, nonatomic) NSInteger badgeValue;
 @end
 
 @interface SBApplicationIcon : SBIcon
+-(id)application;
 @end
 
 @interface SBApplicationProcessState : NSObject
@@ -23,10 +24,14 @@ typedef NS_ENUM(NSInteger, DIPNotificationAnimationType) {
 @property (nonatomic, readonly) SBApplicationProcessState *processState;
 @end
 
+@interface SBFolderIcon : SBIcon
+@end
+
 @interface SBIconView : UIView
 @property (nonatomic, retain) SBIcon *icon;
 @property (nonatomic, readonly) UIImage *iconImageSnapshot;
 @property (nonatomic, strong, readwrite) id folderIcon;
+//@property (retain, nonatomic) SBFolderIcon *folderIcon; // ivar: _folderIcon //ios16
 @property (nonatomic, copy, readonly) NSString *applicationBundleIdentifierForShortcuts;
 
   //DockIndicators
