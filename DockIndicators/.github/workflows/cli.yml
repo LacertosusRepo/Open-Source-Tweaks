@@ -1,0 +1,30 @@
+name: CLI
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Build Rootless Package
+        uses: L1ghtmann/theos-build@main
+        with:
+          sdk: iPhoneOS14.5
+          extra_args: ROOTLESS=1 CLI=1 FINALPACKAGE=1
+
+      - name: Build Rootful Package
+        uses: L1ghtmann/theos-build@main
+        with:
+          extra_args: ROOTLESS=0 CLI=1 FINALPACKAGE=1
+
+      - name: Attach Packages To Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export TAG="${GITHUB_REF#refs/tags/}"
+          gh release upload "$TAG" packages/*.deb

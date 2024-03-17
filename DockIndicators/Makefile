@@ -1,6 +1,14 @@
 export ARCHS = arm64 arm64e
-TARGET = iphone:clang:14.5:14.5
-FINALPACKAGE = 1
+export CLI = 0
+export ROOTLESS = 1
+
+ifeq ($(ROOTLESS),1)
+export THEOS_PACKAGE_SCHEME = rootless
+export TARGET = iphone:clang:14.5:15.0
+else
+export TARGET = iphone:clang:14.5:13.0
+endif
+
 
 INSTALL_TARGET_PROCESSES = SpringBoard
 
