@@ -9,13 +9,15 @@
 			<string>PSGroupCell</string>
 		</dict>
 		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>label</key>
+			<string>GcTwitterCell</string>
+			<key>accountLabel</key>
 			<string>Lacertosus</string>
-			<key>user</key>
+			<key>account</key>
 			<string>LacertosusDeus</string>
-			<key>iconURL</key>
+			<key>URL</key>
 			<string>https://avatars2.githubusercontent.com/u/14306024?v=4</string>
 		</dict>
 		<dict>
@@ -125,8 +127,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>cellClass</key>
-			<string>HBTintedTableCell</string>
 			<key>detail</key>
 			<string>LBMColorsListController</string>
 			<key>isController</key>
@@ -139,8 +139,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>cellClass</key>
-			<string>HBTintedTableCell</string>
 			<key>detail</key>
 			<string>LBMGeneralListController</string>
 			<key>isController</key>
@@ -202,8 +200,6 @@
 			<string>manageBackup:</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
-			<key>cellClass</key>
-    	<string>HBSpinnerTableCell</string>
 			<key>label</key>
 			<string>Manage Backup</string>
 		</dict>
@@ -233,8 +229,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>cellClass</key>
-			<string>HBTintedTableCell</string>
 			<key>detail</key>
 			<string>LBMGesturesListController</string>
 			<key>isController</key>
@@ -256,8 +250,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSLinkCell</string>
-			<key>cellClass</key>
-			<string>HBTintedTableCell</string>
 			<key>detail</key>
 			<string>LBMCreditsListController</string>
 			<key>isController</key>
@@ -270,30 +262,21 @@
 			<integer>57</integer>
 		</dict>
 		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>HBLinkTableCell</string>
-			<key>label</key>
-			<string>Github</string>
-			<key>subtitle</key>
-			<string>Find the source code here!</string>
-			<key>icon</key>
-			<string>github.png</string>
-			<key>url</key>
-			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBLinkTableCell</string>
-			<key>label</key>
+			<string>GcSocialCell</string>
+			<key>userName</key>
 			<string>PayPal</string>
 			<key>subtitle</key>
 			<string>Feed my Steam sale addiction!</string>
-			<key>icon</key>
-			<string>paypal.png</string>
-			<key>url</key>
+			<key>accessoryType</key>
+			<integer>0</integer>
+			<key>pfpURL</key>
+			<string>https://livecartel.it/blog/wp-content/uploads/2022/02/paypal-ga3d83ec73_640.png</string>
+			<key>URL</key>
 			<string>https://paypal.me/Lacertosus</string>
 		</dict>
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>

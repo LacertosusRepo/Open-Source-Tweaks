@@ -1,5 +1,5 @@
 @interface CSNotificationAdjunctListViewController : UIViewController
-@property (nonatomic, retain) UIStackView *stackView;
+@property(nonatomic, retain) UIStackView *stackView;
 @property (nonatomic, assign) CGSize sizeToMimic;
 @end
 

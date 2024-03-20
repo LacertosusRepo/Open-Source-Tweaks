@@ -1,7 +1,9 @@
 #import "LBMBackupViewController.h"
+#import <rootless.h>
+#include <spawn.h>
 
 @implementation LBMNoteBackupViewController {
-  HBPreferences *_preferences;
+  NSUserDefaults *_preferences;
   UILabel *_titleLabel;
   UITextView *_textView;
   UIButton *_viewBackupButton;
@@ -18,7 +20,7 @@
       self.view.backgroundColor = [UIColor colorWithRed:0.15 green:0.15 blue:0.15 alpha:1];
       self.view.translatesAutoresizingMaskIntoConstraints = NO;
 
-      _preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+      _preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.libellumprefs"];
     }
 
     return self;
@@ -146,60 +148,97 @@
     } completion:nil];
   }
 
-  -(IBAction)viewBackupNotes {
+- (IBAction)viewBackupNotes {
+    NSData *backupData = [_preferences objectForKey:@"backupNotes"];
+    if (!backupData) {
+        [self animateTextChangeTo:@"There is no backup to show."];
+        return;
+    }
+
     NSError *error = nil;
     NSMutableString *notesContent = [[NSMutableString alloc] init];
-    NSMutableDictionary *notes = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithObjects:[NSMutableDictionary class], [NSAttributedString class], nil] fromData:[_preferences objectForKey:@"backupNotes"] error:&error];
 
-    for(NSNumber *key in notes) {
-      [notesContent appendString:[NSString stringWithFormat:@"Note #%d:\n%@\n\n", [key intValue] + 1, ((NSAttributedString *)notes[key]).string]];
+    // Include NSNumber in the set of allowed classes
+    NSSet *allowedClasses = [NSSet setWithObjects:[NSMutableDictionary class], [NSAttributedString class], [NSNumber class], nil];
+    NSMutableDictionary *notes = [NSKeyedUnarchiver unarchivedObjectOfClasses:allowedClasses fromData:backupData error:&error];
 
-      if([key intValue] == notes.count - 1) {
-        [self animateTextChangeTo:notesContent];
-      } else {
+    if (error) {
         [self animateTextChangeTo:[NSString stringWithFormat:@"Error viewing backed up notes:\n\n%@\n\n", error]];
+        return;
+    }
+
+    if (notes.count == 0) {
+        [self animateTextChangeTo:@"Looks like you don't have any notes :("];
+        return;
+    }
+
+    // Ensure the order of the notes if necessary by sorting the keys
+    NSArray *sortedKeys = [[notes allKeys] sortedArrayUsingSelector: @selector(compare:)];
+
+    for (NSNumber *key in sortedKeys) {
+        NSAttributedString *note = notes[key];
+        if (note) {
+            [notesContent appendString:[NSString stringWithFormat:@"Note #%ld:\n%@\n\n", (long)[key integerValue] + 1, note.string]];
+        }
+    }
+
+    [self animateTextChangeTo:notesContent];
+}
+
+
+-(IBAction)backupNotesNow {
+    NSData *notesData = [_preferences objectForKey:@"notes"];
+
+    if(notesData) {
+      LOGS(@"Starting backup of notes. Size of notes data: %lu bytes", (unsigned long)[notesData length]);
+
+      [_preferences setObject:notesData forKey:@"backupNotes"];
+      BOOL syncSuccess = [_preferences synchronize];  // Synchronize is not typically needed but can be used to force immediate save.
+
+      if (syncSuccess) {
+        LOGS(@"Backup successful.");
+        [self animateTextChangeTo:@"Backup successful!"];
+      } else {
+        LOGS(@"Failed to synchronize after backup.");
+        [self animateTextChangeTo:@"Failed to backup notes. Please try again."];
       }
-    }
-
-    if(notes.count == 0) {
-      [self animateTextChangeTo:@"Looks like you don't have any notes :("];
-    }
-  }
-
-  -(IBAction)backupNotesNow {
-    if([_preferences objectForKey:@"notes"]) {
-      /*NSDate *date = [NSDate date];
-      NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-      [timeFormatter setDateFormat:@"h:mm a zzz"];
-      NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-      [dateFormatter setDateFormat:@"MMMM d, yyyy"];*/
-
-      [_preferences setObject:[_preferences objectForKey:@"notes"] forKey:@"backupNotes"];
-
-      [self animateTextChangeTo:@"Backup successful!"];
-
     } else {
+      LOGS(@"There are no notes to backup.");
       [self animateTextChangeTo:@"There are no notes to backup."];
     }
-  }
+}
 
-  -(IBAction)restoreBackupNotes {
-    if([_preferences objectForKey:@"backupNotes"]) {
-      UIAlertController *cautionAlert = [UIAlertController alertControllerWithTitle:@"Restore" message:@"Are you sure you want to restore the backup of your notes? This will delete your current notes and respring your device." preferredStyle:UIAlertControllerStyleAlert];
-      UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Confirm" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-        [_preferences setObject:[_preferences objectForKey:@"backupNotes"] forKey:@"notes"];
-        [HBRespringController respring];
-      }];
-      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+-(IBAction)restoreBackupNotes {
+    NSData *backupNotesData = [_preferences objectForKey:@"backupNotes"];
 
-      [cautionAlert addAction:confirmAction];
-      [cautionAlert addAction:cancelAction];
-      [self presentViewController:cautionAlert animated:YES completion:nil];
+    if (backupNotesData) {
+        LOGS(@"Backup data found. Size of backup data: %lu bytes", (unsigned long)[backupNotesData length]);
+        UIAlertController *cautionAlert = [UIAlertController alertControllerWithTitle:@"Restore" message:@"Are you sure you want to restore the backup of your notes? This will delete your current notes and respring your device." preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Confirm" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+            [_preferences setObject:backupNotesData forKey:@"notes"];
+            BOOL syncSuccess = [_preferences synchronize]; // Synchronize to ensure the data is saved immediately.
+
+            if (syncSuccess) {
+                NSData *restoredNotesData = [_preferences objectForKey:@"notes"];
+                LOGS(@"Notes restored from backup successfully. Data size after restore: %lu bytes", (unsigned long)[restoredNotesData length]);
+                [self respring];
+            } else {
+                LOGS(@"Failed to synchronize after restoring backup.");
+                [self animateTextChangeTo:@"Failed to restore notes. Please try again."];
+            }
+        }];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+
+        [cautionAlert addAction:confirmAction];
+        [cautionAlert addAction:cancelAction];
+        [self presentViewController:cautionAlert animated:YES completion:nil];
 
     } else {
-      [self animateTextChangeTo:@"There is no backup to restore from."];
+        LOGS(@"There is no backup to restore from.");
+        [self animateTextChangeTo:@"There is no backup to restore from."];
     }
-  }
+}
+
 
   -(IBAction)deleteBackupNotes {
     if([_preferences objectForKey:@"backupNotes"]) {
@@ -227,4 +266,26 @@
   -(NSArray *)randomJokes {
     return @[@"What do you get when you mix ducks with fireworks? Firequackers.", @"Did you hear about that great new shovel? It’s ground breaking.", @"Bazinga", @"Why should you never trust a train? They have loco motives.", @"What do you call a spanish pig? Porque."];
   }
+
+- (void)minimizeSettings {
+    UIApplication *app = [UIApplication sharedApplication];
+    [app performSelector:@selector(suspend)];
+}
+
+	- (void)terminateSettingsUsingBKS {
+		pid_t pid;
+		const char* args[] = {"sbreload", NULL};
+		posix_spawn(&pid, ROOT_PATH("/usr/bin/sbreload"), NULL, NULL, (char* const*)args, NULL);
+	}
+
+- (void)terminateSettingsAfterDelay:(NSTimeInterval)delay {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self terminateSettingsUsingBKS];
+    });
+}
+- (void)respring {
+    [self minimizeSettings];
+    [self terminateSettingsAfterDelay:0.1];
+}
+
 @end

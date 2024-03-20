@@ -6,13 +6,14 @@
  * Copyright © 2021 LacertosusDeus <LacertosusThemes@gmail.com>. All rights reserved.
  */
 #import <os/log.h>
-#import <Cephei/HBPreferences.h>
 @import Alderis;
 #import "AlderisColorPicker.h"
 #import "DockIndicators.h"
+#import <objc/runtime.h>
 
+  NSString *const domainString = @"com.lacertosusrepo.dockindicatorsprefs";
     //Global Variables
-  static HBPreferences *preferences;
+  static NSUserDefaults *preferences;
 
     //Preference Variables
   static NSInteger indicatorOffset;
@@ -132,12 +133,12 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
 %hook SBIconView
 %property (nonatomic, retain) UIView *runningIndicator;
 
-  -(instancetype)initWithFrame:(CGRect)arg1 {
-    os_log(OS_LOG_DEFAULT, "DockIndicators - 1");
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicator:) name:@"SBApplicationProcessStateDidChange" object:nil];
-
-    return %orig;
-  }
+- (instancetype)initWithFrame:(CGRect)arg1 {
+	if ((self = %orig)) {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicators:) name:@"SBApplicationProcessStateDidChange" object:nil];
+	}
+	return self;
+}
 
   -(void)_updateLabelAccessoryView {
     %orig;
@@ -154,74 +155,143 @@ UIColor* averageColorFromImage(UIImage *image, NSString *identifier) {
 %end
 
 %hook SBDockIconListView
-  -(instancetype)initWithModel:(id)arg1 layoutProvider:(id)arg2 iconLocation:(id)arg3 orientation:(long long)arg4 iconViewProvider:(id)arg5 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicators:) name:@"SBApplicationProcessStateDidChange" object:nil];
 
-    return %orig;
-  }
+- (id)initWithModel:(id)arg0 layoutProvider:(id)arg1 iconLocation:(id)arg2 orientation:(NSInteger)arg3 iconViewProvider:(id)arg4 {
+    %orig;
+    self = %orig(arg0, arg1, arg2, arg3, arg4);
+
+    if (self) {
+        //NSLog(@"DockIndicators initWithModel");
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateRunningIndicators:) name:@"SBApplicationProcessStateDidChange" object:nil];
+
+    }
+    return self;
+}
 
 %new
-  -(void)updateRunningIndicators:(NSNotification *)notification {
-    for(SBIconView *iconView in self.subviews) {
-      if(![iconView isKindOfClass:[%c(SBIconView) class]] || iconView.folderIcon || ![iconView.icon isKindOfClass:[%c(SBApplicationIcon) class]]) {
-        continue; //Ignore icon to fix crash for Harbor 3, if the icon is a folder, if the icon is a download/update
-      }
+-(void)updateRunningIndicators:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (UIView *subview in self.subviews) {
+            if (![subview isKindOfClass:%c(SBIconView)] || [subview isKindOfClass:%c(SBFolderIcon)] || ![(SBIconView *)subview icon] || ![[(SBIconView *)subview icon] isKindOfClass:%c(SBApplicationIcon)]) {
 
-      if(!iconView.runningIndicator || ![iconView.runningIndicator.superview isKindOfClass:[%c(SBIconView) class]]) {
-          //if the iPad dock used by FloatingDockPlus13 or Dock Controller the indicator randomly gets moved to another subview, we move it back to the icon view
-        if(![iconView.runningIndicator.superview isKindOfClass:[%c(SBIconView) class]]) {
-          [iconView.runningIndicator removeFromSuperview];
+                continue;
+            }
+            SBIconView *iconView = (SBIconView *)subview;
+            // Lazy initialization of the runningIndicator view
+            if (!iconView.runningIndicator) {
+                UIView *runningIndicator = [[UIView alloc] init];
+                runningIndicator.alpha = 0;
+                runningIndicator.layer.shadowOffset = CGSizeZero;
+                runningIndicator.layer.shadowOpacity = 0;
+                runningIndicator.layer.shadowRadius = 3;
+                runningIndicator.translatesAutoresizingMaskIntoConstraints = NO;
+                [iconView addSubview:runningIndicator];
+                iconView.runningIndicator = runningIndicator;
+
+                [NSLayoutConstraint activateConstraints:@[
+                    [runningIndicator.centerXAnchor constraintEqualToAnchor:iconView.centerXAnchor],
+                    [runningIndicator.topAnchor constraintEqualToAnchor:iconView.bottomAnchor constant:indicatorOffset],
+                    [runningIndicator.widthAnchor constraintEqualToConstant:indicatorWidth],
+                    [runningIndicator.heightAnchor constraintEqualToConstant:indicatorHeight],
+                ]];
+            }
+
+            // Set properties outside animation block
+            UIColor *averageAppColor;
+            if(indicatorUseAppColor && iconView.iconImageSnapshot) {
+              averageAppColor = averageColorFromImage(iconView.iconImageSnapshot, iconView.applicationBundleIdentifierForShortcuts);
+            }
+
+            [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+              iconView.runningIndicator.backgroundColor = (averageAppColor) ?: [UIColor PF_colorWithHex:indicatorColor];
+              iconView.runningIndicator.layer.cornerRadius = indicatorCornerRadius;
+              iconView.runningIndicator.layer.shadowColor = (averageAppColor.CGColor) ?: [UIColor PF_colorWithHex:indicatorColor].CGColor;
+            } completion:nil];
+
+            SBApplication *application = [(SBApplicationIcon *)iconView.icon application];
+            [UIView transitionWithView:iconView.runningIndicator duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                iconView.runningIndicator.alpha = application.processState.running ? 1 : 0;
+            } completion:nil];
+
+            // Handle the animation based on the badge value and animation type
+            if (iconView.icon.badgeValue > 0 && ![iconView.runningIndicator.layer animationForKey:@"indicatorAnimation"] && indicatorAnimationType != DIPNotificationAnimationTypeNone) {
+                [iconView.runningIndicator.layer addAnimation:animationForType(indicatorAnimationType) forKey:@"indicatorAnimation"];
+            } else if (iconView.icon.badgeValue == 0 && [iconView.runningIndicator.layer animationForKey:@"indicatorAnimation"]) {
+                [iconView.runningIndicator.layer removeAnimationForKey:@"indicatorAnimation"];
+            }
         }
+    });
+}
 
-        iconView.runningIndicator = iconView.runningIndicator ?: [[UIView alloc] init];
-        iconView.runningIndicator.alpha = 0;
-        iconView.runningIndicator.layer.shadowOffset = CGSizeZero;
-        iconView.runningIndicator.layer.shadowOpacity = 0;
-        iconView.runningIndicator.layer.shadowRadius = 3;
-        iconView.runningIndicator.translatesAutoresizingMaskIntoConstraints = NO;
-        [iconView addSubview:iconView.runningIndicator];
 
-        [NSLayoutConstraint activateConstraints:@[
-          [iconView.runningIndicator.centerXAnchor constraintEqualToAnchor:iconView.centerXAnchor],
-          [iconView.runningIndicator.topAnchor constraintEqualToAnchor:iconView.bottomAnchor constant:indicatorOffset],
-          [iconView.runningIndicator.widthAnchor constraintEqualToConstant:indicatorWidth],
-          [iconView.runningIndicator.heightAnchor constraintEqualToConstant:indicatorHeight],
-        ]];
-      }
-
-      UIColor *averageAppColor;
-      if(indicatorUseAppColor && iconView.iconImageSnapshot) {
-         averageAppColor = averageColorFromImage(iconView.iconImageSnapshot, iconView.applicationBundleIdentifierForShortcuts);
-      }
-
-      [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        iconView.runningIndicator.backgroundColor = (averageAppColor) ?: [UIColor PF_colorWithHex:indicatorColor];
-        iconView.runningIndicator.layer.cornerRadius = indicatorCornerRadius;
-        iconView.runningIndicator.layer.shadowColor = (averageAppColor.CGColor) ?: [UIColor PF_colorWithHex:indicatorColor].CGColor;
-      } completion:nil];
-
-      SBApplication *application = [(SBApplicationIcon *)iconView.icon valueForKey:@"_application"];
-      [UIView transitionWithView:iconView.runningIndicator duration:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        iconView.runningIndicator.alpha = (application.processState.running) ? 1 : 0;
-      } completion:nil];
-
-      if(iconView.icon.badgeValue > 0 && ![iconView.runningIndicator.layer animationForKey:@"indicatorAnimation"] && indicatorAnimationType != DIPNotificationAnimationTypeNone) {
-        [iconView.runningIndicator.layer addAnimation:animationForType(indicatorAnimationType) forKey:@"indicatorAnimation"];
-
-      } else if(iconView.icon.badgeValue == 0 && [iconView.runningIndicator.layer animationForKey:@"indicatorAnimation"]) {
-        [iconView.runningIndicator.layer removeAnimationForKey:@"indicatorAnimation"];
-      }
-    }
-  }
 %end
 
+static BOOL tweakShouldLoad() {
+    // https://www.reddit.com/r/jailbreak/comments/4yz5v5/questionremote_messages_not_enabling/d6rlh88/
+    NSArray *args = [[NSClassFromString(@"NSProcessInfo") processInfo] arguments];
+    NSUInteger count = args.count;
+    if (count != 0) {
+        NSString *executablePath = args[0];
+        if (executablePath) {
+            NSString *processName = [executablePath lastPathComponent];
+            NSLog(@"DockIndicators Processname : %@", processName);
+            return [processName isEqualToString:@"SpringBoard"];
+        }
+    }
+
+    return NO;
+}
+
+
+
+void loadPrefs() {
+    NSUserDefaults *dockindicator = [[NSUserDefaults alloc] initWithSuiteName:domainString];
+
+    // Register default values for the preferences
+    NSDictionary *defaultPrefs = @{
+        @"indicatorOffset": @(5),
+        @"indicatorWidth": @(18),
+        @"indicatorHeight": @(5),
+        @"indicatorCornerRadius": @(2.5),
+        @"indicatorUseAppColor": @(NO),
+        @"indicatorAnimationType": @(DIPNotificationAnimationTypeBounce),
+        @"indicatorColor": @"#FFFFFF"
+    };
+    [dockindicator registerDefaults:defaultPrefs];
+
+    // Now load the preferences
+    indicatorOffset = [dockindicator integerForKey:@"indicatorOffset"];
+    indicatorWidth = [dockindicator integerForKey:@"indicatorWidth"];
+    indicatorHeight = [dockindicator integerForKey:@"indicatorHeight"];
+    indicatorCornerRadius = [dockindicator floatForKey:@"indicatorCornerRadius"];
+    indicatorUseAppColor = [dockindicator boolForKey:@"indicatorUseAppColor"];
+    indicatorAnimationType = [dockindicator integerForKey:@"indicatorAnimationType"];
+    indicatorColor = [dockindicator stringForKey:@"indicatorColor"];
+
+    // Initialize the appColorCache
+    NSMutableDictionary *appColorCache = [[dockindicator objectForKey:@"appColorCache"] mutableCopy];
+    if (!appColorCache) {
+        appColorCache = [[NSMutableDictionary alloc] init];
+    }
+    // Assuming 'preferences' is a global variable that's been properly initialized
+    [preferences setObject:appColorCache forKey:@"appColorCache"];
+}
+
+
 %ctor {
-  preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.dockindicatorsprefs"];
-  [preferences registerInteger:&indicatorOffset default:5 forKey:@"indicatorOffset"];
-  [preferences registerInteger:&indicatorWidth default:18 forKey:@"indicatorWidth"];
-  [preferences registerInteger:&indicatorHeight default:5 forKey:@"indicatorHeight"];
-  [preferences registerFloat:&indicatorCornerRadius default:2.5 forKey:@"indicatorCornerRadius"];
-  [preferences registerBool:&indicatorUseAppColor default:NO forKey:@"indicatorUseAppColor"];
-  [preferences registerObject:&indicatorColor default:@"#FFFFFF" forKey:@"indicatorColor"];
-  [preferences registerInteger:&indicatorAnimationType default:DIPNotificationAnimationTypeBounce forKey:@"indicatorAnimationType"];
+
+  if (!tweakShouldLoad()) {
+    NSLog(@"DockIndicators shouldn't run in this process");
+    return;
+  }
+
+  loadPrefs();
+	CFNotificationCenterAddObserver(
+		CFNotificationCenterGetDarwinNotifyCenter(),
+		NULL,
+		(CFNotificationCallback)loadPrefs,
+		CFSTR("com.lacertosusrepo.dockindicatorsprefs/ReloadPrefs"),
+		NULL,
+		CFNotificationSuspensionBehaviorDeliverImmediately
+	);
 }

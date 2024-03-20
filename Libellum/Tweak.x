@@ -12,10 +12,9 @@
   /*
    * Variables
    */
-  static HBPreferences *preferences;
+  static NSUserDefaults *preferences;
   static id scrollView;
-
-#pragma mark - iOS 13/14 Hooks
+#pragma mark - iOS 13/14/15/16 Hooks
 
     /*
      * Add Libellum to the Lockscreen
@@ -26,8 +25,33 @@
   -(void)viewDidLoad {
     %orig;
 
+    UIStackView *customStackView;
+
+    if ([self respondsToSelector:@selector(stackView)]) {
+        // iOS 14, where stackView is a property
+        customStackView = [self stackView];
+    } else {
+        // iOS 16, where stackView doesn't exist, so we create and configure a new one
+        customStackView = [[UIStackView alloc] init];
+        customStackView.axis = UILayoutConstraintAxisVertical;
+        customStackView.distribution = UIStackViewDistributionFill;
+        customStackView.alignment = UIStackViewAlignmentFill;
+        customStackView.translatesAutoresizingMaskIntoConstraints = NO;
+
+        [self.view addSubview:customStackView];
+
+        // Define constraints for customStackView
+        CGFloat padding = 10; // padding
+        [NSLayoutConstraint activateConstraints:@[
+            [customStackView.topAnchor constraintEqualToAnchor:self.view.topAnchor constant:padding],
+            [customStackView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:-padding],
+            [customStackView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor constant:padding],
+            [customStackView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor constant:-padding],
+        ]];
+    }
+
     [[LibellumManager sharedManager] createPages];
-    [self.stackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:0];
+    [customStackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:0];
 
     [((UIScrollView *)scrollView).panGestureRecognizer requireGestureRecognizerToFail:[LibellumManager sharedManager].swipeGesture];
 
@@ -39,8 +63,32 @@
   -(void)adjunctListModel:(id)arg1 didAddItem:(id)arg2 {
     %orig;
 
+    UIStackView *customStackView;
+
+    if ([self respondsToSelector:@selector(stackView)]) {
+        // iOS 14, where stackView is a property
+        customStackView = [self stackView];
+    } else {
+        // iOS 16, where stackView doesn't exist, so we create and configure a new one
+        customStackView = [[UIStackView alloc] init];
+        customStackView.axis = UILayoutConstraintAxisVertical;
+        customStackView.distribution = UIStackViewDistributionFill;
+        customStackView.alignment = UIStackViewAlignmentFill;
+        customStackView.translatesAutoresizingMaskIntoConstraints = NO;
+
+        [self.view addSubview:customStackView];
+
+        // Define constraints for customStackView
+        [NSLayoutConstraint activateConstraints:@[
+            [customStackView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+            [customStackView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+            [customStackView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+            [customStackView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        ]];
+    }
+
     if([preferences integerForKey:@"notePosition"] == 2) {
-      [self.stackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:[self.stackView.arrangedSubviews count]];
+      [customStackView insertArrangedSubview:[LibellumManager sharedManager].pageController.view atIndex:[customStackView.arrangedSubviews count]];
     }
   }
 
@@ -208,7 +256,7 @@
 %end
 
 %ctor {
-  preferences = [[HBPreferences alloc] initWithIdentifier:@"com.lacertosusrepo.libellumprefs"];
+  preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.libellumprefs"];
   [preferences registerDefaults:@{
       //Main Preferences
     @"noteSize" : @121,
@@ -253,11 +301,10 @@
     @"isHidden" : @NO,
   }];
 
-  if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
-    %init(iOS13Plus);
-  } else {
-    %init(iOS12);
-  }
-
-  %init;
+    if([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){13, 0, 0}]) {
+      %init(iOS13Plus);
+    } else {
+      %init(iOS12);
+    }
+    %init;
 }

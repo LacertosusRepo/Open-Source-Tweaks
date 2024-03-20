@@ -1,10 +1,10 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <UIKit/UIKit.h>
-#import <Cephei/HBPreferences.h>
 @import Alderis;
 #import "AlderisColorPicker.h"
 #import "LibellumViewController.h"
-#import "HBLog.h"
+
+#define LOGS(format, ...) NSLog(@"Libellum: " format, ## __VA_ARGS__)
 
 @interface UIApplication (Private)
 -(UIInterfaceOrientation)activeInterfaceOrientation;
@@ -62,8 +62,8 @@
 @end
 
 @interface LibellumManager : NSObject <UIPageViewControllerDataSource, UITextViewDelegate, SBSystemGestureRecognizerDelegate>
-@property (nonatomic, retain) HBPreferences *preferences;
-@property (nonatomic, retain, readonly) NSMutableDictionary *notesByIndex;
+@property (nonatomic, retain) NSUserDefaults *preferences;
+@property (nonatomic, retain) NSMutableDictionary *notesByIndex;
 @property (nonatomic, retain, readonly) NSMutableArray *pages;
 @property (nonatomic, retain) UIPageViewController *pageController;
 @property (nonatomic, retain) NSLayoutConstraint *heightConstraint;
@@ -85,7 +85,7 @@
 -(void)forceLockScreenStackViewLayout;
 -(void)saveNotes;
 -(void)backupNotes;
--(void)preferencesChanged;
+- (void)preferencesChanged:(NSNotification *)notification;
 -(void)notifyViewControllersOfInterfaceChange:(NSInteger)style;
 -(UIColor *)getTintColor;
 -(BOOL)isDarkMode;

@@ -1,7 +1,7 @@
 #import "DIPIndicatorPreviewCell.h"
 
 @implementation DIPIndicatorPreviewCell {
-  HBPreferences *_preferences;
+  NSUserDefaults *_preferences;
   UIView *_indicator;
   NSLayoutConstraint *_height;
   NSLayoutConstraint *_width;
@@ -11,10 +11,14 @@
     self = [super initWithStyle:style reuseIdentifier:identifier specifier:specifier];
 
     if(self) {
-      _preferences = [HBPreferences preferencesForIdentifier:[specifier propertyForKey:@"defaults"]];
-      [_preferences registerPreferenceChangeBlock:^{
-        [self updateIndicatorPreview];
-      }];
+      _preferences = [[NSUserDefaults alloc] initWithSuiteName:[specifier propertyForKey:@"defaults"]];
+
+        // Register for user defaults changes notification
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(userDefaultsDidChange:)
+                                                     name:NSUserDefaultsDidChangeNotification
+                                                   object:_preferences];
+
 
       _indicator = [[UIView alloc] initWithFrame:CGRectZero];
       _indicator.backgroundColor = ([UIColor PF_colorWithHex:[_preferences objectForKey:@"indicatorColor"]]) ?: [UIColor whiteColor];
@@ -141,4 +145,12 @@
       [self.contentView layoutIfNeeded];
     } completion:nil];
   }
+
+- (void)userDefaultsDidChange:(NSNotification *)notification {
+    [self updateIndicatorPreview];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end

@@ -9,8 +9,6 @@
 			<string>PSGroupCell</string>
 		</dict>
 		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
 			<key>label</key>
 			<string>Lacertosus</string>
 			<key>user</key>
@@ -181,8 +179,6 @@
 		<dict>
 			<key>cell</key>
 			<string>PSButtonCell</string>
-			<key>cellClass</key>
-			<string>HBTintedTableCell</string>
 			<key>action</key>
 			<string>clearColorCache</string>
 			<key>label</key>
@@ -233,38 +229,6 @@
 			<key>PostNotification</key>
 			<string>com.lacertosusrepo.dockindicatorsprefs/ReloadPrefs</string>
 		</dict>
-
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Support</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBLinkTableCell</string>
-			<key>label</key>
-			<string>Github</string>
-			<key>subtitle</key>
-			<string>Find the source code here!</string>
-			<key>icon</key>
-			<string>github.png</string>
-			<key>url</key>
-			<string>https://github.com/LacertosusRepo/Open-Source-Tweaks</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBLinkTableCell</string>
-			<key>label</key>
-			<string>Donate</string>
-			<key>subtitle</key>
-			<string>Fund my next ski trip!</string>
-			<key>icon</key>
-			<string>paypal.png</string>
-			<key>url</key>
-			<string>https://paypal.me/Lacertosus</string>
-		</dict>
-
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>

@@ -4,14 +4,6 @@
 	-(instancetype)init {
 		self = [super init];
 		if(self) {
-			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
-			appearanceSettings.navigationBarBackgroundColor = Sec_Color;
-			appearanceSettings.navigationBarTintColor = Pri_Color;
-			appearanceSettings.showsNavigationBarShadow = NO;
-			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
-			appearanceSettings.tintColor = Pri_Color;
-			appearanceSettings.translucentNavigationBar = NO;
-			self.hb_appearanceSettings = appearanceSettings;
 		}
 
 		return self;

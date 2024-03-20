@@ -5,14 +5,6 @@
 	-(id)init {
 		self = [super init];
 		if(self) {
-			HBAppearanceSettings *appearanceSettings = [[HBAppearanceSettings alloc] init];
-			appearanceSettings.navigationBarBackgroundColor = Sec_Color;
-			appearanceSettings.navigationBarTintColor = Pri_Color;
-			appearanceSettings.showsNavigationBarShadow = NO;
-			appearanceSettings.tableViewCellSeparatorColor = [UIColor clearColor];
-			appearanceSettings.tintColor = Pri_Color;
-			appearanceSettings.translucentNavigationBar = NO;
-			self.hb_appearanceSettings = appearanceSettings;
 		}
 
 		return self;
@@ -47,7 +39,7 @@
 	}
 
 	-(void)toggleSpecifiersVisibility:(BOOL)animated {
-		HBPreferences *preferences = [HBPreferences preferencesForIdentifier:@"com.lacertosusrepo.libellumprefs"];
+		NSUserDefaults *preferences = [[NSUserDefaults alloc] initWithSuiteName:@"com.lacertosusrepo.libellumprefs"];
 
 		if(![[preferences objectForKey:@"blurStyle"] isEqualToString:@"adaptive"]) {
 			[self removeSpecifier:[self specifierForID:@"IGNORE_ADAPTIVE_PRESET_COLORS"] animated:animated];
@@ -88,7 +80,7 @@
 
 			case 1:	//Are you sure?
 			{
-				UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:[HBRespringController class] action:@selector(respring)];
+				UIBarButtonItem *respringButton = [[UIBarButtonItem alloc] initWithTitle:@"Are you sure?" style:UIBarButtonItemStyleDone target:self action:@selector(respring)];
 				respringButton.tintColor = [UIColor colorWithRed:0.90 green:0.23 blue:0.23 alpha:1.00];
 				respringButton.tag = 0;
 				[self.navigationItem setRightBarButtonItem:respringButton animated:YES];
@@ -118,6 +110,27 @@
 
 	-(UIUserInterfaceStyle)overrideUserInterfaceStyle {
 		return UIUserInterfaceStyleDark;
+	}
+
+	- (void)minimizeSettings {
+		UIApplication *app = [UIApplication sharedApplication];
+		[app performSelector:@selector(suspend)];
+	}
+
+	- (void)terminateSettingsUsingBKS {
+		pid_t pid;
+		const char* args[] = {"sbreload", NULL};
+		posix_spawn(&pid, ROOT_PATH("/usr/bin/sbreload"), NULL, NULL, (char* const*)args, NULL);
+	}
+
+	- (void)terminateSettingsAfterDelay:(NSTimeInterval)delay {
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			[self terminateSettingsUsingBKS];
+		});
+	}
+	- (void)respring {
+		[self minimizeSettings];
+		[self terminateSettingsAfterDelay:0.5];
 	}
 
 @end
